@@ -8,17 +8,13 @@ Informatics is the science of processing data for storage, retrieval, and analys
 
 ## 📚 Table of Contents
 
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Who Is This For?](#who-is-this-for)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Getting Started](#getting-started)
-- [Repository Structure](#repository-structure)
-- [Example Use Cases](#example-use-cases)
-- [Contributing](#contributing)
-- [Resources & Further Learning](#resources--further-learning)
-- [License](#license)
+- [Python for Informatics](#python-for-informatics)
+  - [📚 Table of Contents](#-table-of-contents)
+  - [🔍 Project Overview](#-project-overview)
+  - [✨ Features](#-features)
+  - [🎯 Who Is This For?](#-who-is-this-for)
+  - [📋 Prerequisites](#-prerequisites)
+  - [🛠 Installation](#-installation)
 
 ---
 
@@ -56,7 +52,7 @@ All materials are self-contained and include explanations, code snippets, and pr
 - **Data analysts** transitioning to Python from other tools (R, Excel).
 - **Self‑learners** with an interest in data‑driven fields.
 
-*Basic programming knowledge is helpful but not required – we start from the ground up.*
+_Basic programming knowledge is helpful but not required – we start from the ground up._
 
 ---
 
@@ -76,3 +72,5 @@ All required Python packages are listed in `requirements.txt` – you can instal
    ```bash
    git clone https://github.com/your-username/python-for-informatics.git
    cd python-for-informatics
+   ```
+
