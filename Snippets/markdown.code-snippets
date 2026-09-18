@@ -1,0 +1,1401 @@
+{
+  "// ==================== 1. DOCUMENT STRUCTURE ====================": {
+    "prefix": "md_section_structure",
+    "body": ["<!-- ============ DOCUMENT STRUCTURE ============ -->"],
+    "description": "Section marker (HTML comment)"
+  },
+
+  "Heading 1": {
+    "prefix": "md_h1",
+    "body": ["# ${1:Title}"],
+    "description": "Top-level heading"
+  },
+  "Heading 2": {
+    "prefix": "md_h2",
+    "body": ["## ${1:Section}"],
+    "description": "Second-level heading"
+  },
+  "Heading 3": {
+    "prefix": "md_h3",
+    "body": ["### ${1:Subsection}"],
+    "description": "Third-level heading"
+  },
+  "Heading (any level)": {
+    "prefix": "md_heading",
+    "body": ["${1|#, ##, ###, ####, #####, ######|} ${2:Title}"],
+    "description": "Heading with level chooser"
+  },
+  "Anchor link to a heading": {
+    "prefix": "md_anchor",
+    "body": ["[${1:Link text}](#${2:section-anchor})"],
+    "description": "Jump link to a heading (GitHub slug)"
+  },
+  "Table of contents": {
+    "prefix": "md_toc",
+    "body": [
+      "## Table of Contents",
+      "",
+      "- [${1:Section 1}](#${2:section-1})",
+      "- [${3:Section 2}](#${4:section-2})",
+      "- [${5:Section 3}](#${6:section-3})"
+    ],
+    "description": "Manual table of contents"
+  },
+  "Horizontal rule": {
+    "prefix": "md_hr",
+    "body": ["---"],
+    "description": "Horizontal rule / section divider"
+  },
+
+  "// ==================== 2. TEXT FORMATTING ====================": {
+    "prefix": "md_section_format",
+    "body": ["<!-- ============ TEXT FORMATTING ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Bold": {
+    "prefix": "md_bold",
+    "body": ["**${1:bold text}**"],
+    "description": "Bold text"
+  },
+  "Italic": {
+    "prefix": "md_italic",
+    "body": ["*${1:italic text}*"],
+    "description": "Italic text"
+  },
+  "Bold + italic": {
+    "prefix": "md_bolditalic",
+    "body": ["***${1:bold italic}***"],
+    "description": "Bold and italic"
+  },
+  "Strikethrough": {
+    "prefix": "md_strike",
+    "body": ["~~${1:struck text}~~"],
+    "description": "Strikethrough"
+  },
+  "Inline code": {
+    "prefix": "md_code_inline",
+    "body": ["`${1:code}`"],
+    "description": "Inline code span"
+  },
+  "Highlight (HTML)": {
+    "prefix": "md_mark",
+    "body": ["<mark>${1:highlighted}</mark>"],
+    "description": "Highlight text (renders on most platforms)"
+  },
+  "Subscript / superscript": {
+    "prefix": "md_subsup",
+    "body": [
+      "H<sub>${1:2}</sub>O",
+      "E = mc<sup>${2:2}</sup>"
+    ],
+    "description": "Subscript and superscript (HTML)"
+  },
+  "Keyboard shortcut": {
+    "prefix": "md_kbd",
+    "body": ["<kbd>${1:Ctrl}</kbd> + <kbd>${2:S}</kbd>"],
+    "description": "Keyboard shortcut styling"
+  },
+  "Escape special characters": {
+    "prefix": "md_escape",
+    "body": ["\\\\${1:*}"],
+    "description": "Escape a Markdown special char"
+  },
+
+  "// ==================== 3. LISTS ====================": {
+    "prefix": "md_section_lists",
+    "body": ["<!-- ============ LISTS ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Bullet list": {
+    "prefix": "md_ul",
+    "body": [
+      "- ${1:first item}",
+      "- ${2:second item}",
+      "- ${3:third item}"
+    ],
+    "description": "Unordered list"
+  },
+  "Numbered list": {
+    "prefix": "md_ol",
+    "body": [
+      "1. ${1:first}",
+      "2. ${2:second}",
+      "3. ${3:third}"
+    ],
+    "description": "Ordered list"
+  },
+  "Nested list": {
+    "prefix": "md_ul_nested",
+    "body": [
+      "- ${1:parent item}",
+      "  - ${2:child item}",
+      "    - ${3:grandchild item}",
+      "- ${4:another parent}"
+    ],
+    "description": "Nested bullet list"
+  },
+  "Task list (checkboxes)": {
+    "prefix": "md_task",
+    "body": [
+      "- [ ] ${1:todo item}",
+      "- [x] ${2:done item}",
+      "- [ ] ${3:another todo}"
+    ],
+    "description": "GitHub-style task list"
+  },
+  "Definition list (HTML)": {
+    "prefix": "md_deflist",
+    "body": [
+      "<dl>",
+      "  <dt>${1:Term}</dt>",
+      "  <dd>${2:Definition}</dd>",
+      "  <dt>${3:Another term}</dt>",
+      "  <dd>${4:Its definition}</dd>",
+      "</dl>"
+    ],
+    "description": "Definition list (HTML)"
+  },
+
+  "// ==================== 4. LINKS & IMAGES ====================": {
+    "prefix": "md_section_links",
+    "body": ["<!-- ============ LINKS & IMAGES ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Link": {
+    "prefix": "md_link",
+    "body": ["[${1:link text}](${2:https://example.com})"],
+    "description": "Inline link"
+  },
+  "Link with title": {
+    "prefix": "md_link_title",
+    "body": ["[${1:text}](${2:url} \"${3:Hover title}\")"],
+    "description": "Link with hover title"
+  },
+  "Reference link": {
+    "prefix": "md_link_ref",
+    "body": [
+      "[${1:text}][${2:ref}]",
+      "",
+      "[${2:ref}]: ${3:https://example.com}"
+    ],
+    "description": "Reference-style link"
+  },
+  "Bare URL (autolink)": {
+    "prefix": "md_autolink",
+    "body": ["<${1:https://example.com}>"],
+    "description": "Autolink URL"
+  },
+  "Image": {
+    "prefix": "md_img",
+    "body": ["![${1:alt text}](${2:path/to/image.png})"],
+    "description": "Image"
+  },
+  "Image with title": {
+    "prefix": "md_img_title",
+    "body": ["![${1:alt text}](${2:path/to/image.png} \"${3:Title}\")"],
+    "description": "Image with title"
+  },
+  "Clickable image": {
+    "prefix": "md_img_link",
+    "body": ["[![${1:alt text}](${2:image.png})](${3:link_url})"],
+    "description": "Image wrapped in a link"
+  },
+  "Centered image (HTML)": {
+    "prefix": "md_img_center",
+    "body": [
+      "<p align=\"center\">",
+      "  <img src=\"${1:path/to/image.png}\" alt=\"${2:alt}\" width=\"${3:600}\"/>",
+      "</p>"
+    ],
+    "description": "Center and size an image"
+  },
+  "Badge (shields.io)": {
+    "prefix": "md_badge",
+    "body": [
+      "![${1:Python}](https://img.shields.io/badge/${1:Python}-${2:3.11}-${3:blue})"
+    ],
+    "description": "Shields.io badge"
+  },
+  "Row of badges": {
+    "prefix": "md_badges",
+    "body": [
+      "![Python](https://img.shields.io/badge/python-3.10%2B-blue)",
+      "![License](https://img.shields.io/badge/license-MIT-green)",
+      "![Status](https://img.shields.io/badge/status-active-success)",
+      "![Tests](https://img.shields.io/badge/tests-passing-brightgreen)"
+    ],
+    "description": "Common badge row for a README"
+  },
+
+  "// ==================== 5. CODE BLOCKS ====================": {
+    "prefix": "md_section_code",
+    "body": ["<!-- ============ CODE BLOCKS ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Fenced code block": {
+    "prefix": "md_code",
+    "body": [
+      "```${1:python}",
+      "${2:code here}",
+      "```"
+    ],
+    "description": "Fenced code block with language"
+  },
+  "Python code block": {
+    "prefix": "md_code_py",
+    "body": [
+      "```python",
+      "${1:import pandas as pd}",
+      "```"
+    ],
+    "description": "Python code block"
+  },
+  "Bash / shell block": {
+    "prefix": "md_code_bash",
+    "body": [
+      "```bash",
+      "${1:pip install -r requirements.txt}",
+      "```"
+    ],
+    "description": "Shell block"
+  },
+  "JSON block": {
+    "prefix": "md_code_json",
+    "body": [
+      "```json",
+      "{",
+      "  \"${1:key}\": \"${2:value}\"",
+      "}",
+      "```"
+    ],
+    "description": "JSON block"
+  },
+  "Diff block": {
+    "prefix": "md_code_diff",
+    "body": [
+      "```diff",
+      "- ${1:old line}",
+      "+ ${2:new line}",
+      "```"
+    ],
+    "description": "Diff block"
+  },
+  "Code block with line highlight": {
+    "prefix": "md_code_hl",
+    "body": [
+      "```${1:python} {${2:2,4-6}}",
+      "${3:line 1}",
+      "${4:line 2 (highlighted)}",
+      "```"
+    ],
+    "description": "Highlight specific lines (platform-dependent)"
+  },
+  "Notebook-style cell output": {
+    "prefix": "md_code_output",
+    "body": [
+      "**Input**",
+      "",
+      "```python",
+      "${1:>>> print('hello')}",
+      "```",
+      "",
+      "**Output**",
+      "",
+      "```",
+      "${2:hello}",
+      "```"
+    ],
+    "description": "Input / Output pair"
+  },
+
+  "// ==================== 6. TABLES ====================": {
+    "prefix": "md_section_tables",
+    "body": ["<!-- ============ TABLES ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Table (basic)": {
+    "prefix": "md_table",
+    "body": [
+      "| ${1:Column A} | ${2:Column B} |",
+      "| ---------- | ---------- |",
+      "| ${3:value 1} | ${4:value 2} |",
+      "| ${5:value 3} | ${6:value 4} |"
+    ],
+    "description": "Basic Markdown table"
+  },
+  "Table (aligned)": {
+    "prefix": "md_table_aligned",
+    "body": [
+      "| ${1:Left} | ${2:Center} | ${3:Right} |",
+      "| :------- | :--------: | --------: |",
+      "| ${4:a}    | ${5:b}      | ${6:c}     |"
+    ],
+    "description": "Table with column alignment"
+  },
+  "Table (with formatting)": {
+    "prefix": "md_table_format",
+    "body": [
+      "| Model | Accuracy | F1 | AUC |",
+      "| :---- | :------: | -: | --: |",
+      "| **${1:LogisticRegression}** | ${2:0.852} | ${3:0.840} | ${4:0.891} |",
+      "| ${5:RandomForest} | ${6:0.871} | ${7:0.862} | ${8:0.910} |",
+      "| ${9:XGBoost} | ${10:0.885} | ${11:0.877} | ${12:0.923} |"
+    ],
+    "description": "Model comparison table"
+  },
+  "Table (metrics report)": {
+    "prefix": "md_table_metrics",
+    "body": [
+      "| Metric | Value |",
+      "| :----- | ----: |",
+      "| Accuracy | ${1:0.00} |",
+      "| Precision | ${2:0.00} |",
+      "| Recall | ${3:0.00} |",
+      "| F1-score | ${4:0.00} |",
+      "| ROC-AUC | ${5:0.00} |"
+    ],
+    "description": "Metrics table for a model"
+  },
+  "Dataset summary table": {
+    "prefix": "md_table_dataset",
+    "body": [
+      "| Column | Type | Non-null | Unique | Example |",
+      "| :----- | :--- | -------: | -----: | :------ |",
+      "| ${1:id} | int64 | ${2:1000} | ${3:1000} | ${4:1} |",
+      "| ${5:age} | float64 | ${6:980} | ${7:80} | ${8:34.2} |"
+    ],
+    "description": "DataFrame schema snapshot"
+  },
+
+  "// ==================== 7. QUOTES & CALLOUTS ====================": {
+    "prefix": "md_section_quotes",
+    "body": ["<!-- ============ QUOTES & CALLOUTS ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Blockquote": {
+    "prefix": "md_quote",
+    "body": ["> ${1:quoted text}"],
+    "description": "Blockquote"
+  },
+  "Multi-line blockquote": {
+    "prefix": "md_quote_multi",
+    "body": [
+      "> ${1:first line}",
+      ">",
+      "> ${2:second paragraph}"
+    ],
+    "description": "Multi-line blockquote"
+  },
+  "GitHub alert: Note": {
+    "prefix": "md_note",
+    "body": [
+      "> [!NOTE]",
+      "> ${1:Useful background information.}"
+    ],
+    "description": "GitHub alert block (Note)"
+  },
+  "GitHub alert: Tip": {
+    "prefix": "md_tip",
+    "body": [
+      "> [!TIP]",
+      "> ${1:Helpful advice or shortcut.}"
+    ],
+    "description": "GitHub alert block (Tip)"
+  },
+  "GitHub alert: Important": {
+    "prefix": "md_important",
+    "body": [
+      "> [!IMPORTANT]",
+      "> ${1:Key information users need to know.}"
+    ],
+    "description": "GitHub alert block (Important)"
+  },
+  "GitHub alert: Warning": {
+    "prefix": "md_warning",
+    "body": [
+      "> [!WARNING]",
+      "> ${1:Critical warning about data loss or risk.}"
+    ],
+    "description": "GitHub alert block (Warning)"
+  },
+  "GitHub alert: Caution": {
+    "prefix": "md_caution",
+    "body": [
+      "> [!CAUTION]",
+      "> ${1:Potential negative consequences.}"
+    ],
+    "description": "GitHub alert block (Caution)"
+  },
+  "HTML comment (hidden)": {
+    "prefix": "md_comment",
+    "body": ["<!-- ${1:comment} -->"],
+    "description": "Invisible HTML comment"
+  },
+
+  "// ==================== 8. MATH (LaTeX) ====================": {
+    "prefix": "md_section_math",
+    "body": ["<!-- ============ MATH (LaTeX) ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Inline math": {
+    "prefix": "md_math_inline",
+    "body": ["\\$${1:x^2 + y^2}\\$"],
+    "description": "Inline math expression"
+  },
+  "Display math (block)": {
+    "prefix": "md_math_block",
+    "body": [
+      "\\$\\$",
+      "${1:\\\\hat{y} = \\\\sigma(W x + b)}",
+      "\\$\\$"
+    ],
+    "description": "Display math block"
+  },
+  "Aligned equations": {
+    "prefix": "md_math_align",
+    "body": [
+      "\\$\\$",
+      "\\\\begin{aligned}",
+      "${1:L(\\\\theta)} &= ${2:-\\\\frac{1}{N} \\\\sum_{i=1}^{N} y_i \\\\log \\\\hat{y}_i} \\\\\\\\",
+      "${3:\\\\nabla_\\\\theta L} &= ${4:\\\\frac{\\\\partial L}{\\\\partial \\\\theta}}",
+      "\\\\end{aligned}",
+      "\\$\\$"
+    ],
+    "description": "Multi-line aligned equations"
+  },
+  "Matrix": {
+    "prefix": "md_math_matrix",
+    "body": [
+      "\\$\\$",
+      "${1:X} = \\\\begin{bmatrix}",
+      "${2:1} & ${3:0} & ${4:0} \\\\\\\\",
+      "${5:0} & ${6:1} & ${7:0} \\\\\\\\",
+      "${8:0} & ${9:0} & ${10:1}",
+      "\\\\end{bmatrix}",
+      "\\$\\$"
+    ],
+    "description": "Matrix notation"
+  },
+  "Summation": {
+    "prefix": "md_math_sum",
+    "body": ["\\$\\$\\\\sum_{${1:i=1}}^{${2:N}} ${3:x_i}\\$\\$"],
+    "description": "Summation"
+  },
+  "Gradient / derivative": {
+    "prefix": "md_math_grad",
+    "body": ["\\$\\\\nabla_{${1:\\\\theta}} ${2:L(\\\\theta)}\\$"],
+    "description": "Gradient notation"
+  },
+  "Common ML equations": {
+    "prefix": "md_math_ml",
+    "body": [
+      "<!-- Linear regression -->",
+      "\\$\\\\hat{y} = X w + b\\$",
+      "",
+      "<!-- Logistic (sigmoid) -->",
+      "\\$\\\\sigma(z) = \\\\frac{1}{1 + e^{-z}}\\$",
+      "",
+      "<!-- MSE loss -->",
+      "\\$L = \\\\frac{1}{N} \\\\sum_{i=1}^{N} (y_i - \\\\hat{y}_i)^2\\$",
+      "",
+      "<!-- Cross-entropy -->",
+      "\\$L = -\\\\frac{1}{N} \\\\sum_{i=1}^{N} y_i \\\\log \\\\hat{y}_i\\$"
+    ],
+    "description": "Common ML formulas"
+  },
+
+  "// ==================== 9. MERMAID DIAGRAMS ====================": {
+    "prefix": "md_section_mermaid",
+    "body": ["<!-- ============ MERMAID DIAGRAMS ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Mermaid: flowchart": {
+    "prefix": "md_mermaid_flow",
+    "body": [
+      "```mermaid",
+      "flowchart ${1:TD}",
+      "    A[${2:Start}] --> B[${3:Load data}]",
+      "    B --> C[${4:Preprocess}]",
+      "    C --> D[${5:Train model}]",
+      "    D --> E{${6:Converged?}}",
+      "    E -->|No| D",
+      "    E -->|Yes| F[${7:Evaluate}]",
+      "```"
+    ],
+    "description": "ML pipeline flowchart"
+  },
+  "Mermaid: sequence diagram": {
+    "prefix": "md_mermaid_seq",
+    "body": [
+      "```mermaid",
+      "sequenceDiagram",
+      "    participant U as ${1:User}",
+      "    participant A as ${2:API}",
+      "    participant M as ${3:Model}",
+      "    U->>A: POST /predict",
+      "    A->>M: score(features)",
+      "    M-->>A: probabilities",
+      "    A-->>U: JSON response",
+      "```"
+    ],
+    "description": "Inference sequence diagram"
+  },
+  "Mermaid: class diagram": {
+    "prefix": "md_mermaid_class",
+    "body": [
+      "```mermaid",
+      "classDiagram",
+      "    class ${1:Model} {",
+      "        +fit(X, y)",
+      "        +predict(X)",
+      "        -_weights",
+      "    }",
+      "    class ${2:LinearModel} {",
+      "        +fit(X, y)",
+      "    }",
+      "    ${1:Model} <|-- ${2:LinearModel}",
+      "```"
+    ],
+    "description": "Class diagram for model hierarchy"
+  },
+  "Mermaid: ER diagram": {
+    "prefix": "md_mermaid_er",
+    "body": [
+      "```mermaid",
+      "erDiagram",
+      "    ${1:USER} ||--o{ ${2:ORDER} : places",
+      "    ${2:ORDER} ||--|{ ${3:ITEM} : contains",
+      "    ${1:USER} {",
+      "        int id",
+      "        string email",
+      "    }",
+      "```"
+    ],
+    "description": "Entity relationship diagram"
+  },
+  "Mermaid: Gantt chart": {
+    "prefix": "md_mermaid_gantt",
+    "body": [
+      "```mermaid",
+      "gantt",
+      "    title ${1:ML Project Timeline}",
+      "    dateFormat  YYYY-MM-DD",
+      "    section ${2:Data}",
+      "    ${3:Collection}     :a1, 2024-01-01, 30d",
+      "    ${4:Cleaning}       :after a1, 20d",
+      "    section ${5:Modeling}",
+      "    ${6:Baseline}       :2024-02-20, 15d",
+      "    ${7:Tuning}         :15d",
+      "```"
+    ],
+    "description": "Gantt chart for project timeline"
+  },
+  "Mermaid: pie chart": {
+    "prefix": "md_mermaid_pie",
+    "body": [
+      "```mermaid",
+      "pie title ${1:Dataset class distribution}",
+      "    \"${2:Class A}\" : ${3:45}",
+      "    \"${4:Class B}\" : ${5:35}",
+      "    \"${6:Class C}\" : ${7:20}",
+      "```"
+    ],
+    "description": "Pie chart for class balance"
+  },
+  "Mermaid: state diagram": {
+    "prefix": "md_mermaid_state",
+    "body": [
+      "```mermaid",
+      "stateDiagram-v2",
+      "    [*] --> ${1:Idle}",
+      "    ${1:Idle} --> ${2:Training}: start()",
+      "    ${2:Training} --> ${3:Done}: converged",
+      "    ${2:Training} --> ${4:Failed}: error",
+      "    ${3:Done} --> [*]",
+      "```"
+    ],
+    "description": "State machine diagram"
+  },
+
+  "// ==================== 10. DATA SCIENCE README PATTERNS ====================": {
+    "prefix": "md_section_ds",
+    "body": ["<!-- ============ DATA SCIENCE README PATTERNS ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Project badge row": {
+    "prefix": "md_readme_badges",
+    "body": [
+      "![Python](https://img.shields.io/badge/python-3.10%2B-blue)",
+      "![License](https://img.shields.io/badge/license-MIT-green)",
+      "![Status](https://img.shields.io/badge/status-active-success)",
+      "![Made with](https://img.shields.io/badge/made%20with-scikit--learn-orange)"
+    ],
+    "description": "Project badges"
+  },
+  "Project overview": {
+    "prefix": "md_readme_overview",
+    "body": [
+      "# ${1:Project Name}",
+      "",
+      "> ${2:One-line description.}",
+      "",
+      "## Overview",
+      "",
+      "${3:Paragraph describing the problem, the data, and the approach.}",
+      "",
+      "**Task:** ${4|Classification, Regression, Clustering, Time-series forecasting, NLP, Computer vision|}",
+      "**Dataset:** ${5:dataset.csv} (${6:N} rows, ${7:M} features)",
+      "**Best model:** ${8:XGBoost} — ${9:ROC-AUC 0.92}"
+    ],
+    "description": "Project overview"
+  },
+  "Repository structure": {
+    "prefix": "md_readme_structure",
+    "body": [
+      "## Project structure",
+      "",
+      "```",
+      "${1:project/}",
+      "├── data/",
+      "│   ├── raw/                # immutable original data",
+      "│   └── processed/          # cleaned / feature-engineered data",
+      "├── notebooks/",
+      "│   ├── 01_eda.ipynb",
+      "│   └── 02_modeling.ipynb",
+      "├── src/",
+      "│   ├── data/",
+      "│   ├── features/",
+      "│   ├── models/",
+      "│   └── visualization/",
+      "├── models/                 # persisted .joblib / .pkl files",
+      "├── reports/",
+      "│   └── figures/",
+      "├── tests/",
+      "├── requirements.txt",
+      "└── README.md",
+      "```"
+    ],
+    "description": "Folder structure block"
+  },
+  "Installation & usage": {
+    "prefix": "md_readme_install",
+    "body": [
+      "## Installation",
+      "",
+      "```bash",
+      "git clone ${1:https://github.com/user/repo.git}",
+      "cd ${2:repo}",
+      "python -m venv .venv",
+      "source .venv/bin/activate      # Windows: .venv\\\\Scripts\\\\activate",
+      "pip install -r requirements.txt",
+      "```",
+      "",
+      "## Usage",
+      "",
+      "```bash",
+      "python -m src.train --config configs/${3:default}.yaml",
+      "python -m src.predict --input data/sample.csv",
+      "```"
+    ],
+    "description": "Installation & usage"
+  },
+  "Results section": {
+    "prefix": "md_readme_results",
+    "body": [
+      "## Results",
+      "",
+      "| Model | Accuracy | Precision | Recall | F1 | ROC-AUC |",
+      "| :---- | :------: | :-------: | :----: | -: | ------: |",
+      "| ${1:Baseline} | ${2:0.82} | ${3:0.80} | ${4:0.78} | ${5:0.79} | ${6:0.87} |",
+      "| ${7:Random Forest} | ${8:0.87} | ${9:0.86} | ${10:0.84} | ${11:0.85} | ${12:0.91} |",
+      "| **${13:XGBoost}** | **${14:0.90}** | **${15:0.89}** | **${16:0.88}** | **${17:0.88}** | **${18:0.94}** |",
+      "",
+      "![Confusion matrix](reports/figures/confusion_matrix.png)",
+      "![ROC curves](reports/figures/roc_curves.png)"
+    ],
+    "description": "Results + figures section"
+  },
+  "Dataset description": {
+    "prefix": "md_readme_dataset",
+    "body": [
+      "## Dataset",
+      "",
+      "**Source:** ${1:URL or description}",
+      "**Size:** ${2:100,000} rows × ${3:20} features",
+      "**Target:** `${4:label}` — ${5|binary, multiclass, continuous|}",
+      "",
+      "| Column | Type | Description |",
+      "| :----- | :--- | :---------- |",
+      "| `${6:id}` | int | Unique identifier |",
+      "| `${7:feature_1}` | float | ${8:description} |",
+      "| `${9:label}` | int | Target variable |",
+      "",
+      "**Missing values:** ${10:no} / yes — imputed with median",
+      "**Class balance:** ${11:roughly balanced} / imbalanced (80:20)"
+    ],
+    "description": "Dataset section"
+  },
+  "Model card": {
+    "prefix": "md_model_card",
+    "body": [
+      "## Model Card",
+      "",
+      "### Model details",
+      "- **Type:** ${1:XGBoost classifier}",
+      "- **Version:** ${2:1.0.0}",
+      "- **Trained on:** ${3:2024-01-15}",
+      "- **Framework:** ${4:scikit-learn 1.4}",
+      "",
+      "### Intended use",
+      "${5:Predicts customer churn for retention campaigns.}",
+      "",
+      "### Out-of-scope",
+      "${6:Not intended for real-time credit decisions.}",
+      "",
+      "### Training data",
+      "${7:Kaggle Telco Customer Churn, 7,043 rows, 21 features.}",
+      "",
+      "### Metrics",
+      "| Metric | Value |",
+      "| :----- | ----: |",
+      "| Accuracy | ${8:0.87} |",
+      "| ROC-AUC | ${9:0.92} |",
+      "",
+      "### Ethical considerations",
+      "${10:Reviewed for disparate impact on protected groups.}",
+      "",
+      "### Caveats",
+      "${11:Performance degrades for customers with < 3 months tenure.}"
+    ],
+    "description": "Model card template"
+  },
+  "Datasheet / dataset card": {
+    "prefix": "md_datasheet",
+    "body": [
+      "## Datasheet",
+      "",
+      "### Motivation",
+      "${1:Why was this dataset created?}",
+      "",
+      "### Composition",
+      "${2:Instances, features, labels, splits.}",
+      "",
+      "### Collection process",
+      "${3:How was data collected and sampled?}",
+      "",
+      "### Preprocessing",
+      "${4:Cleaning, filtering, feature engineering.}",
+      "",
+      "### Uses",
+      "${5:Recommended and discouraged uses.}",
+      "",
+      "### Distribution",
+      "${6:How will it be distributed? Licensing?}",
+      "",
+      "### Maintenance",
+      "${7:Who maintains it, and how?}"
+    ],
+    "description": "Datasheet template"
+  },
+  "Experiment log table": {
+    "prefix": "md_experiment_log",
+    "body": [
+      "| # | Date | Model | Features | Params | Val AUC | Notes |",
+      "| -: | :--- | :---- | :------- | :----- | ------: | :---- |",
+      "| 1 | ${1:2024-01-10} | ${2:LogReg} | ${3:raw} | C=1 | ${4:0.85} | baseline |",
+      "| 2 | ${1:2024-01-11} | ${2:XGBoost} | ${3:raw} | n=300 | ${5:0.90} | +boost |",
+      "| 3 | ${6:2024-01-12} | ${2:XGBoost} | ${7:engineered} | n=500 | ${8:0.93} | +lags |"
+    ],
+    "description": "Experiment tracking table"
+  },
+
+  "// ==================== 11. NOTEBOOK MARKDOWN CELLS ====================": {
+    "prefix": "md_section_notebook",
+    "body": ["<!-- ============ NOTEBOOK MARKDOWN CELLS ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Notebook title cell": {
+    "prefix": "md_nb_title",
+    "body": [
+      "# ${1:Notebook title}",
+      "",
+      "**Author:** ${2:Your Name}  ",
+      "**Date:** ${3:2024-01-15}  ",
+      "**Description:** ${4:Short purpose of this notebook.}"
+    ],
+    "description": "Notebook title cell"
+  },
+  "Notebook section divider": {
+    "prefix": "md_nb_section",
+    "body": [
+      "---",
+      "",
+      "## ${1:Section title}",
+      "",
+      "${2:Description of what this section does.}"
+    ],
+    "description": "Notebook section divider"
+  },
+  "EDA summary cell": {
+    "prefix": "md_nb_eda",
+    "body": [
+      "### EDA summary",
+      "",
+      "- **Shape:** ${1:(rows, cols)}",
+      "- **Target:** `${2:label}` — ${3:binary}",
+      "- **Missing:** ${4:none}",
+      "- **Imbalance:** ${5:mild}",
+      "",
+      "**Key findings**",
+      "1. ${6:Finding 1}",
+      "2. ${7:Finding 2}",
+      "3. ${8:Finding 3}"
+    ],
+    "description": "EDA summary cell"
+  },
+  "Hypothesis cell": {
+    "prefix": "md_nb_hypothesis",
+    "body": [
+      "### Hypothesis",
+      "",
+      "> ${1:Customers with higher tenure churn less.}",
+      "",
+      "**Test:** ${2:compare churn rate across tenure buckets}",
+      "**Result:** ${3:confirmed, p < 0.01}"
+    ],
+    "description": "Hypothesis and result"
+  },
+  "Next steps cell": {
+    "prefix": "md_nb_next",
+    "body": [
+      "### Next steps",
+      "",
+      "- [ ] ${1:Engineer lag features}",
+      "- [ ] ${2:Try XGBoost and LightGBM}",
+      "- [ ] ${3:Run SHAP analysis}",
+      "- [ ] ${4:Package as pipeline}"
+    ],
+    "description": "Next steps checklist"
+  },
+  "TL;DR cell": {
+    "prefix": "md_nb_tldr",
+    "body": [
+      "> **TL;DR** — ${1:One-sentence summary of the notebook's conclusion.}"
+    ],
+    "description": "TL;DR callout"
+  },
+
+  "// ==================== 12. DOCUMENTATION PATTERNS ====================": {
+    "prefix": "md_section_docs",
+    "body": ["<!-- ============ DOCUMENTATION PATTERNS ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Function / API documentation": {
+    "prefix": "md_api_func",
+    "body": [
+      "### `${1:function_name}(${2:args})`",
+      "",
+      "${3:One-line description.}",
+      "",
+      "**Parameters**",
+      "- `${4:arg1}` *(${5:type})* — ${6:description.}",
+      "- `${7:arg2}` *(${8:type})* — ${9:description.}",
+      "",
+      "**Returns**",
+      "- *(${10:type})* — ${11:description.}",
+      "",
+      "**Example**",
+      "```python",
+      "${12:result = function_name(a, b)}",
+      "```"
+    ],
+    "description": "API function documentation"
+  },
+  "Class documentation": {
+    "prefix": "md_api_class",
+    "body": [
+      "### `class ${1:ClassName}`",
+      "",
+      "${2:Description.}",
+      "",
+      "**Attributes**",
+      "- `${3:attr}` *(${4:type})* — ${5:description.}",
+      "",
+      "**Methods**",
+      "- `${6:method}(...)` — ${7:description.}",
+      "",
+      "**Example**",
+      "```python",
+      "${8:obj = ClassName(...)}",
+      "```"
+    ],
+    "description": "API class documentation"
+  },
+  "Changelog entry": {
+    "prefix": "md_changelog",
+    "body": [
+      "## [${1:1.0.0}] - ${2:2024-01-15}",
+      "",
+      "### Added",
+      "- ${3:New feature.}",
+      "",
+      "### Changed",
+      "- ${4:Behaviour change.}",
+      "",
+      "### Fixed",
+      "- ${5:Bug fix.}",
+      "",
+      "### Removed",
+      "- ${6:Deprecated feature.}"
+    ],
+    "description": "Keep-a-Changelog entry"
+  },
+  "Contributing guidelines": {
+    "prefix": "md_contributing",
+    "body": [
+      "## Contributing",
+      "",
+      "1. Fork the repo and create a branch: `git checkout -b feature/name`",
+      "2. Install dev dependencies: `pip install -r requirements-dev.txt`",
+      "3. Write tests for new functionality.",
+      "4. Run `pytest` and `ruff check .` before committing.",
+      "5. Use [Conventional Commits](https://www.conventionalcommits.org/).",
+      "6. Open a pull request with a clear description."
+    ],
+    "description": "Contributing section"
+  },
+  "Conventional commit reference": {
+    "prefix": "md_commits",
+    "body": [
+      "## Commit message conventions",
+      "",
+      "| Prefix | Meaning |",
+      "| :----- | :------ |",
+      "| `feat:` | new feature |",
+      "| `fix:` | bug fix |",
+      "| `docs:` | documentation only |",
+      "| `refactor:` | code restructure |",
+      "| `test:` | test change |",
+      "| `chore:` | tooling / build |",
+      "| `perf:` | performance |",
+      "",
+      "Example: `feat(model): add L2 regularisation to logistic regression`"
+    ],
+    "description": "Conventional commits reference"
+  },
+  "MIT License section": {
+    "prefix": "md_license",
+    "body": [
+      "## License",
+      "",
+      "This project is licensed under the ${1:MIT} License — see the [LICENSE](LICENSE) file for details."
+    ],
+    "description": "License section"
+  },
+  "Citation block": {
+    "prefix": "md_citation",
+    "body": [
+      "## Citation",
+      "",
+      "If you use this project in academic work, please cite:",
+      "",
+      "```bibtex",
+      "@misc{${1:key},",
+      "  title  = {${2:Project Title}},",
+      "  author = {${3:Author Name}},",
+      "  year   = {${4:2024}},",
+      "  url    = {${5:https://github.com/user/repo}}",
+      "}",
+      "```"
+    ],
+    "description": "BibTeX citation block"
+  },
+
+  "// ==================== 13. ADVANCED ====================": {
+    "prefix": "md_section_advanced",
+    "body": ["<!-- ============ ADVANCED ============ -->"],
+    "description": "Section marker"
+  },
+
+  "Collapsible section (<details>)": {
+    "prefix": "md_details",
+    "body": [
+      "<details>",
+      "<summary>${1:Click to expand}</summary>",
+      "",
+      "${2:Hidden content goes here.}",
+      "",
+      "</details>"
+    ],
+    "description": "Collapsible details block"
+  },
+  "Collapsible code block": {
+    "prefix": "md_details_code",
+    "body": [
+      "<details>",
+      "<summary>${1:Show full code}</summary>",
+      "",
+      "```${2:python}",
+      "${3:code}",
+      "```",
+      "",
+      "</details>"
+    ],
+    "description": "Collapsible code block"
+  },
+  "Footnote": {
+    "prefix": "md_footnote",
+    "body": [
+      "Here is a statement that needs a footnote.[^${1:1}]",
+      "",
+      "[^${1:1}]: ${2:The footnote text.}"
+    ],
+    "description": "Footnote"
+  },
+  "Two-column layout (HTML table)": {
+    "prefix": "md_two_columns",
+    "body": [
+      "<table>",
+      "<tr>",
+      "<td width=\"50%\" valign=\"top\">",
+      "",
+      "${1:Left column content}",
+      "",
+      "</td>",
+      "<td width=\"50%\" valign=\"top\">",
+      "",
+      "${2:Right column content}",
+      "",
+      "</td>",
+      "</tr>",
+      "</table>"
+    ],
+    "description": "Two-column layout"
+  },
+  "Centered text": {
+    "prefix": "md_center",
+    "body": [
+      "<p align=\"center\">${1:centered text}</p>"
+    ],
+    "description": "Center text via HTML"
+  },
+  "Line break (forced)": {
+    "prefix": "md_br",
+    "body": ["${1:line one}  ", "${2:line two}"],
+    "description": "Force a line break (two trailing spaces)"
+  },
+  "YAML front matter": {
+    "prefix": "md_frontmatter",
+    "body": [
+      "---",
+      "title: ${1:Title}",
+      "author: ${2:Author}",
+      "date: ${3:2024-01-15}",
+      "tags: [${4:data-science, machine-learning}]",
+      "---",
+      "",
+      "${5:Content starts here.}"
+    ],
+    "description": "YAML front matter (Jekyll, Hugo, Quarto)"
+  },
+  "Emoji shortcodes (GitHub)": {
+    "prefix": "md_emoji",
+    "body": [
+      ":rocket: :sparkles: :bug: :books: :bar_chart: :robot: :brain: :chart_with_upwards_trend:"
+    ],
+    "description": "Common emoji shortcodes"
+  },
+  "README table of contents (featured)": {
+    "prefix": "md_readme_toc",
+    "body": [
+      "## Table of Contents",
+      "",
+      "- [Overview](#overview)",
+      "- [Dataset](#dataset)",
+      "- [Methodology](#methodology)",
+      "- [Results](#results)",
+      "- [Project structure](#project-structure)",
+      "- [Installation](#installation)",
+      "- [Usage](#usage)",
+      "- [Model card](#model-card)",
+      "- [Citation](#citation)",
+      "- [License](#license)"
+    ],
+    "description": "Standard ML README TOC"
+  },
+
+  "// ==================== 14. READY-MADE EXAMPLES ====================": {
+    "prefix": "md_section_examples",
+    "body": ["<!-- ============ READY-MADE EXAMPLES ============ -->"],
+    "description": "Section marker"
+  },
+
+  "EXAMPLE: Classification results table": {
+    "prefix": "md_ex_classification",
+    "body": [
+      "| Model | Accuracy | Precision | Recall | F1 | ROC-AUC |",
+      "| :---- | :------: | :-------: | :----: | -: | ------: |",
+      "| Logistic Regression | 0.852 | 0.840 | 0.831 | 0.835 | 0.891 |",
+      "| Random Forest | 0.871 | 0.864 | 0.858 | 0.861 | 0.910 |",
+      "| XGBoost | 0.885 | 0.879 | 0.872 | 0.875 | 0.923 |",
+      "| **LightGBM** | **0.891** | **0.884** | **0.880** | **0.882** | **0.928** |"
+    ],
+    "description": "Filled classification results table"
+  },
+  "EXAMPLE: Regression results table": {
+    "prefix": "md_ex_regression",
+    "body": [
+      "| Model | RMSE | MAE | MAPE (%) | R² |",
+      "| :---- | ---: | --: | -------: | -: |",
+      "| Linear Regression | 12,450 | 9,120 | 15.3 | 0.72 |",
+      "| Ridge (α=1.0) | 12,210 | 8,940 | 14.9 | 0.74 |",
+      "| Random Forest | 10,830 | 7,650 | 12.1 | 0.81 |",
+      "| XGBoost | 9,940 | 7,010 | 11.2 | 0.85 |",
+      "| **LightGBM** | **9,720** | **6,880** | **10.9** | **0.86** |"
+    ],
+    "description": "Filled regression results table"
+  },
+  "EXAMPLE: Dataset schema (Titanic)": {
+    "prefix": "md_ex_dataset",
+    "body": [
+      "| Column | Type | Non-null | Unique | Example | Description |",
+      "| :----- | :--- | -------: | -----: | :------ | :---------- |",
+      "| `PassengerId` | int64 | 891 | 891 | 1 | Unique passenger identifier |",
+      "| `Survived` | int64 | 891 | 2 | 0 | Target: 0 = died, 1 = survived |",
+      "| `Pclass` | int64 | 891 | 3 | 3 | Ticket class (1=1st, 2=2nd, 3=3rd) |",
+      "| `Name` | object | 891 | 891 | Braund, Mr. Owen | Full name |",
+      "| `Sex` | object | 891 | 2 | male | Gender |",
+      "| `Age` | float64 | 714 | 88 | 22.0 | Age in years (19.9% missing) |",
+      "| `Fare` | float64 | 891 | 248 | 7.25 | Ticket fare |",
+      "| `Embarked` | object | 889 | 3 | S | Port (C=Cherbourg, Q=Queenstown, S=Southampton) |"
+    ],
+    "description": "Filled dataset schema table"
+  },
+  "EXAMPLE: Confusion matrix (as table)": {
+    "prefix": "md_ex_confusion",
+    "body": [
+      "| | Predicted Negative | Predicted Positive |",
+      "| :--- | :---: | :---: |",
+      "| **Actual Negative** | TN = 8,420 | FP = 340 |",
+      "| **Actual Positive** | FN = 180 | TP = 1,060 |",
+      "",
+      "**Metrics derived:**",
+      "- Accuracy = (8,420 + 1,060) / 10,000 = **0.948**",
+      "- Precision = 1,060 / (1,060 + 340) = **0.757**",
+      "- Recall = 1,060 / (1,060 + 180) = **0.855**",
+      "- F1 = 2 · 0.757 · 0.855 / (0.757 + 0.855) = **0.803**"
+    ],
+    "description": "Confusion matrix + derived metrics"
+  },
+  "EXAMPLE: Hyperparameter search results": {
+    "prefix": "md_ex_hyperparams",
+    "body": [
+      "| Rank | learning_rate | max_depth | n_estimators | subsample | CV ROC-AUC |",
+      "| :--: | ------------: | --------: | -----------: | --------: | ---------: |",
+      "| 1 | 0.05 | 6 | 500 | 0.8 | **0.928** |",
+      "| 2 | 0.05 | 6 | 300 | 0.8 | 0.926 |",
+      "| 3 | 0.10 | 6 | 500 | 0.9 | 0.923 |",
+      "| 4 | 0.05 | 3 | 500 | 0.8 | 0.918 |",
+      "| 5 | 0.10 | 3 | 300 | 0.9 | 0.912 |",
+      "",
+      "**Chosen:** `learning_rate=0.05, max_depth=6, n_estimators=500, subsample=0.8`"
+    ],
+    "description": "Hyperparameter tuning table"
+  },
+  "EXAMPLE: Class balance table": {
+    "prefix": "md_ex_class_balance",
+    "body": [
+      "| Class | Count | Percentage |",
+      "| :---- | ----: | ---------: |",
+      "| Negative (0) | 8,760 | 87.6% |",
+      "| Positive (1) | 1,240 | 12.4% |",
+      "| **Total** | **10,000** | **100%** |",
+      "",
+      "> [!NOTE]",
+      "> Imbalance ratio ≈ 7:1. Consider `class_weight='balanced'` or resampling."
+    ],
+    "description": "Class balance with imbalance warning"
+  },
+  "EXAMPLE: Formula — Linear regression": {
+    "prefix": "md_ex_formula_linreg",
+    "body": [
+      "**Linear regression**",
+      "",
+      "\\$\\\\hat{y} = w_1 x_1 + w_2 x_2 + \\\\dots + w_n x_n + b\\$",
+      "",
+      "In vector form:",
+      "",
+      "\\$\\\\hat{y} = \\\\mathbf{X}\\\\mathbf{w} + b\\$",
+      "",
+      "Ordinary Least Squares solution:",
+      "",
+      "\\$\\\\mathbf{w}^* = (\\\\mathbf{X}^\\\\top \\\\mathbf{X})^{-1} \\\\mathbf{X}^\\\\top \\\\mathbf{y}\\$"
+    ],
+    "description": "Linear regression formulas"
+  },
+  "EXAMPLE: Formula — Logistic regression & cross-entropy": {
+    "prefix": "md_ex_formula_logreg",
+    "body": [
+      "**Logistic regression**",
+      "",
+      "Sigmoid activation:",
+      "",
+      "\\$\\\\sigma(z) = \\\\frac{1}{1 + e^{-z}}\\$",
+      "",
+      "Prediction:",
+      "",
+      "\\$\\\\hat{y} = \\\\sigma(\\\\mathbf{w}^\\\\top \\\\mathbf{x} + b)\\$",
+      "",
+      "Binary cross-entropy loss:",
+      "",
+      "\\$L = -\\\\frac{1}{N} \\\\sum_{i=1}^{N} \\\\left[ y_i \\\\log \\\\hat{y}_i + (1 - y_i) \\\\log(1 - \\\\hat{y}_i) \\\\right]\\$",
+      "",
+      "Gradient:",
+      "",
+      "\\$\\\\nabla_{\\\\mathbf{w}} L = \\\\frac{1}{N} \\\\mathbf{X}^\\\\top (\\\\hat{\\\\mathbf{y}} - \\\\mathbf{y})\\$"
+    ],
+    "description": "Logistic regression formulas"
+  },
+  "EXAMPLE: Formula — Metrics (accuracy, precision, recall)": {
+    "prefix": "md_ex_formula_metrics",
+    "body": [
+      "**Classification metrics**",
+      "",
+      "Accuracy:",
+      "",
+      "\\$\\\\text{Accuracy} = \\\\frac{TP + TN}{TP + TN + FP + FN}\\$",
+      "",
+      "Precision:",
+      "",
+      "\\$\\\\text{Precision} = \\\\frac{TP}{TP + FP}\\$",
+      "",
+      "Recall:",
+      "",
+      "\\$\\\\text{Recall} = \\\\frac{TP}{TP + FN}\\$",
+      "",
+      "F1-score:",
+      "",
+      "\\$F_1 = 2 \\\\cdot \\\\frac{\\\\text{Precision} \\\\cdot \\\\text{Recall}}{\\\\text{Precision} + \\\\text{Recall}}\\$"
+    ],
+    "description": "Classification metric formulas"
+  },
+  "EXAMPLE: Formula — Gradient descent update": {
+    "prefix": "md_ex_formula_gd",
+    "body": [
+      "**Gradient descent**",
+      "",
+      "Parameter update rule:",
+      "",
+      "\\$\\\\theta_{t+1} = \\\\theta_t - \\\\eta \\\\, \\\\nabla_{\\\\theta} L(\\\\theta_t)\\$",
+      "",
+      "Where:",
+      "- \\$\\\\theta\\$ — model parameters",
+      "- \\$\\\\eta\\$ — learning rate",
+      "- \\$\\\\nabla_{\\\\theta} L\\$ — gradient of the loss",
+      "",
+      "**Variants:**",
+      "- Batch GD: uses entire dataset per step",
+      "- SGD: uses one sample per step",
+      "- Mini-batch GD: uses a small batch (typical: 32–512)"
+    ],
+    "description": "Gradient descent formula"
+  },
+  "EXAMPLE: Formula — Regularization (L1 & L2)": {
+    "prefix": "md_ex_formula_reg",
+    "body": [
+      "**Regularized loss**",
+      "",
+      "L2 (Ridge):",
+      "",
+      "\\$L_{\\\\text{ridge}} = L + \\\\lambda \\\\sum_{j=1}^{n} w_j^2\\$",
+      "",
+      "L1 (Lasso):",
+      "",
+      "\\$L_{\\\\text{lasso}} = L + \\\\lambda \\\\sum_{j=1}^{n} |w_j|\\$",
+      "",
+      "ElasticNet (mix):",
+      "",
+      "\\$L_{\\\\text{elastic}} = L + \\\\lambda_1 \\\\sum_{j=1}^{n} |w_j| + \\\\lambda_2 \\\\sum_{j=1}^{n} w_j^2\\$"
+    ],
+    "description": "Regularization formulas"
+  },
+  "EXAMPLE: Formula — Softmax & multiclass CE": {
+    "prefix": "md_ex_formula_softmax",
+    "body": [
+      "**Multiclass softmax**",
+      "",
+      "Softmax over K classes:",
+      "",
+      "\\$\\\\hat{y}_k = \\\\frac{e^{z_k}}{\\\\sum_{j=1}^{K} e^{z_j}}\\$",
+      "",
+      "Multiclass cross-entropy:",
+      "",
+      "\\$L = -\\\\sum_{k=1}^{K} y_k \\\\log \\\\hat{y}_k\\$"
+    ],
+    "description": "Softmax + multiclass CE"
+  },
+  "EXAMPLE: Formula — Bias-variance decomposition": {
+    "prefix": "md_ex_formula_biasvar",
+    "body": [
+      "**Bias-variance decomposition**",
+      "",
+      "Expected test error:",
+      "",
+      "\\$\\\\mathbb{E}\\\\left[(y - \\\\hat{f}(x))^2\\\\right] = \\\\text{Bias}^2 + \\\\text{Variance} + \\\\text{Noise}\\$",
+      "",
+      "Where:",
+      "- Bias² = \\$(\\\\mathbb{E}[\\\\hat{f}(x)] - f(x))^2\\$",
+      "- Variance = \\$\\\\mathbb{E}\\\\left[(\\\\hat{f}(x) - \\\\mathbb{E}[\\\\hat{f}(x)])^2\\\\right]\\$",
+      "- Noise = irreducible error"
+    ],
+    "description": "Bias-variance decomposition"
+  },
+  "EXAMPLE: Mixed results + math section": {
+    "prefix": "md_ex_mixed",
+    "body": [
+      "### Model evaluation",
+      "",
+      "**Setup:** 10,000 samples, 12.4% positive class.",
+      "",
+      "| Model | Precision | Recall | F1 |",
+      "| :---- | :-------: | :----: | -: |",
+      "| Baseline | 0.612 | 0.540 | 0.574 |",
+      "| Tuned | 0.757 | 0.855 | 0.803 |",
+      "",
+      "**F1 improvement:** from 0.574 to 0.803. Formally:",
+      "",
+      "\\$\\\\Delta F_1 = F_1^{\\\\text{tuned}} - F_1^{\\\\text{baseline}} = 0.229\\$",
+      "",
+      "This corresponds to a **+40%** relative improvement."
+    ],
+    "description": "Results table + math together"
+  },
+  "EXAMPLE: A/B test results": {
+    "prefix": "md_ex_abtest",
+    "body": [
+      "### A/B Test Results",
+      "",
+      "| Metric | Control (A) | Treatment (B) | Δ | p-value |",
+      "| :----- | ----------: | ------------: | -: | ------: |",
+      "| Conversion rate | 3.21% | 3.85% | +0.64 pp | 0.012 |",
+      "| Revenue / user | \\\\$4.12 | \\\\$4.48 | +\\\\$0.36 | 0.031 |",
+      "| Sessions / user | 2.41 | 2.38 | −0.03 | 0.480 |",
+      "",
+      "> [!NOTE]",
+      "> Conversion and revenue improvements are statistically significant (p < 0.05).",
+      "> Sessions show no significant change."
+    ],
+    "description": "A/B test results table"
+  }
+}

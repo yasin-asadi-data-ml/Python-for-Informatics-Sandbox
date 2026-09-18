@@ -1,0 +1,1195 @@
+{
+  "// ==================== 1. IMPORT & SETUP ====================": {
+    "prefix": "plt_section_setup",
+    "body": ["# ============ IMPORT & SETUP ============"],
+    "description": "Section marker"
+  },
+
+  "Import Matplotlib": {
+    "prefix": "plt_import",
+    "body": [
+      "import matplotlib.pyplot as plt",
+      "import numpy as np",
+      "",
+      "# Optional: for Jupyter inline plots (not needed in scripts)",
+      "# %matplotlib inline"
+    ],
+    "description": "Standard Matplotlib import"
+  },
+  "Set style": {
+    "prefix": "plt_style",
+    "body": [
+      "# ---- Pick a style for consistent visuals ----",
+      "plt.style.use('${1:seaborn-v0_8-whitegrid}')",
+      "# Common styles:",
+      "#   'default', 'ggplot', 'seaborn-v0_8', 'seaborn-v0_8-whitegrid',",
+      "#   'seaborn-v0_8-darkgrid', 'fivethirtyeight', 'bmh', 'classic'",
+      "",
+      "# List all available styles:",
+      "# print(plt.style.available)"
+    ],
+    "description": "Set a plotting style"
+  },
+  "Global rcParams": {
+    "prefix": "plt_rcparams",
+    "body": [
+      "# ---- Global defaults for the whole session ----",
+      "plt.rcParams.update({",
+      "    'figure.figsize': (${1:8}, ${2:5}),",
+      "    'figure.dpi': ${3:100},",
+      "    'savefig.dpi': ${4:300},",
+      "    'font.size': ${5:11},",
+      "    'axes.titlesize': ${6:13},",
+      "    'axes.labelsize': ${7:11},",
+      "    'axes.grid': ${8:True},",
+      "    'grid.alpha': 0.3,",
+      "    'legend.frameon': False,",
+      "})"
+    ],
+    "description": "Global style via rcParams"
+  },
+  "Backend (headless / script)": {
+    "prefix": "plt_backend",
+    "body": [
+      "# ---- Use a non-interactive backend when running as a script ----",
+      "import matplotlib",
+      "matplotlib.use('Agg')   # no display; fast + safe for servers",
+      "import matplotlib.pyplot as plt"
+    ],
+    "description": "Set non-interactive backend"
+  },
+
+  "// ==================== 2. FIGURE & AXES ANATOMY ====================": {
+    "prefix": "plt_section_anatomy",
+    "body": ["# ============ FIGURE & AXES ANATOMY ============"],
+    "description": "Section marker"
+  },
+
+  "Object-oriented pattern (preferred)": {
+    "prefix": "plt_fig_ax",
+    "body": [
+      "# ---- Object-oriented API (use this instead of pyplot state) ----",
+      "fig, ax = plt.subplots(figsize=(${1:8}, ${2:5}))",
+      "ax.plot(${3:x}, ${4:y})",
+      "ax.set_title('${5:Title}')",
+      "ax.set_xlabel('${6:x}')",
+      "ax.set_ylabel('${7:y}')",
+      "fig.tight_layout()",
+      "plt.show()",
+      "",
+      "# Why OO? Explicit; works with multiple subplots; predictable."
+    ],
+    "description": "Figure + Axes (OO API)"
+  },
+  "Pyplot state-machine (quick)": {
+    "prefix": "plt_pyplot_state",
+    "body": [
+      "# ---- Quick pyplot state-machine (fine for one-off plots) ----",
+      "plt.figure(figsize=(${1:8}, ${2:5}))",
+      "plt.plot(${3:x}, ${4:y})",
+      "plt.title('${5:Title}')",
+      "plt.xlabel('${6:x}')",
+      "plt.ylabel('${7:y}')",
+      "plt.show()"
+    ],
+    "description": "Pyplot state-machine style"
+  },
+  "Figure / Axes attributes": {
+    "prefix": "plt_anatomy",
+    "body": [
+      "# ---- Anatomy of a plot ----",
+      "# Figure = the whole canvas",
+      "# Axes   = the plotting area (one per subplot)",
+      "# Axis   = the x-axis or y-axis lines/ticks",
+      "",
+      "fig, ax = plt.subplots()",
+      "ax.set_title('title')      # title of the axes",
+      "ax.set_xlabel('x')          # x axis label",
+      "ax.set_ylabel('y')          # y axis label",
+      "ax.legend()                 # legend from labels",
+      "fig.suptitle('figure title')  # title of the whole figure"
+    ],
+    "description": "Figure / Axes anatomy"
+  },
+
+  "// ==================== 3. SUBPLOTS & LAYOUT ====================": {
+    "prefix": "plt_section_subplots",
+    "body": ["# ============ SUBPLOTS & LAYOUT ============"],
+    "description": "Section marker"
+  },
+
+  "Grid of subplots": {
+    "prefix": "plt_subplots_grid",
+    "body": [
+      "# ---- Fixed grid ----",
+      "fig, axes = plt.subplots(${1:2}, ${2:3}, figsize=(${3:15}, ${4:8}))",
+      "axes[0, 0].plot(${5:x1}, ${6:y1})",
+      "axes[0, 1].plot(${7:x2}, ${8:y2})",
+      "axes[1, 2].plot(${9:x3}, ${10:y3})",
+      "fig.tight_layout()",
+      "plt.show()",
+      "",
+      "# axes is a NumPy array; flatten for iteration:",
+      "# for ax in axes.flat: ax.grid(True)"
+    ],
+    "description": "Grid of subplots"
+  },
+  "Iterate over subplots": {
+    "prefix": "plt_subplots_loop",
+    "body": [
+      "fig, axes = plt.subplots(1, len(${1:cols}), figsize=(15, 4), sharey=True)",
+      "for ax, col in zip(axes, ${1:cols}):",
+      "    ax.hist(df[col], bins=30)",
+      "    ax.set_title(col)",
+      "fig.tight_layout()"
+    ],
+    "description": "Loop over subplot axes"
+  },
+  "Subplot mosaic (gridspec)": {
+    "prefix": "plt_gridspec",
+    "body": [
+      "# ---- Complex layouts with GridSpec (varying sizes) ----",
+      "fig = plt.figure(figsize=(12, 8))",
+      "gs = fig.add_gridspec(${1:2}, ${2:3}, hspace=0.3, wspace=0.3)",
+      "ax1 = fig.add_subplot(gs[0, :])     # top row spans all columns",
+      "ax2 = fig.add_subplot(gs[1, 0])",
+      "ax3 = fig.add_subplot(gs[1, 1:])",
+      "fig.tight_layout()"
+    ],
+    "description": "Flexible layout with gridspec"
+  },
+  "Subplot mosaic (concat)": {
+    "prefix": "plt_subplot_mosaic",
+    "body": [
+      "# ---- subplot_mosaic (clean ASCII layout, 3.3+) ----",
+      "fig, axd = plt.subplot_mosaic(",
+      "    [['${1:left}', '${2:right}'],",
+      "     ['${3:bottom}', '${3:bottom}']],",
+      "    figsize=(10, 8),",
+      ")",
+      "axd['${1:left}'].plot(${4:x}, ${5:y})"
+    ],
+    "description": "subplot_mosaic for readable layouts"
+  },
+  "Shared axes": {
+    "prefix": "plt_share_axes",
+    "body": [
+      "# ---- Share axes: synced zoom/pan ----",
+      "fig, axes = plt.subplots(2, 1, sharex=True, sharey=False)"
+    ],
+    "description": "Shared axes"
+  },
+  "Twin axes (dual y-axes)": {
+    "prefix": "plt_twinx",
+    "body": [
+      "# ---- Two y-axes sharing the same x ----",
+      "fig, ax1 = plt.subplots(figsize=(8, 4))",
+      "ax1.plot(${1:x}, ${2:y1}, color='C0', label='${3:y1}')",
+      "ax1.set_ylabel('${4:Left}', color='C0')",
+      "",
+      "ax2 = ax1.twinx()",
+      "ax2.plot(${1:x}, ${5:y2}, color='C1', label='${6:y2}')",
+      "ax2.set_ylabel('${7:Right}', color='C1')",
+      "",
+      "fig.tight_layout()"
+    ],
+    "description": "Dual y-axes"
+  },
+
+  "// ==================== 4. BASIC PLOTS ====================": {
+    "prefix": "plt_section_basic",
+    "body": ["# ============ BASIC PLOTS ============"],
+    "description": "Section marker"
+  },
+
+  "Line plot": {
+    "prefix": "plt_line",
+    "body": [
+      "# ---- Line plot (trends over time/sequence) ----",
+      "fig, ax = plt.subplots(figsize=(${1:8}, ${2:4}))",
+      "ax.plot(${3:x}, ${4:y}, label='${5:series}')",
+      "ax.set_title('${6:Title}')",
+      "ax.set_xlabel('${7:x}')",
+      "ax.set_ylabel('${8:y}')",
+      "ax.legend()",
+      "fig.tight_layout()"
+    ],
+    "description": "Line plot"
+  },
+  "Multiple lines": {
+    "prefix": "plt_multi_line",
+    "body": [
+      "fig, ax = plt.subplots(figsize=(9, 5))",
+      "for ${1:col} in ${2:columns}:",
+      "    ax.plot(df['${3:x}'], df[${1:col}], label=${1:col})",
+      "ax.set_xlabel('${3:x}')",
+      "ax.set_ylabel('value')",
+      "ax.legend()"
+    ],
+    "description": "Multiple lines on one plot"
+  },
+  "Scatter plot": {
+    "prefix": "plt_scatter",
+    "body": [
+      "# ---- Scatter (relationship between two variables) ----",
+      "fig, ax = plt.subplots(figsize=(7, 6))",
+      "ax.scatter(df['${1:x}'], df['${2:y}'], s=${3:20}, alpha=${4:0.6})",
+      "ax.set_xlabel('${1:x}')",
+      "ax.set_ylabel('${2:y}')",
+      "ax.set_title('${5:Scatter}')"
+    ],
+    "description": "Scatter plot"
+  },
+  "Scatter with color & size (bubble)": {
+    "prefix": "plt_scatter_color",
+    "body": [
+      "# ---- Encode 4 dimensions: x, y, color, size ----",
+      "fig, ax = plt.subplots(figsize=(8, 6))",
+      "sc = ax.scatter(",
+      "    df['${1:x}'], df['${2:y}'],",
+      "    c=df['${3:color_col}'], cmap='${4:viridis}',",
+      "    s=df['${5:size_col}'] * ${6:20},",
+      "    alpha=0.7, edgecolors='w', linewidths=0.5,",
+      ")",
+      "plt.colorbar(sc, ax=ax, label='${3:color_col}')",
+      "ax.set_xlabel('${1:x}'); ax.set_ylabel('${2:y}')"
+    ],
+    "description": "Bubble scatter (color + size)"
+  },
+  "Bar chart": {
+    "prefix": "plt_bar",
+    "body": [
+      "# ---- Vertical bar chart (categorical comparison) ----",
+      "fig, ax = plt.subplots(figsize=(${1:8}, ${2:4}))",
+      "ax.bar(${3:categories}, ${4:values}, color='${5:steelblue}')",
+      "ax.set_title('${6:Title}')",
+      "ax.set_ylabel('${7:value}')",
+      "plt.xticks(rotation=${8:45}, ha='right')",
+      "fig.tight_layout()"
+    ],
+    "description": "Bar chart"
+  },
+  "Horizontal bar chart": {
+    "prefix": "plt_barh",
+    "body": [
+      "# ---- Horizontal bars: better when category names are long ----",
+      "fig, ax = plt.subplots(figsize=(8, ${1:5}))",
+      "ax.barh(${2:categories}, ${3:values})",
+      "ax.set_xlabel('${4:value}')",
+      "ax.invert_yaxis()   # highest at top"
+    ],
+    "description": "Horizontal bar chart"
+  },
+  "Grouped bar chart": {
+    "prefix": "plt_bar_grouped",
+    "body": [
+      "fig, ax = plt.subplots(figsize=(9, 5))",
+      "x = np.arange(len(${1:categories}))",
+      "width = ${2:0.35}",
+      "ax.bar(x - width/2, ${3:values_a}, width, label='${4:A}')",
+      "ax.bar(x + width/2, ${5:values_b}, width, label='${6:B}')",
+      "ax.set_xticks(x); ax.set_xticklabels(${1:categories})",
+      "ax.legend()"
+    ],
+    "description": "Grouped bars"
+  },
+  "Stacked bar chart": {
+    "prefix": "plt_bar_stacked",
+    "body": [
+      "fig, ax = plt.subplots(figsize=(9, 5))",
+      "ax.bar(${1:categories}, ${2:values_a}, label='${3:A}')",
+      "ax.bar(${1:categories}, ${4:values_b}, bottom=${2:values_a}, label='${5:B}')",
+      "ax.legend()"
+    ],
+    "description": "Stacked bars"
+  },
+  "Histogram": {
+    "prefix": "plt_hist",
+    "body": [
+      "# ---- Histogram (distribution of a single feature) ----",
+      "fig, ax = plt.subplots(figsize=(8, 4))",
+      "ax.hist(df['${1:col}'], bins=${2:30}, edgecolor='white')",
+      "ax.set_xlabel('${1:col}')",
+      "ax.set_ylabel('frequency')",
+      "ax.set_title('Distribution of ${1:col}')"
+    ],
+    "description": "Histogram"
+  },
+  "Histogram with KDE": {
+    "prefix": "plt_hist_kde",
+    "body": [
+      "# ---- Histogram + smooth density (requires SciPy for kde) ----",
+      "import seaborn as sns",
+      "fig, ax = plt.subplots(figsize=(8, 4))",
+      "sns.histplot(df['${1:col}'], bins=${2:30}, kde=True, ax=ax)"
+    ],
+    "description": "Histogram with KDE"
+  },
+  "Pie chart": {
+    "prefix": "plt_pie",
+    "body": [
+      "# ---- Pie: use sparingly; only when parts make a whole ----",
+      "fig, ax = plt.subplots(figsize=(6, 6))",
+      "ax.pie(${1:values}, labels=${2:labels}, autopct='%1.1f%%', startangle=90)",
+      "ax.axis('equal')   # makes it circular"
+    ],
+    "description": "Pie chart"
+  },
+  "Box plot": {
+    "prefix": "plt_boxplot",
+    "body": [
+      "# ---- Box plot (distribution + outliers) ----",
+      "fig, ax = plt.subplots(figsize=(8, 5))",
+      "ax.boxplot([${1:group_a}, ${2:group_b}], labels=['${3:A}', '${4:B}'])",
+      "ax.set_ylabel('${5:value}')",
+      "ax.set_title('${6:Distribution by group}')"
+    ],
+    "description": "Box plot"
+  },
+  "Violin plot": {
+    "prefix": "plt_violin",
+    "body": [
+      "# ---- Violin: like a box plot but shows full distribution shape ----",
+      "fig, ax = plt.subplots(figsize=(8, 5))",
+      "ax.violinplot([${1:group_a}, ${2:group_b}], showmeans=True)",
+      "ax.set_xticks([1, 2])",
+      "ax.set_xticklabels(['${3:A}', '${4:B}'])"
+    ],
+    "description": "Violin plot"
+  },
+  "Error bars": {
+    "prefix": "plt_errorbar",
+    "body": [
+      "# ---- Error bars (mean ± std) ----",
+      "fig, ax = plt.subplots()",
+      "ax.errorbar(${1:x}, ${2:y}, yerr=${3:yerr}, fmt='o-', capsize=4)"
+    ],
+    "description": "Error bars"
+  },
+  "Fill between (uncertainty band)": {
+    "prefix": "plt_fill_between",
+    "body": [
+      "# ---- Confidence / uncertainty band ----",
+      "fig, ax = plt.subplots()",
+      "ax.plot(${1:x}, ${2:mean}, label='mean')",
+      "ax.fill_between(${1:x}, ${3:lower}, ${4:upper}, alpha=0.3, label='${5:95% CI}')",
+      "ax.legend()"
+    ],
+    "description": "Fill between (CI band)"
+  },
+  "Stem plot": {
+    "prefix": "plt_stem",
+    "body": [
+      "fig, ax = plt.subplots()",
+      "ax.stem(${1:x}, ${2:y})"
+    ],
+    "description": "Stem plot"
+  },
+  "Stairs / step plot": {
+    "prefix": "plt_step",
+    "body": [
+      "# ---- Step plot (ECDFs, cumulative counts) ----",
+      "fig, ax = plt.subplots()",
+      "ax.step(${1:x}, ${2:y}, where='${3:mid}')"
+    ],
+    "description": "Step plot"
+  },
+
+  "// ==================== 5. STYLING ====================": {
+    "prefix": "plt_section_styling",
+    "body": ["# ============ STYLING ============"],
+    "description": "Section marker"
+  },
+
+  "Colors": {
+    "prefix": "plt_colors",
+    "body": [
+      "# ---- Colors ----",
+      "color='${1:steelblue}'              # named color",
+      "color='#${2:1f77b4}'                 # hex",
+      "color=(${3:0.1}, ${4:0.5}, ${5:0.9})  # RGB tuple",
+      "color='C0'                       # color cycle index (C0..C9)"
+    ],
+    "description": "Color specifications"
+  },
+  "Markers": {
+    "prefix": "plt_markers",
+    "body": [
+      "# ---- Markers ----",
+      "# o circle | s square | ^ triangle up | v triangle down | * star",
+      "# + plus | x cross | D diamond | p pentagon | . point",
+      "ax.plot(x, y, marker='${1:o}', markersize=${2:6})"
+    ],
+    "description": "Marker styles"
+  },
+  "Line styles": {
+    "prefix": "plt_linestyle",
+    "body": [
+      "# ---- Line styles ----",
+      "# '-' solid | '--' dashed | '-.' dash-dot | ':' dotted | 'None'",
+      "ax.plot(x, y, linestyle='${1:--}', linewidth=${2:1.8})"
+    ],
+    "description": "Line styles"
+  },
+  "Color maps": {
+    "prefix": "plt_colormaps",
+    "body": [
+      "# ---- Colormaps ----",
+      "# Sequential: 'viridis', 'plasma', 'cividis', 'Blues', 'Greens'",
+      "# Diverging:  'coolwarm', 'RdBu_r', 'bwr', 'seismic'",
+      "# Cyclic:     'twilight', 'hsv'",
+      "# Qualitative:'tab10', 'Set1', 'Paired'",
+      "",
+      "cmap = plt.get_cmap('${1:viridis}')"
+    ],
+    "description": "Colormaps"
+  },
+
+  "// ==================== 6. AXES CUSTOMIZATION ====================": {
+    "prefix": "plt_section_axes",
+    "body": ["# ============ AXES CUSTOMIZATION ============"],
+    "description": "Section marker"
+  },
+
+  "Axis limits": {
+    "prefix": "plt_axis_limits",
+    "body": [
+      "ax.set_xlim(${1:0}, ${2:10})",
+      "ax.set_ylim(${3:0}, ${4:100})",
+      "ax.set_xlim(left=0)               # only the lower bound",
+      "ax.margins(x=0.05, y=0.05)         # padding around data"
+    ],
+    "description": "Set axis limits"
+  },
+  "Axis scales": {
+    "prefix": "plt_axis_scale",
+    "body": [
+      "# ---- Linear / log / symlog / logit ----",
+      "ax.set_xscale('${1:linear}')",
+      "ax.set_yscale('${2:log}')     # useful for skewed distributions",
+      "ax.set_yscale('${3:logit}')   # useful for probabilities",
+      "",
+      "# Log-log plot:",
+      "ax.loglog(x, y)"
+    ],
+    "description": "Axis scales (log, symlog, logit)"
+  },
+  "Ticks & tick labels": {
+    "prefix": "plt_ticks",
+    "body": [
+      "ax.set_xticks([${1:0, 1, 2, 3}])",
+      "ax.set_xticklabels(['${2:a}', '${3:b}', '${4:c}', '${5:d}'])",
+      "ax.tick_params(axis='${6:x}', rotation=${7:45})",
+      "ax.minorticks_on()",
+      "",
+      "# Custom tick formatter:",
+      "from matplotlib.ticker import FuncFormatter",
+      "ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f'{v:.0%}'))"
+    ],
+    "description": "Ticks and tick labels"
+  },
+  "Grid": {
+    "prefix": "plt_grid",
+    "body": [
+      "ax.grid(True, which='${1:major}', alpha=${2:0.3}, linestyle='${3:--}')",
+      "ax.grid(True, axis='${4:y}')",
+      "ax.grid(False)"
+    ],
+    "description": "Grid lines"
+  },
+  "Axis spine visibility": {
+    "prefix": "plt_spines",
+    "body": [
+      "# ---- Remove spines for a minimal look ----",
+      "for side in ['top', 'right']:",
+      "    ax.spines[side].set_visible(False)"
+    ],
+    "description": "Spine visibility"
+  },
+  "Legend": {
+    "prefix": "plt_legend",
+    "body": [
+      "ax.legend(",
+      "    loc='${1:best}',          # upper right, lower left, best, ...",
+      "    title='${2:Legend title}',",
+      "    ncol=${3:2},",
+      "    frameon=${4:False},",
+      "    fontsize=${5:10},",
+      ")"
+    ],
+    "description": "Legend customization"
+  },
+  "Text & title": {
+    "prefix": "plt_text_title",
+    "body": [
+      "ax.set_title('${1:Title}', fontsize=${2:14}, fontweight='${3:bold}')",
+      "ax.set_xlabel('${4:x}', fontsize=${5:11})",
+      "ax.set_ylabel('${6:y}', fontsize=${5:11})",
+      "fig.suptitle('${7:Figure title}', fontsize=16)"
+    ],
+    "description": "Titles and labels"
+  },
+  "Annotate a point": {
+    "prefix": "plt_annotate",
+    "body": [
+      "ax.annotate('${1:label}',",
+      "    xy=(${2:x_pt}, ${3:y_pt}),",
+      "    xytext=(${4:x_txt}, ${5:y_txt}),",
+      "    arrowprops=dict(arrowstyle='->', color='${6:gray}'),",
+      "    fontsize=${7:10},",
+      ")"
+    ],
+    "description": "Annotate a point with an arrow"
+  },
+  "Reference lines": {
+    "prefix": "plt_reflines",
+    "body": [
+      "ax.axhline(y=${1:0}, color='${2:gray}', linestyle='--', linewidth=1)",
+      "ax.axvline(x=${3:0}, color='${4:gray}', linestyle='--', linewidth=1)",
+      "ax.axhspan(${5:ymin}, ${6:ymax}, alpha=0.1, color='${7:yellow}')",
+      "ax.axvspan(${8:xmin}, ${9:xmax}, alpha=0.1, color='${10:red}')"
+    ],
+    "description": "Horizontal/vertical reference lines and bands"
+  },
+
+  "// ==================== 7. 2D DATA VISUALIZATION ====================": {
+    "prefix": "plt_section_2d",
+    "body": ["# ============ 2D DATA VISUALIZATION ============"],
+    "description": "Section marker"
+  },
+
+  "imshow (image / matrix)": {
+    "prefix": "plt_imshow",
+    "body": [
+      "# ---- Display a 2D array as an image ----",
+      "fig, ax = plt.subplots(figsize=(6, 6))",
+      "im = ax.imshow(${1:matrix}, cmap='${2:viridis}', aspect='auto')",
+      "plt.colorbar(im, ax=ax, label='${3:value}')"
+    ],
+    "description": "imshow for images or matrices"
+  },
+  "Heatmap (matrix + labels)": {
+    "prefix": "plt_heatmap",
+    "body": [
+      "# ---- Heatmap with values annotated ----",
+      "fig, ax = plt.subplots(figsize=(8, 6))",
+      "im = ax.imshow(${1:matrix}, cmap='${2:coolwarm}', aspect='auto')",
+      "ax.set_xticks(range(len(${3:x_labels}))); ax.set_xticklabels(${3:x_labels}, rotation=45, ha='right')",
+      "ax.set_yticks(range(len(${4:y_labels}))); ax.set_yticklabels(${4:y_labels})",
+      "plt.colorbar(im, ax=ax)",
+      "",
+      "# Annotate values:",
+      "for i in range(${1:matrix}.shape[0]):",
+      "    for j in range(${1:matrix}.shape[1]):",
+      "        ax.text(j, i, f'{${1:matrix}[i, j]:.2f}', ha='center', va='center', color='w')"
+    ],
+    "description": "Annotated heatmap"
+  },
+  "Contour plot": {
+    "prefix": "plt_contour",
+    "body": [
+      "# ---- Contour lines of a 2D field ----",
+      "fig, ax = plt.subplots(figsize=(7, 6))",
+      "cs = ax.contour(${1:X}, ${2:Y}, ${3:Z}, levels=${4:10}, cmap='${5:viridis}')",
+      "ax.clabel(cs, inline=True, fontsize=8)",
+      "plt.colorbar(cs, ax=ax)"
+    ],
+    "description": "Contour plot"
+  },
+  "Contourf (filled)": {
+    "prefix": "plt_contourf",
+    "body": [
+      "fig, ax = plt.subplots(figsize=(7, 6))",
+      "cf = ax.contourf(${1:X}, ${2:Y}, ${3:Z}, levels=${4:20}, cmap='${5:viridis}')",
+      "plt.colorbar(cf, ax=ax)"
+    ],
+    "description": "Filled contour plot"
+  },
+  "pcolormesh (large grids)": {
+    "prefix": "plt_pcolormesh",
+    "body": [
+      "# ---- pcolormesh: faster than contourf for dense grids ----",
+      "fig, ax = plt.subplots()",
+      "mesh = ax.pcolormesh(${1:X}, ${2:Y}, ${3:Z}, cmap='${4:viridis}', shading='auto')",
+      "plt.colorbar(mesh, ax=ax)"
+    ],
+    "description": "pcolormesh"
+  },
+  "quiver (vector field)": {
+    "prefix": "plt_quiver",
+    "body": [
+      "# ---- Vector field (e.g., gradients, flow) ----",
+      "fig, ax = plt.subplots()",
+      "ax.quiver(${1:X}, ${2:Y}, ${3:U}, ${4:V}, ${5:magnitude})"
+    ],
+    "description": "Vector field"
+  },
+  "streamplot": {
+    "prefix": "plt_streamplot",
+    "body": [
+      "fig, ax = plt.subplots()",
+      "ax.streamplot(${1:X}, ${2:Y}, ${3:U}, ${4:V}, density=${5:1.2}, color=${6:magnitude})"
+    ],
+    "description": "Stream plot"
+  },
+
+  "// ==================== 8. 3D PLOTS ====================": {
+    "prefix": "plt_section_3d",
+    "body": ["# ============ 3D PLOTS ============"],
+    "description": "Section marker"
+  },
+
+  "3D scatter": {
+    "prefix": "plt_3d_scatter",
+    "body": [
+      "fig = plt.figure(figsize=(8, 6))",
+      "ax = fig.add_subplot(111, projection='3d')",
+      "ax.scatter(${1:x}, ${2:y}, ${3:z}, c=${4:colors}, cmap='viridis', s=${5:20})",
+      "ax.set_xlabel('${6:x}'); ax.set_ylabel('${7:y}'); ax.set_zlabel('${8:z}')"
+    ],
+    "description": "3D scatter plot"
+  },
+  "3D surface": {
+    "prefix": "plt_3d_surface",
+    "body": [
+      "fig = plt.figure(figsize=(9, 7))",
+      "ax = fig.add_subplot(111, projection='3d')",
+      "surf = ax.plot_surface(${1:X}, ${2:Y}, ${3:Z}, cmap='${4:viridis}', alpha=${5:0.9})",
+      "fig.colorbar(surf, shrink=0.5, aspect=10)",
+      "ax.view_init(elev=${6:30}, azim=${7:45})"
+    ],
+    "description": "3D surface plot"
+  },
+  "3D line": {
+    "prefix": "plt_3d_line",
+    "body": [
+      "fig = plt.figure()",
+      "ax = fig.add_subplot(111, projection='3d')",
+      "ax.plot(${1:x}, ${2:y}, ${3:z})"
+    ],
+    "description": "3D line plot"
+  },
+
+  "// ==================== 9. ML-SPECIFIC PLOTS ====================": {
+    "prefix": "plt_section_ml",
+    "body": ["# ============ ML-SPECIFIC PLOTS ============"],
+    "description": "Section marker"
+  },
+
+  "Confusion matrix": {
+    "prefix": "plt_confusion_matrix",
+    "body": [
+      "# ---- Confusion matrix heatmap ----",
+      "from sklearn.metrics import confusion_matrix",
+      "",
+      "cm = confusion_matrix(y_true, y_pred)",
+      "fig, ax = plt.subplots(figsize=(6, 5))",
+      "im = ax.imshow(cm, cmap='Blues')",
+      "ax.set_xticks(range(len(${1:labels}))); ax.set_xticklabels(${1:labels})",
+      "ax.set_yticks(range(len(${1:labels}))); ax.set_yticklabels(${1:labels})",
+      "ax.set_xlabel('Predicted'); ax.set_ylabel('True')",
+      "plt.colorbar(im, ax=ax)",
+      "",
+      "for i in range(cm.shape[0]):",
+      "    for j in range(cm.shape[1]):",
+      "        ax.text(j, i, cm[i, j], ha='center', va='center',",
+      "                color='white' if cm[i, j] > cm.max() / 2 else 'black')"
+    ],
+    "description": "Confusion matrix"
+  },
+  "ROC curve (single model)": {
+    "prefix": "plt_roc",
+    "body": [
+      "from sklearn.metrics import roc_curve, auc",
+      "",
+      "fpr, tpr, _ = roc_curve(y_true, y_score)",
+      "roc_auc = auc(fpr, tpr)",
+      "",
+      "fig, ax = plt.subplots(figsize=(6, 6))",
+      "ax.plot(fpr, tpr, label=f'AUC = {roc_auc:.3f}')",
+      "ax.plot([0, 1], [0, 1], 'k--', label='Chance')",
+      "ax.set_xlabel('False Positive Rate')",
+      "ax.set_ylabel('True Positive Rate')",
+      "ax.set_title('ROC Curve')",
+      "ax.legend(loc='lower right')"
+    ],
+    "description": "ROC curve"
+  },
+  "ROC curve (multi-model)": {
+    "prefix": "plt_roc_multi",
+    "body": [
+      "from sklearn.metrics import roc_curve, auc",
+      "",
+      "fig, ax = plt.subplots(figsize=(7, 6))",
+      "for name, scores in ${1:model_scores}.items():",
+      "    fpr, tpr, _ = roc_curve(y_true, scores)",
+      "    ax.plot(fpr, tpr, label=f'{name} (AUC={auc(fpr, tpr):.3f})')",
+      "ax.plot([0, 1], [0, 1], 'k--')",
+      "ax.set_xlabel('FPR'); ax.set_ylabel('TPR')",
+      "ax.legend(loc='lower right')"
+    ],
+    "description": "ROC curves for multiple models"
+  },
+  "Precision-Recall curve": {
+    "prefix": "plt_pr_curve",
+    "body": [
+      "from sklearn.metrics import precision_recall_curve, average_precision_score",
+      "",
+      "prec, rec, _ = precision_recall_curve(y_true, y_score)",
+      "ap = average_precision_score(y_true, y_score)",
+      "",
+      "fig, ax = plt.subplots(figsize=(6, 6))",
+      "ax.plot(rec, prec, label=f'AP = {ap:.3f}')",
+      "ax.set_xlabel('Recall'); ax.set_ylabel('Precision')",
+      "ax.set_title('Precision-Recall Curve')",
+      "ax.legend()"
+    ],
+    "description": "Precision-Recall curve"
+  },
+  "Learning curves": {
+    "prefix": "plt_learning_curve",
+    "body": [
+      "from sklearn.model_selection import learning_curve",
+      "",
+      "sizes, train_scores, val_scores = learning_curve(",
+      "    ${1:model}, X, y, cv=${2:5},",
+      "    train_sizes=np.linspace(0.1, 1.0, 10), scoring='${3:accuracy}',",
+      ")",
+      "tr_mean, tr_std = train_scores.mean(1), train_scores.std(1)",
+      "va_mean, va_std = val_scores.mean(1), val_scores.std(1)",
+      "",
+      "fig, ax = plt.subplots(figsize=(7, 5))",
+      "ax.plot(sizes, tr_mean, 'o-', label='Train')",
+      "ax.fill_between(sizes, tr_mean - tr_std, tr_mean + tr_std, alpha=0.2)",
+      "ax.plot(sizes, va_mean, 's-', label='Validation')",
+      "ax.fill_between(sizes, va_mean - va_std, va_mean + va_std, alpha=0.2)",
+      "ax.set_xlabel('Training size'); ax.set_ylabel('Score')",
+      "ax.set_title('Learning Curve'); ax.legend()"
+    ],
+    "description": "Learning curve (train vs val)"
+  },
+  "Feature importance (tree models)": {
+    "prefix": "plt_feature_importance",
+    "body": [
+      "# ---- Feature importances from a fitted tree model ----",
+      "importances = ${1:model}.feature_importances_",
+      "order = np.argsort(importances)[::-1]",
+      "",
+      "fig, ax = plt.subplots(figsize=(8, ${2:6}))",
+      "ax.barh(${3:feature_names}[order][:${4:15}][::-1],",
+      "        importances[order][:${4:15}][::-1])",
+      "ax.set_xlabel('Importance')",
+      "ax.set_title('Top Features')"
+    ],
+    "description": "Feature importance plot"
+  },
+  "Decision boundary (2D)": {
+    "prefix": "plt_decision_boundary",
+    "body": [
+      "# ---- Visualize a 2D classifier boundary ----",
+      "fig, ax = plt.subplots(figsize=(7, 6))",
+      "",
+      "# Build a fine grid",
+      "x_min, x_max = X[:, 0].min() - 0.5, X[:, 0].max() + 0.5",
+      "y_min, y_max = X[:, 1].min() - 0.5, X[:, 1].max() + 0.5",
+      "xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200),",
+      "                     np.linspace(y_min, y_max, 200))",
+      "",
+      "Z = ${1:model}.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)",
+      "ax.contourf(xx, yy, Z, alpha=0.3, cmap='coolwarm')",
+      "ax.scatter(X[:, 0], X[:, 1], c=y, cmap='coolwarm', edgecolors='k', s=20)",
+      "ax.set_xlabel('${2:feature 1}'); ax.set_ylabel('${3:feature 2}')"
+    ],
+    "description": "Decision boundary for a 2D classifier"
+  },
+  "Residual plot (regression)": {
+    "prefix": "plt_residuals",
+    "body": [
+      "# ---- Residuals vs predicted: check for patterns ----",
+      "y_pred = ${1:model}.predict(X)",
+      "residuals = y - y_pred",
+      "",
+      "fig, axes = plt.subplots(1, 2, figsize=(12, 5))",
+      "axes[0].scatter(y_pred, residuals, alpha=0.5)",
+      "axes[0].axhline(0, color='red', linestyle='--')",
+      "axes[0].set_xlabel('Predicted'); axes[0].set_ylabel('Residual')",
+      "axes[0].set_title('Residuals vs Predicted')",
+      "",
+      "axes[1].hist(residuals, bins=30)",
+      "axes[1].set_title('Residual Distribution')"
+    ],
+    "description": "Residual plot for regression"
+  },
+  "Predicted vs actual (regression)": {
+    "prefix": "plt_pred_vs_actual",
+    "body": [
+      "fig, ax = plt.subplots(figsize=(6, 6))",
+      "ax.scatter(y_true, y_pred, alpha=0.5)",
+      "lims = [min(y_true.min(), y_pred.min()), max(y_true.max(), y_pred.max())]",
+      "ax.plot(lims, lims, 'r--', label='Perfect')",
+      "ax.set_xlabel('Actual'); ax.set_ylabel('Predicted')",
+      "ax.set_title('Predicted vs Actual'); ax.legend()"
+    ],
+    "description": "Predicted vs actual"
+  },
+  "Correlation heatmap": {
+    "prefix": "plt_corr_heatmap",
+    "body": [
+      "# ---- Correlation matrix for feature selection ----",
+      "corr = df.select_dtypes('number').corr()",
+      "",
+      "fig, ax = plt.subplots(figsize=(10, 8))",
+      "im = ax.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1)",
+      "ax.set_xticks(range(len(corr))); ax.set_xticklabels(corr.columns, rotation=45, ha='right')",
+      "ax.set_yticks(range(len(corr))); ax.set_yticklabels(corr.columns)",
+      "plt.colorbar(im, ax=ax)"
+    ],
+    "description": "Correlation heatmap"
+  },
+  "Validation curve": {
+    "prefix": "plt_validation_curve",
+    "body": [
+      "from sklearn.model_selection import validation_curve",
+      "",
+      "param_range = ${1:np.logspace(-3, 3, 7)}",
+      "tr_scores, va_scores = validation_curve(",
+      "    ${2:model}, X, y,",
+      "    param_name='${3:param}', param_range=param_range,",
+      "    cv=5, scoring='${4:accuracy}',",
+      ")",
+      "",
+      "fig, ax = plt.subplots(figsize=(7, 5))",
+      "ax.plot(param_range, tr_scores.mean(1), 'o-', label='Train')",
+      "ax.plot(param_range, va_scores.mean(1), 's-', label='Validation')",
+      "ax.set_xscale('${5:log}')",
+      "ax.set_xlabel('${3:param}'); ax.set_ylabel('Score')",
+      "ax.legend()"
+    ],
+    "description": "Validation curve (hyperparameter tuning)"
+  },
+
+  "// ==================== 10. TIME SERIES PLOTS ====================": {
+    "prefix": "plt_section_ts",
+    "body": ["# ============ TIME SERIES PLOTS ============"],
+    "description": "Section marker"
+  },
+
+  "Time series line": {
+    "prefix": "plt_ts_line",
+    "body": [
+      "fig, ax = plt.subplots(figsize=(12, 4))",
+      "ax.plot(df.index, df['${1:value}'])",
+      "ax.set_xlabel('Date'); ax.set_ylabel('${1:value}')",
+      "ax.set_title('${2:Time series}')",
+      "fig.autofmt_xdate()   # rotate date labels"
+    ],
+    "description": "Time series line plot"
+  },
+  "Date formatting on x-axis": {
+    "prefix": "plt_date_format",
+    "body": [
+      "import matplotlib.dates as mdates",
+      "",
+      "ax.xaxis.set_major_locator(mdates.MonthLocator(interval=${1:1}))",
+      "ax.xaxis.set_major_formatter(mdates.DateFormatter('${2:%Y-%m}'))",
+      "fig.autofmt_xdate()"
+    ],
+    "description": "Format date ticks"
+    ],
+  },
+  "Candlestick-style OHLC bars": {
+    "prefix": "plt_ohlc",
+    "body": [
+      "# ---- OHLC bars for financial data ----",
+      "fig, ax = plt.subplots(figsize=(12, 5))",
+      "ax.vlines(df.index, df['${1:low}'], df['${2:high}'], color='gray', linewidth=0.8)",
+      "ax.hlines(df['${3:open}'], df.index, df.index + pd.Timedelta('${4:6H}'), color='green')",
+      "ax.hlines(df['${5:close}'], df.index, df.index + pd.Timedelta('${4:6H}'), color='red')"
+    ],
+    "description": "OHLC bars"
+  },
+
+  "// ==================== 11. LAYOUT & SAVING ====================": {
+    "prefix": "plt_section_save",
+    "body": ["# ============ LAYOUT & SAVING ============"],
+    "description": "Section marker"
+  },
+
+  "Tight layout & constrained": {
+    "prefix": "plt_layout",
+    "body": [
+      "# ---- Prevent overlapping labels ----",
+      "fig.tight_layout()",
+      "",
+      "# Alternative: constrained_layout (better for subplots)",
+      "fig, axes = plt.subplots(2, 2, constrained_layout=True)"
+    ],
+    "description": "Layout adjustments"
+  },
+  "Save figure": {
+    "prefix": "plt_save",
+    "body": [
+      "fig.savefig('${1:plot.png}', dpi=${2:300}, bbox_inches='tight')",
+      "# Formats: png, pdf, svg, eps, jpg",
+      "#   Use pdf or svg for publication (vector).",
+      "#   Use png for slides/screenshots."
+    ],
+    "description": "Save a figure"
+  },
+  "Show / close": {
+    "prefix": "plt_show",
+    "body": [
+      "plt.show()      # render (or display in notebook)",
+      "plt.close(fig)  # free memory (important in loops)"
+    ],
+    "description": "Show / close figures"
+  },
+  "Subplot spacing": {
+    "prefix": "plt_subplots_adjust",
+    "body": [
+      "fig.subplots_adjust(",
+      "    left=${1:0.08}, right=${2:0.95},",
+      "    top=${3:0.92}, bottom=${4:0.10},",
+      "    wspace=${5:0.25}, hspace=${6:0.30},",
+      ")"
+    ],
+    "description": "Fine-tune subplot spacing"
+  },
+
+  "// ==================== 12. ADVANCED ====================": {
+    "prefix": "plt_section_advanced",
+    "body": ["# ============ ADVANCED ============"],
+    "description": "Section marker"
+  },
+
+  "Colorbar": {
+    "prefix": "plt_colorbar",
+    "body": [
+      "cbar = fig.colorbar(${1:im}, ax=ax, orientation='${2:vertical}', fraction=0.046, pad=0.04)",
+      "cbar.set_label('${3:value}')"
+    ],
+    "description": "Add a colorbar"
+  },
+  "Inset axes (zoom)": {
+    "prefix": "plt_inset",
+    "body": [
+      "from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset",
+      "",
+      "axins = inset_axes(ax, width='${1:40%}', height='${2:30%}', loc='${3:upper right}')",
+      "axins.plot(x, y)",
+      "axins.set_xlim(${4:x1}, ${5:x2}); axins.set_ylim(${6:y1}, ${7:y2})",
+      "mark_inset(ax, axins, loc1=2, loc2=4, fc='none', ec='gray')"
+    ],
+    "description": "Inset zoom on a region"
+  },
+  "Patches (rectangles, circles)": {
+    "prefix": "plt_patches",
+    "body": [
+      "from matplotlib.patches import Rectangle, Circle, FancyBboxPatch",
+      "",
+      "ax.add_patch(Rectangle((${1:x}, ${2:y}), ${3:w}, ${4:h}, alpha=0.2, color='${5:red}'))",
+      "ax.add_patch(Circle((${6:x}, ${7:y}), radius=${8:1}, fill=False, edgecolor='black'))"
+    ],
+    "description": "Draw shapes on axes"
+  },
+  "Secondary axis (unit conversion)": {
+    "prefix": "plt_secondary_axis",
+    "body": [
+      "secax = ax.secondary_yaxis('right', functions=(",
+      "    lambda c: c * 9/5 + 32,     # forward",
+      "    lambda f: (f - 32) * 5/9,   # inverse",
+      "))",
+      "secax.set_ylabel('${1:°F}')"
+    ],
+    "description": "Secondary axis with conversion"
+  },
+  "Custom legend handles": {
+    "prefix": "plt_custom_legend",
+    "body": [
+      "from matplotlib.lines import Line2D",
+      "from matplotlib.patches import Patch",
+      "",
+      "handles = [",
+      "    Line2D([], [], color='C0', linestyle='-', label='${1:Line}'),",
+      "    Patch(facecolor='C1', label='${2:Bar}'),",
+      "]",
+      "ax.legend(handles=handles)"
+    ],
+    "description": "Manual legend handles"
+    ],
+  },
+  "Colormap normalization": {
+    "prefix": "plt_norm",
+    "body": [
+      "from matplotlib.colors import LogNorm, Normalize, TwoSlopeNorm, BoundaryNorm",
+      "",
+      "norm = LogNorm(vmin=${1:1e-3}, vmax=${2:1e3})",
+      "norm = TwoSlopeNorm(vmin=${3:-1}, vcenter=${4:0}, vmax=${5:1})",
+      "ax.imshow(data, cmap='coolwarm', norm=norm)"
+    ],
+    "description": "Custom color normalization"
+  },
+  "Interactive mode": {
+    "prefix": "plt_ion",
+    "body": [
+      "# ---- Turn on interactive mode (live updating plots) ----",
+      "plt.ion()",
+      "",
+      "fig, ax = plt.subplots()",
+      "line, = ax.plot([], [])",
+      "for i in range(${1:100}):",
+      "    line.set_data(range(i), range(i))",
+      "    ax.relim(); ax.autoscale_view()",
+      "    plt.pause(0.01)",
+      "",
+      "plt.ioff()"
+    ],
+    "description": "Interactive / live updating plots"
+  },
+  "Animation": {
+    "prefix": "plt_animation",
+    "body": [
+      "from matplotlib.animation import FuncAnimation",
+      "",
+      "fig, ax = plt.subplots()",
+      "line, = ax.plot([], [])",
+      "ax.set_xlim(0, ${1:10}); ax.set_ylim(-1, 1)",
+      "",
+      "def update(frame):",
+      "    x = np.linspace(0, 10, 200)",
+      "    y = np.sin(x - frame * 0.1)",
+      "    line.set_data(x, y)",
+      "    return line,",
+      "",
+      "ani = FuncAnimation(fig, update, frames=${2:100}, interval=${3:30}, blit=True)",
+      "# ani.save('${4:animation.mp4}', fps=30)"
+    ],
+    "description": "Animated plots"
+  },
+  "Matplotlib + Pandas integration": {
+    "prefix": "plt_pandas_plot",
+    "body": [
+      "# ---- Quick plots from a DataFrame (returns Axes) ----",
+      "ax = df.plot(kind='${1:line}', x='${2:date}', y='${3:value}', figsize=(10, 4))",
+      "df.plot(kind='hist', bins=30, subplots=True, layout=(2, 3), figsize=(15, 8))",
+      "df.plot(kind='scatter', x='${4:a}', y='${5:b}')",
+      "df.plot(kind='box', subplots=True, figsize=(15, 8))",
+      "df.plot(kind='bar', stacked=True, figsize=(10, 5))"
+    ],
+    "description": "Pandas plotting shortcuts"
+  },
+  "Matplotlib + Seaborn integration": {
+    "prefix": "plt_seaborn",
+    "body": [
+      "# ---- Seaborn for statistical plots, on top of Matplotlib ----",
+      "import seaborn as sns",
+      "",
+      "sns.set_theme(style='${1:whitegrid}', context='${2:notebook}')",
+      "fig, ax = plt.subplots(figsize=(8, 5))",
+      "sns.${3:scatterplot}(data=df, x='${4:a}', y='${5:b}', hue='${6:cat}', ax=ax)"
+    ],
+    "description": "Seaborn-integrated plot"
+  },
+  "Log scale on one axis": {
+    "prefix": "plt_log_scale",
+    "body": [
+      "fig, ax = plt.subplots()",
+      "ax.plot(x, y)",
+      "ax.set_yscale('log')",
+      "ax.set_ylabel('${1:value} (log scale)')"
+    ],
+    "description": "Log scale on y-axis"
+    ],
+  },
+  "Plotting with datetime index (Pandas)": {
+    "prefix": "plt_datetime_index",
+    "body": [
+      "fig, ax = plt.subplots(figsize=(12, 4))",
+      "df['${1:value}'].plot(ax=ax)",
+      "ax.set_title('${2:Time series}')",
+      "fig.autofmt_xdate()"
+    ],
+    "description": "Plot with DatetimeIndex"
+  },
+
+  "// ==================== 13. COMMON PITFALLS ====================": {
+    "prefix": "plt_section_pitfalls",
+    "body": ["# ============ COMMON PITFALLS ============"],
+    "description": "Section marker"
+  },
+
+  "Pitfall: pyplot vs OO mixing": {
+    "prefix": "plt_pitfall_mixing",
+    "body": [
+      "# BAD: mixing pyplot state-machine and OO confusingly",
+      "# plt.plot(x, y)",
+      "# ax = plt.gca()",
+      "# ax.set_title('...')",
+      "",
+      "# GOOD: pick one style per figure",
+      "fig, ax = plt.subplots()",
+      "ax.plot(x, y); ax.set_title('...')"
+    ],
+    "description": "Consistency between APIs"
+  },
+  "Pitfall: labels lost on multiple plots": {
+    "prefix": "plt_pitfall_labels",
+    "body": [
+      "# BAD: only one legend() call collects the labels",
+      "# ax.plot(x, y1); ax.legend()   # only y1",
+      "# ax.plot(x, y2)",
+      "",
+      "# GOOD: label everything, then call legend once",
+      "ax.plot(x, y1, label='y1')",
+      "ax.plot(x, y2, label='y2')",
+      "ax.legend()"
+    ],
+    "description": "Collect all labels before legend()"
+  },
+  "Pitfall: overlapping subplot labels": {
+    "prefix": "plt_pitfall_overlap",
+    "body": [
+      "# BAD: titles/labels overlap between subplots",
+      "# GOOD: use tight/constrained layout",
+      "fig, axes = plt.subplots(2, 2, constrained_layout=True)",
+      "# ...",
+      "# or: fig.tight_layout()"
+    ],
+    "description": "Fix subplot overlap"
+  },
+  "Pitfall: figures not closed in a loop": {
+    "prefix": "plt_pitfall_memory",
+    "body": [
+      "# BAD: memory grows in a loop without closing figures",
+      "# for x in data: plt.figure(); plt.plot(x); plt.savefig(...)",
+      "",
+      "# GOOD: always close",
+      "for i, x in enumerate(${1:data}):",
+      "    fig, ax = plt.subplots()",
+      "    ax.plot(x)",
+      "    fig.savefig(f'plot_{i}.png', bbox_inches='tight')",
+      "    plt.close(fig)   # free memory"
+    ],
+    "description": "Close figures in loops"
+  },
+  "Pitfall: jet colormap is misleading": {
+    "prefix": "plt_pitfall_colormap",
+    "body": [
+      "# The 'jet' colormap is NOT perceptually uniform and hides structure.",
+      "# Prefer 'viridis', 'plasma', 'cividis', or 'magma' for sequential data.",
+      "# Use 'coolwarm' or 'RdBu_r' for diverging data (mean-centered)."
+    ],
+    "description": "Avoid 'jet'; use viridis"
+  },
+  "Pitfall: bar chart with truncated y-axis": {
+    "prefix": "plt_pitfall_baseline",
+    "body": [
+      "# Bar charts must start at 0, otherwise differences look exaggerated.",
+      "ax.bar(categories, values)",
+      "ax.set_ylim(0, max(values) * 1.1)   # always anchor at 0",
+      "",
+      "# If you need a zoomed view, use a line or dot plot instead."
+    ],
+    "description": "Bar charts must start at 0"
+  }
+}

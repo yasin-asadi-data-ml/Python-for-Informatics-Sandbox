@@ -1,0 +1,1134 @@
+{
+  "// ==================== MATH ====================": {
+    "prefix": "py_section_math",
+    "body": ["# ============ MATH ============"],
+    "description": "Section marker"
+  },
+
+  "Math: import": {
+    "prefix": "py_math_imp",
+    "body": ["import math"],
+    "description": "Import math"
+  },
+  "Math: constants": {
+    "prefix": "py_math_const",
+    "body": [
+      "math.pi        # 3.141592653589793",
+      "math.e         # 2.718281828459045",
+      "math.tau       # 6.283185307179586 (2*pi)",
+      "math.inf       # inf",
+      "math.nan       # nan"
+    ],
+    "description": "Math constants"
+  },
+  "Math: rounding": {
+    "prefix": "py_math_round",
+    "body": [
+      "math.floor(3.7)      # 3  (down)",
+      "math.ceil(3.2)       # 4  (up)",
+      "math.trunc(3.9)      # 3  (toward zero)",
+      "round(3.14159, 2)    # 3.14",
+      "abs(-5)              # 5"
+    ],
+    "description": "Rounding functions"
+  },
+  "Math: powers & roots": {
+    "prefix": "py_math_pow",
+    "body": [
+      "math.sqrt(16)         # 4.0",
+      "math.pow(2, 10)       # 1024.0",
+      "math.isqrt(17)        # 4  (integer sqrt)",
+      "math.exp(1)           # 2.718...",
+      "2 ** 10               # 1024"
+    ],
+    "description": "Power and root functions"
+  },
+  "Math: logarithms": {
+    "prefix": "py_math_log",
+    "body": [
+      "math.log(100, 10)      # 2.0 (base 10)",
+      "math.log(math.e)       # 1.0 (natural)",
+      "math.log2(8)           # 3.0",
+      "math.log10(1000)       # 3.0"
+    ],
+    "description": "Logarithm functions"
+  },
+  "Math: trig": {
+    "prefix": "py_math_trig",
+    "body": [
+      "math.sin(math.pi / 2)   # 1.0",
+      "math.cos(0)             # 1.0",
+      "math.tan(0)             # 0.0",
+      "math.degrees(math.pi)   # 180.0",
+      "math.radians(180)       # 3.14159..."
+    ],
+    "description": "Trigonometry"
+  },
+  "Math: combinatorics": {
+    "prefix": "py_math_comb",
+    "body": [
+      "math.factorial(5)             # 120",
+      "math.comb(5, 2)               # 10  (nCr)",
+      "math.perm(5, 2)               # 20  (nPr)",
+      "math.gcd(12, 18)              # 6",
+      "math.lcm(4, 6)                # 12"
+    ],
+    "description": "Combinatorics and number theory"
+  },
+  "Math: special checks": {
+    "prefix": "py_math_check",
+    "body": [
+      "math.isnan(math.nan)      # True",
+      "math.isinf(math.inf)      # True",
+      "math.isfinite(5)          # True",
+      "math.isclose(0.1 + 0.2, 0.3)   # True"
+    ],
+    "description": "Special float checks"
+  },
+
+  "// ==================== STATISTICS ====================": {
+    "prefix": "py_section_stats",
+    "body": ["# ============ STATISTICS ============"],
+    "description": "Section marker"
+  },
+
+  "Statistics: central tendency": {
+    "prefix": "py_stats_central",
+    "body": [
+      "import statistics",
+      "",
+      "data = [${1:2, 4, 4, 4, 5, 5, 7, 9}]",
+      "statistics.mean(data)        # arithmetic mean",
+      "statistics.median(data)      # middle value",
+      "statistics.mode(data)        # most common",
+      "statistics.multimode(data)   # all modes (3.8+)",
+      "statistics.harmonic_mean(data)",
+      "statistics.geometric_mean(data)"
+    ],
+    "description": "Mean, median, mode"
+  },
+  "Statistics: spread": {
+    "prefix": "py_stats_spread",
+    "body": [
+      "import statistics",
+      "",
+      "data = [${1:2, 4, 4, 4, 5, 5, 7, 9}]",
+      "statistics.variance(data)         # sample variance",
+      "statistics.pvariance(data)        # population variance",
+      "statistics.stdev(data)            # sample std dev",
+      "statistics.pstdev(data)           # population std dev",
+      "max(data) - min(data)             # range"
+    ],
+    "description": "Variance and standard deviation"
+  },
+  "Statistics: quantiles": {
+    "prefix": "py_stats_quantiles",
+    "body": [
+      "import statistics",
+      "",
+      "data = [${1:1, 2, 3, 4, 5, 6, 7, 8, 9, 10}]",
+      "statistics.quantiles(data, n=4)   # quartiles",
+      "statistics.quantiles(data, n=10)  # deciles"
+    ],
+    "description": "Quantiles (quartiles, deciles)"
+  },
+  "Statistics: correlation & slope": {
+    "prefix": "py_stats_corr",
+    "body": [
+      "import statistics",
+      "",
+      "x = [${1:1, 2, 3, 4, 5}]",
+      "y = [${2:2, 4, 5, 4, 5}]",
+      "statistics.correlation(x, y)          # Pearson r",
+      "statistics.linear_regression(x, y)    # slope, intercept (3.10+)"
+    ],
+    "description": "Correlation and linear regression"
+  },
+
+  "// ==================== DECIMAL & FRACTIONS ====================": {
+    "prefix": "py_section_decimal",
+    "body": ["# ============ DECIMAL & FRACTIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Decimal: precise arithmetic": {
+    "prefix": "py_decimal",
+    "body": [
+      "from decimal import Decimal, getcontext",
+      "",
+      "getcontext().prec = 28          # precision",
+      "a = Decimal('0.1') + Decimal('0.2')   # exactly 0.3",
+      "print(a)                        # 0.3 (not 0.30000000000000004)"
+    ],
+    "description": "Exact decimal arithmetic"
+  },
+  "Decimal: rounding modes": {
+    "prefix": "py_decimal_round",
+    "body": [
+      "from decimal import Decimal, ROUND_HALF_UP",
+      "",
+      "Decimal('2.675').quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)"
+    ],
+    "description": "Round decimals with a specified mode"
+  },
+  "Fraction: exact rationals": {
+    "prefix": "py_fraction",
+    "body": [
+      "from fractions import Fraction",
+      "",
+      "f = Fraction(1, 3) + Fraction(1, 6)",
+      "print(f)              # 1/2",
+      "print(float(f))       # 0.5",
+      "print(f.numerator, f.denominator)"
+    ],
+    "description": "Exact rational numbers"
+  },
+
+  "// ==================== RANDOM ====================": {
+    "prefix": "py_section_random",
+    "body": ["# ============ RANDOM ============"],
+    "description": "Section marker"
+  },
+
+  "Random: numbers": {
+    "prefix": "py_random_num",
+    "body": [
+      "import random",
+      "",
+      "random.seed(42)              # reproducible",
+      "random.random()              # float [0.0, 1.0)",
+      "random.uniform(0, 10)        # float [0, 10]",
+      "random.randint(1, 10)        # int [1, 10]",
+      "random.randrange(0, 100, 5)  # step",
+      "random.gauss(0, 1)           # normal distribution"
+    ],
+    "description": "Random number generators"
+  },
+  "Random: sequences": {
+    "prefix": "py_random_seq",
+    "body": [
+      "import random",
+      "",
+      "random.choice(${1:['a', 'b', 'c']})              # one item",
+      "random.choices(${1:['a', 'b', 'c']}, k=3)        # with replacement",
+      "random.sample(range(100), 5)                     # unique",
+      "random.shuffle(${2:items})                       # in place"
+    ],
+    "description": "Pick from sequences"
+  },
+
+  "// ==================== DATETIME ====================": {
+    "prefix": "py_section_datetime",
+    "body": ["# ============ DATETIME ============"],
+    "description": "Section marker"
+  },
+
+  "Datetime: now": {
+    "prefix": "py_dt_now",
+    "body": [
+      "from datetime import datetime, date, time",
+      "",
+      "now = datetime.now()          # local",
+      "utc = datetime.utcnow()       # UTC",
+      "today = date.today()",
+      "print(now.year, now.month, now.day, now.hour, now.minute, now.second)"
+    ],
+    "description": "Get current date/time"
+  },
+  "Datetime: create": {
+    "prefix": "py_dt_create",
+    "body": [
+      "from datetime import datetime",
+      "",
+      "dt = datetime(${1:2024}, ${2:1}, ${3:15}, ${4:10}, ${5:30})"
+    ],
+    "description": "Construct a datetime"
+  },
+  "Datetime: format": {
+    "prefix": "py_dt_format",
+    "body": [
+      "${1:dt}.strftime('${2:%Y-%m-%d %H:%M:%S}')"
+    ],
+    "description": "Format a datetime as string"
+  },
+  "Datetime: parse": {
+    "prefix": "py_dt_parse",
+    "body": [
+      "from datetime import datetime",
+      "",
+      "dt = datetime.strptime('${1:2024-01-15}', '${2:%Y-%m-%d}')"
+    ],
+    "description": "Parse a string to datetime"
+  },
+  "Datetime: timedelta": {
+    "prefix": "py_dt_timedelta",
+    "body": [
+      "from datetime import datetime, timedelta",
+      "",
+      "now = datetime.now()",
+      "delta = timedelta(days=${1:10}, hours=${2:3})",
+      "future = now + delta",
+      "past = now - delta",
+      "(future - now).days    # days difference"
+    ],
+    "description": "Add/subtract time deltas"
+  },
+  "Datetime: timestamp": {
+    "prefix": "py_dt_timestamp",
+    "body": [
+      "from datetime import datetime",
+      "",
+      "ts = datetime.now().timestamp()         # datetime -> float",
+      "dt = datetime.fromtimestamp(ts)         # float -> datetime"
+    ],
+    "description": "Convert between datetime and timestamp"
+  },
+  "Datetime: ISO format": {
+    "prefix": "py_dt_iso",
+    "body": [
+      "${1:dt}.isoformat()                     # '2024-01-15T10:30:00'",
+      "from datetime import datetime",
+      "datetime.fromisoformat('${2:2024-01-15T10:30:00}')"
+    ],
+    "description": "ISO 8601 conversion"
+  },
+  "Time: sleep & perf": {
+    "prefix": "py_time",
+    "body": [
+      "import time",
+      "",
+      "time.sleep(${1:1.5})              # pause seconds",
+      "time.time()                       # Unix timestamp (float)",
+      "time.perf_counter()               # high-res timer for benchmarks",
+      "time.monotonic()                  # never goes backward"
+    ],
+    "description": "Time module essentials"
+  },
+
+  "// ==================== COLLECTIONS ====================": {
+    "prefix": "py_section_collections",
+    "body": ["# ============ COLLECTIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Collections: Counter": {
+    "prefix": "py_coll_counter",
+    "body": [
+      "from collections import Counter",
+      "",
+      "c = Counter('${1:abracadabra}')",
+      "c.most_common(3)       # top 3",
+      "c['a']                 # count of 'a'",
+      "c.total()              # sum of counts (3.10+)",
+      "c1 + c2                # add counts",
+      "c1 - c2                # subtract"
+    ],
+    "description": "Count hashable items"
+  },
+  "Collections: defaultdict": {
+    "prefix": "py_coll_defaultdict",
+    "body": [
+      "from collections import defaultdict",
+      "",
+      "groups = defaultdict(list)",
+      "groups['fruit'].append('apple')   # auto-creates list",
+      "",
+      "counts = defaultdict(int)",
+      "for ch in '${1:hello}':",
+      "    counts[ch] += 1"
+    ],
+    "description": "Dict with default value factories"
+  },
+  "Collections: deque": {
+    "prefix": "py_coll_deque",
+    "body": [
+      "from collections import deque",
+      "",
+      "d = deque([1, 2, 3])",
+      "d.appendleft(0)        # fast left insert",
+      "d.append(4)",
+      "d.popleft()            # fast left pop",
+      "d.pop()",
+      "d.rotate(1)            # rotate right",
+      "",
+      "# Fixed-size buffer",
+      "buf = deque(maxlen=3)"
+    ],
+    "description": "Double-ended queue"
+  },
+  "Collections: OrderedDict": {
+    "prefix": "py_coll_ordered",
+    "body": [
+      "from collections import OrderedDict",
+      "",
+      "d = OrderedDict()",
+      "d['a'] = 1",
+      "d['b'] = 2",
+      "d.move_to_end('a')     # reorder"
+    ],
+    "description": "Dict with reorder helpers"
+  },
+  "Collections: namedtuple": {
+    "prefix": "py_coll_namedtuple",
+    "body": [
+      "from collections import namedtuple",
+      "",
+      "Point = namedtuple('Point', ['x', 'y'])",
+      "p = Point(3, 4)",
+      "print(p.x, p.y)         # 3 4",
+      "print(p._asdict())      # {'x': 3, 'y': 4}"
+    ],
+    "description": "Lightweight named tuple"
+  },
+  "Collections: ChainMap": {
+    "prefix": "py_coll_chainmap",
+    "body": [
+      "from collections import ChainMap",
+      "",
+      "defaults = {'color': 'red', 'size': 'M'}",
+      "user = {'color': 'blue'}",
+      "merged = ChainMap(user, defaults)",
+      "merged['color']    # 'blue' (first wins)",
+      "merged['size']     # 'M'"
+    ],
+    "description": "Layered dict lookup"
+  },
+
+  "// ==================== ITERTOOLS ====================": {
+    "prefix": "py_section_itertools",
+    "body": ["# ============ ITERTOOLS ============"],
+    "description": "Section marker"
+  },
+
+  "Itertools: infinite": {
+    "prefix": "py_it_count",
+    "body": [
+      "from itertools import count, cycle, repeat",
+      "",
+      "count(10, 2)                   # 10, 12, 14, ...",
+      "cycle('ABC')                   # A, B, C, A, B, C, ...",
+      "repeat('x', 3)                 # x, x, x"
+    ],
+    "description": "Infinite iterators"
+  },
+  "Itertools: terminating": {
+    "prefix": "py_it_term",
+    "body": [
+      "from itertools import chain, compress, dropwhile, takewhile, filterfalse",
+      "",
+      "chain([1, 2], [3, 4])                    # 1,2,3,4",
+      "compress('ABCD', [1, 0, 1, 0])           # A, C",
+      "dropwhile(lambda x: x < 3, [1, 2, 3, 4]) # 3, 4",
+      "takewhile(lambda x: x < 3, [1, 2, 3, 4]) # 1, 2",
+      "filterfalse(lambda x: x % 2, [1, 2, 3])  # 2"
+    ],
+    "description": "Terminating iterators"
+  },
+  "Itertools: combinatorial": {
+    "prefix": "py_it_comb",
+    "body": [
+      "from itertools import (",
+      "    product, permutations, combinations,",
+      "    combinations_with_replacement,",
+      ")",
+      "",
+      "product([1, 2], 'ab')                    # Cartesian product",
+      "permutations([1, 2, 3], 2)               # ordered",
+      "combinations([1, 2, 3], 2)               # unordered",
+      "combinations_with_replacement([1, 2], 2)"
+    ],
+    "description": "Combinatorial iterators"
+  },
+  "Itertools: grouping": {
+    "prefix": "py_it_group",
+    "body": [
+      "from itertools import groupby",
+      "",
+      "data = sorted(${1:data}, key=lambda x: x[0])",
+      "for key, group in groupby(data, key=lambda x: x[0]):",
+      "    print(key, list(group))"
+    ],
+    "description": "Group consecutive items (sort first!)"
+  },
+  "Itertools: slicing & accumulating": {
+    "prefix": "py_it_slice",
+    "body": [
+      "from itertools import islice, accumulate, pairwise, zip_longest",
+      "",
+      "islice(range(100), 5)                    # first 5",
+      "islice(range(100), 10, 20)               # 10..19",
+      "accumulate([1, 2, 3, 4])                 # running sum: 1, 3, 6, 10",
+      "pairwise([1, 2, 3, 4])                   # (1,2), (2,3), (3,4)",
+      "zip_longest([1, 2], 'abc', fillvalue='-')"
+    ],
+    "description": "Slicing and accumulation"
+  },
+
+  "// ==================== FUNCTOOLS ====================": {
+    "prefix": "py_section_functools",
+    "body": ["# ============ FUNCTOOLS ============"],
+    "description": "Section marker"
+  },
+
+  "Functools: lru_cache": {
+    "prefix": "py_ft_cache",
+    "body": [
+      "from functools import lru_cache",
+      "",
+      "@lru_cache(maxsize=None)",
+      "def fib(n: int) -> int:",
+      "    return n if n < 2 else fib(n - 1) + fib(n - 2)"
+    ],
+    "description": "Memoize with LRU cache"
+  },
+  "Functools: cache (3.9+)": {
+    "prefix": "py_ft_cache_simple",
+    "body": [
+      "from functools import cache",
+      "",
+      "@cache",
+      "def fib(n: int) -> int:",
+      "    return n if n < 2 else fib(n - 1) + fib(n - 2)"
+    ],
+    "description": "Unbounded memoization"
+  },
+  "Functools: partial": {
+    "prefix": "py_ft_partial",
+    "body": [
+      "from functools import partial",
+      "",
+      "def power(base, exp):",
+      "    return base ** exp",
+      "",
+      "square = partial(power, exp=2)",
+      "square(5)   # 25"
+    ],
+    "description": "Freeze some arguments"
+  },
+  "Functools: reduce": {
+    "prefix": "py_ft_reduce",
+    "body": [
+      "from functools import reduce",
+      "",
+      "reduce(lambda a, b: a + b, ${1:[1, 2, 3, 4]}, 0)"
+    ],
+    "description": "Fold an iterable"
+  },
+  "Functools: wraps": {
+    "prefix": "py_ft_wraps",
+    "body": [
+      "from functools import wraps",
+      "",
+      "def my_decorator(func):",
+      "    @wraps(func)",
+      "    def wrapper(*args, **kwargs):",
+      "        return func(*args, **kwargs)",
+      "    return wrapper"
+    ],
+    "description": "Preserve metadata in decorators"
+  },
+  "Functools: total_ordering": {
+    "prefix": "py_ft_ordering",
+    "body": [
+      "from functools import total_ordering",
+      "",
+      "@total_ordering",
+      "class Version:",
+      "    def __init__(self, n): self.n = n",
+      "    def __eq__(self, other): return self.n == other.n",
+      "    def __lt__(self, other): return self.n < other.n"
+    ],
+    "description": "Fill in comparison methods"
+  },
+
+  "// ==================== OS & SYS ====================": {
+    "prefix": "py_section_os",
+    "body": ["# ============ OS & SYS ============"],
+    "description": "Section marker"
+  },
+
+  "OS: paths & dirs": {
+    "prefix": "py_os_path",
+    "body": [
+      "import os",
+      "",
+      "os.getcwd()                       # current dir",
+      "os.chdir('${1:/tmp}')              # change dir",
+      "os.listdir('.')                   # list entries",
+      "os.makedirs('${2:a/b/c}', exist_ok=True)",
+      "os.path.join('${3:a}', '${4:b}', '${5:c}.txt')",
+      "os.path.exists('${6:path}')",
+      "os.path.isfile('${6:path}')",
+      "os.path.isdir('${6:path}')"
+    ],
+    "description": "OS path and directory helpers"
+  },
+  "OS: filesystem ops": {
+    "prefix": "py_os_fs",
+    "body": [
+      "import os",
+      "",
+      "os.rename('${1:old}', '${2:new}')",
+      "os.remove('${3:file}')",
+      "os.rmdir('${4:emptydir}')",
+      "os.stat('${5:path}').st_size   # file size in bytes"
+    ],
+    "description": "Rename, remove, stat"
+  },
+  "OS: env vars": {
+    "prefix": "py_os_env",
+    "body": [
+      "import os",
+      "",
+      "os.environ.get('${1:HOME}')",
+      "os.environ['${2:MY_VAR}'] = '${3:value}'",
+      "dict(os.environ)   # all env vars"
+    ],
+    "description": "Read and write environment variables"
+  },
+  "OS: subprocess": {
+    "prefix": "py_os_subprocess",
+    "body": [
+      "import subprocess",
+      "",
+      "result = subprocess.run(",
+      "    ['${1:ls}', '${2:-la}'],",
+      "    capture_output=True,",
+      "    text=True,",
+      "    check=False,",
+      ")",
+      "print(result.stdout)"
+    ],
+    "description": "Run a subprocess"
+  },
+  "SYS: argv & exit": {
+    "prefix": "py_sys_argv",
+    "body": [
+      "import sys",
+      "",
+      "print(sys.argv)                # ['script.py', 'arg1', ...]",
+      "sys.exit(${1:0})               # exit with code",
+      "sys.stderr.write('${2:error}\\n')",
+      "print(sys.version)"
+    ],
+    "description": "Command-line args and exit"
+  },
+  "SYS: path & modules": {
+    "prefix": "py_sys_path",
+    "body": [
+      "import sys",
+      "",
+      "sys.path                   # module search path",
+      "sys.path.insert(0, '${1:./lib}')",
+      "sys.modules                # already imported modules"
+    ],
+    "description": "Module search path"
+  },
+
+  "// ==================== FILE FORMATS ====================": {
+    "prefix": "py_section_formats",
+    "body": ["# ============ FILE FORMATS ============"],
+    "description": "Section marker"
+  },
+
+  "JSON: dumps / loads": {
+    "prefix": "py_json",
+    "body": [
+      "import json",
+      "",
+      "s = json.dumps(${1:obj}, indent=2, ensure_ascii=False)",
+      "obj = json.loads(s)"
+    ],
+    "description": "JSON serialization in memory"
+  },
+  "JSON: file read / write": {
+    "prefix": "py_json_file",
+    "body": [
+      "import json",
+      "",
+      "with open('${1:data.json}', encoding='utf-8') as f:",
+      "    data = json.load(f)",
+      "",
+      "with open('${2:out.json}', 'w', encoding='utf-8') as f:",
+      "    json.dump(${3:data}, f, indent=2, ensure_ascii=False)"
+    ],
+    "description": "Read/write JSON files"
+  },
+  "CSV: read": {
+    "prefix": "py_csv_read",
+    "body": [
+      "import csv",
+      "",
+      "with open('${1:data.csv}', newline='', encoding='utf-8') as f:",
+      "    reader = csv.reader(f)",
+      "    for row in reader:",
+      "        print(row)"
+    ],
+    "description": "Read CSV rows"
+  },
+  "CSV: read as dicts": {
+    "prefix": "py_csv_dict",
+    "body": [
+      "import csv",
+      "",
+      "with open('${1:data.csv}', newline='', encoding='utf-8') as f:",
+      "    rows = list(csv.DictReader(f))"
+    ],
+    "description": "Read CSV as list of dicts"
+  },
+  "CSV: write": {
+    "prefix": "py_csv_write",
+    "body": [
+      "import csv",
+      "",
+      "with open('${1:out.csv}', 'w', newline='', encoding='utf-8') as f:",
+      "    writer = csv.writer(f)",
+      "    writer.writerow(['${2:name}', '${3:age}'])",
+      "    writer.writerows(${4:rows})"
+    ],
+    "description": "Write CSV rows"
+  },
+  "CSV: DictWriter": {
+    "prefix": "py_csv_dictwriter",
+    "body": [
+      "import csv",
+      "",
+      "fields = ['${1:name}', '${2:age}']",
+      "with open('${3:out.csv}', 'w', newline='', encoding='utf-8') as f:",
+      "    writer = csv.DictWriter(f, fieldnames=fields)",
+      "    writer.writeheader()",
+      "    writer.writerows(${4:rows})"
+    ],
+    "description": "Write list of dicts as CSV"
+  },
+
+  "// ==================== REGEX ====================": {
+    "prefix": "py_section_regex",
+    "body": ["# ============ REGEX ============"],
+    "description": "Section marker"
+  },
+
+  "Regex: match / search": {
+    "prefix": "py_re_match",
+    "body": [
+      "import re",
+      "",
+      "m = re.match(r'${1:pattern}', ${2:text})    # anchored at start",
+      "if m:",
+      "    print(m.group())",
+      "",
+      "m = re.search(r'${1:pattern}', ${2:text})   # anywhere",
+      "if m:",
+      "    print(m.group())"
+    ],
+    "description": "match vs search"
+  },
+  "Regex: findall / finditer": {
+    "prefix": "py_re_find",
+    "body": [
+      "import re",
+      "",
+      "re.findall(r'${1:\\\\d+}', ${2:text})            # list of strings",
+      "for m in re.finditer(r'${1:\\\\d+}', ${2:text}):",
+      "    print(m.group(), m.start())"
+    ],
+    "description": "Find all matches"
+  },
+  "Regex: sub / split": {
+    "prefix": "py_re_sub",
+    "body": [
+      "import re",
+      "",
+      "re.sub(r'${1:\\\\s+}', ' ', ${2:text})           # replace",
+      "re.split(r'${3:\\\\s*,\\\\s*}', ${4:text})            # split"
+    ],
+    "description": "Regex replace and split"
+  },
+  "Regex: compile (reuse)": {
+    "prefix": "py_re_compile",
+    "body": [
+      "import re",
+      "",
+      "pattern = re.compile(r'${1:\\\\d{4}-\\\\d{2}-\\\\d{2}}')",
+      "pattern.findall(${2:text})",
+      "pattern.search(${2:text})"
+    ],
+    "description": "Compile a regex for reuse"
+  },
+  "Regex: named groups": {
+    "prefix": "py_re_named",
+    "body": [
+      "import re",
+      "",
+      "m = re.match(r'(?P<year>\\\\d{4})-(?P<month>\\\\d{2})', '${1:2024-01}')",
+      "if m:",
+      "    print(m.group('year'), m.group('month'))",
+      "    print(m.groupdict())"
+    ],
+    "description": "Named capture groups"
+  },
+
+  "// ==================== CRYPTO & IDS ====================": {
+    "prefix": "py_section_crypto",
+    "body": ["# ============ CRYPTO & IDS ============"],
+    "description": "Section marker"
+  },
+
+  "Hashlib: hashes": {
+    "prefix": "py_hashlib",
+    "body": [
+      "import hashlib",
+      "",
+      "hashlib.md5(b'${1:data}').hexdigest()",
+      "hashlib.sha1(b'${1:data}').hexdigest()",
+      "hashlib.sha256(b'${1:data}').hexdigest()"
+    ],
+    "description": "Compute hashes"
+  },
+  "Hashlib: file hash": {
+    "prefix": "py_hashlib_file",
+    "body": [
+      "import hashlib",
+      "",
+      "h = hashlib.sha256()",
+      "with open('${1:file}', 'rb') as f:",
+      "    for chunk in iter(lambda: f.read(8192), b''):",
+      "        h.update(chunk)",
+      "print(h.hexdigest())"
+    ],
+    "description": "Hash a large file in chunks"
+  },
+  "Secrets: secure random": {
+    "prefix": "py_secrets",
+    "body": [
+      "import secrets",
+      "",
+      "secrets.token_hex(16)                  # 32-char hex string",
+      "secrets.token_urlsafe(16)              # URL-safe token",
+      "secrets.randbelow(100)                 # 0..99",
+      "secrets.choice(['a', 'b', 'c'])",
+      "secrets.compare_digest('${1:a}', '${2:b}')   # constant-time compare"
+    ],
+    "description": "Cryptographically secure random"
+  },
+  "UUID: generate": {
+    "prefix": "py_uuid",
+    "body": [
+      "import uuid",
+      "",
+      "uuid.uuid4()                # random",
+      "uuid.uuid1()                # time-based",
+      "str(uuid.uuid4())           # as string"
+    ],
+    "description": "Generate UUIDs"
+  },
+  "Base64: encode / decode": {
+    "prefix": "py_base64",
+    "body": [
+      "import base64",
+      "",
+      "base64.b64encode(b'${1:data}').decode()    # bytes -> str",
+      "base64.b64decode('${2:ZGF0YQ==}')            # str -> bytes",
+      "base64.urlsafe_b64encode(b'${1:data}')"
+    ],
+    "description": "Base64 encoding"
+  },
+
+  "// ==================== PATHS & FILES ====================": {
+    "prefix": "py_section_paths",
+    "body": ["# ============ PATHS & FILES ============"],
+    "description": "Section marker"
+  },
+
+  "Pathlib: create & inspect": {
+    "prefix": "py_path_create",
+    "body": [
+      "from pathlib import Path",
+      "",
+      "p = Path('${1:data/file.txt}')",
+      "p.exists()",
+      "p.is_file()",
+      "p.is_dir()",
+      "p.suffix          # '.txt'",
+      "p.stem            # 'file'",
+      "p.name            # 'file.txt'",
+      "p.parent          # Path('data')"
+    ],
+    "description": "Path inspection"
+  },
+  "Pathlib: read / write": {
+    "prefix": "py_path_rw",
+    "body": [
+      "from pathlib import Path",
+      "",
+      "p = Path('${1:file.txt}')",
+      "p.write_text(${2:'content'}, encoding='utf-8')",
+      "text = p.read_text(encoding='utf-8')",
+      "p.write_bytes(b'${3:data}')",
+      "data = p.read_bytes()"
+    ],
+    "description": "Read and write files with Path"
+  },
+  "Pathlib: join & glob": {
+    "prefix": "py_path_join",
+    "body": [
+      "from pathlib import Path",
+      "",
+      "p = Path('${1:data}') / '${2:sub}' / '${3:file.txt}'",
+      "list(Path('${1:data}').glob('**/*.py'))    # recursive",
+      "list(Path('.').rglob('*.txt'))"
+    ],
+    "description": "Path joining and globbing"
+  },
+  "Tempfile: temp files": {
+    "prefix": "py_tempfile",
+    "body": [
+      "import tempfile",
+      "",
+      "with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:",
+      "    f.write('${1:data}')",
+      "    path = f.name",
+      "",
+      "with tempfile.TemporaryDirectory() as d:",
+      "    print(d)"
+    ],
+    "description": "Temporary files and directories"
+  },
+  "Shutil: copy & move": {
+    "prefix": "py_shutil",
+    "body": [
+      "import shutil",
+      "",
+      "shutil.copy('${1:src}', '${2:dst}')          # file",
+      "shutil.copytree('${3:src_dir}', '${4:dst_dir}')",
+      "shutil.move('${5:src}', '${6:dst}')",
+      "shutil.rmtree('${7:dir}')                    # recursive delete",
+      "shutil.disk_usage('/')                       # disk info"
+    ],
+    "description": "Copy, move, delete files/trees"
+  },
+  "Glob: find files": {
+    "prefix": "py_glob",
+    "body": [
+      "import glob",
+      "",
+      "glob.glob('${1:*.py}')",
+      "glob.glob('${2:**/*.txt}', recursive=True)"
+    ],
+    "description": "Find files by pattern"
+  },
+
+  "// ==================== STRING & TEXT ====================": {
+    "prefix": "py_section_text",
+    "body": ["# ============ STRING & TEXT ============"],
+    "description": "Section marker"
+  },
+
+  "String: constants": {
+    "prefix": "py_string_const",
+    "body": [
+      "import string",
+      "",
+      "string.ascii_letters     # a-z + A-Z",
+      "string.ascii_lowercase",
+      "string.ascii_uppercase",
+      "string.digits            # 0-9",
+      "string.hexdigits",
+      "string.punctuation",
+      "string.whitespace"
+    ],
+    "description": "Character class constants"
+  },
+  "Textwrap: wrap & fill": {
+    "prefix": "py_textwrap",
+    "body": [
+      "import textwrap",
+      "",
+      "textwrap.wrap(${1:text}, width=${2:40})     # list of lines",
+      "textwrap.fill(${1:text}, width=${2:40})     # single string",
+      "textwrap.dedent($\"\"\"${3:",
+      "    Indented",
+      "    block",
+      "\"\"\")",
+      "textwrap.shorten(${1:text}, width=${2:40})"
+    ],
+    "description": "Wrap, fill, dedent text"
+  },
+  "Pprint: pretty print": {
+    "prefix": "py_pprint",
+    "body": [
+      "from pprint import pprint",
+      "",
+      "pprint(${1:obj}, indent=2, width=80, sort_dicts=False)"
+    ],
+    "description": "Pretty-print data structures"
+  },
+
+  "// ==================== CONTEXT MANAGERS ====================": {
+    "prefix": "py_section_context",
+    "body": ["# ============ CONTEXT MANAGERS ============"],
+    "description": "Section marker"
+  },
+
+  "Contextlib: contextmanager": {
+    "prefix": "py_contextmanager",
+    "body": [
+      "from contextlib import contextmanager",
+      "",
+      "@contextmanager",
+      "def ${1:resource}():",
+      "    ${2:# setup}",
+      "    try:",
+      "        yield ${3:value}",
+      "    finally:",
+      "        ${4:# teardown}"
+    ],
+    "description": "Generator-based context manager"
+  },
+  "Contextlib: suppress": {
+    "prefix": "py_contextlib_suppress",
+    "body": [
+      "from contextlib import suppress",
+      "",
+      "with suppress(${1:FileNotFoundError}):",
+      "    ${2:os.remove('file.txt')}"
+    ],
+    "description": "Ignore specific exceptions"
+  },
+  "Contextlib: redirect_stdout": {
+    "prefix": "py_contextlib_redirect",
+    "body": [
+      "from contextlib import redirect_stdout",
+      "import io",
+      "",
+      "buf = io.StringIO()",
+      "with redirect_stdout(buf):",
+      "    ${1:print('captured')}",
+      "output = buf.getvalue()"
+    ],
+    "description": "Capture stdout"
+  },
+  "Copy: shallow / deep": {
+    "prefix": "py_copy",
+    "body": [
+      "import copy",
+      "",
+      "shallow = copy.copy(${1:obj})",
+      "deep = copy.deepcopy(${1:obj})"
+    ],
+    "description": "Shallow vs deep copy"
+  },
+
+  "// ==================== CONCURRENCY ====================": {
+    "prefix": "py_section_concurrency",
+    "body": ["# ============ CONCURRENCY ============"],
+    "description": "Section marker"
+  },
+
+  "Asyncio: run": {
+    "prefix": "py_asyncio_run",
+    "body": [
+      "import asyncio",
+      "",
+      "async def main() -> None:",
+      "    ${1:await asyncio.sleep(1)}",
+      "",
+      "if __name__ == '__main__':",
+      "    asyncio.run(main())"
+    ],
+    "description": "Run an async entrypoint"
+  },
+  "Asyncio: gather": {
+    "prefix": "py_asyncio_gather",
+    "body": [
+      "results = await asyncio.gather(",
+      "    ${1:task1()},",
+      "    ${2:task2()},",
+      "    return_exceptions=True,",
+      ")"
+    ],
+    "description": "Run coroutines concurrently"
+  },
+  "Threading: Thread": {
+    "prefix": "py_thread",
+    "body": [
+      "import threading",
+      "",
+      "def worker(arg):",
+      "    ${1:pass}",
+      "",
+      "t = threading.Thread(target=worker, args=(${2:value},), daemon=True)",
+      "t.start()",
+      "t.join()"
+    ],
+    "description": "Start a background thread"
+  },
+  "Threading: Lock": {
+    "prefix": "py_thread_lock",
+    "body": [
+      "import threading",
+      "",
+      "lock = threading.Lock()",
+      "with lock:",
+      "    ${1:# critical section}"
+    ],
+    "description": "Mutual exclusion with Lock"
+  },
+  "Concurrent: ThreadPoolExecutor": {
+    "prefix": "py_threadpool",
+    "body": [
+      "from concurrent.futures import ThreadPoolExecutor",
+      "",
+      "with ThreadPoolExecutor(max_workers=${1:4}) as ex:",
+      "    results = list(ex.map(${2:func}, ${3:items}))"
+    ],
+    "description": "Thread pool for I/O-bound work"
+  },
+  "Concurrent: ProcessPoolExecutor": {
+    "prefix": "py_processpool",
+    "body": [
+      "from concurrent.futures import ProcessPoolExecutor",
+      "",
+      "with ProcessPoolExecutor() as ex:",
+      "    results = list(ex.map(${1:func}, ${2:items}))"
+    ],
+    "description": "Process pool for CPU-bound work"
+  },
+
+  "// ==================== DATABASES ====================": {
+    "prefix": "py_section_db",
+    "body": ["# ============ DATABASES ============"],
+    "description": "Section marker"
+  },
+
+  "SQLite3: connect & query": {
+    "prefix": "py_sqlite",
+    "body": [
+      "import sqlite3",
+      "",
+      "with sqlite3.connect('${1:app.db}') as conn:",
+      "    cur = conn.cursor()",
+      "    cur.execute('SELECT * FROM ${2:users} WHERE ${3:id} = ?', (${4:1},))",
+      "    rows = cur.fetchall()",
+      "",
+      "    conn.execute(",
+      "        'INSERT INTO ${2:users} (name) VALUES (?)',",
+      "        ('${5:Alice}',),",
+      "    )",
+      "    conn.commit()"
+    ],
+    "description": "SQLite connection and queries"
+  },
+  "SQLite3: row factory": {
+    "prefix": "py_sqlite_rows",
+    "body": [
+      "import sqlite3",
+      "",
+      "conn = sqlite3.connect('${1:app.db}')",
+      "conn.row_factory = sqlite3.Row       # dict-like rows",
+      "row = conn.execute('SELECT * FROM ${2:users}').fetchone()",
+      "print(row['${3:name}'])"
+    ],
+    "description": "Dict-like rows from SQLite"
+  }
+}

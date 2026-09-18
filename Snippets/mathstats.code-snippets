@@ -1,0 +1,825 @@
+{
+  "// ==================== MATH: NUMBER THEORY ====================": {
+    "prefix": "py_section_math_numtheory",
+    "body": ["# ============ MATH: NUMBER THEORY ============"],
+    "description": "Section marker"
+  },
+
+  "Math: comb (binomial coefficient)": {
+    "prefix": "py_math_comb",
+    "body": [
+      "# math.comb(n, k) -> int",
+      "# Number of ways to choose k items from n without repetition, order ignored.",
+      "# Data analysis: counting possible subsets, hypergeometric probabilities.",
+      "math.comb(5, 2)                # 10",
+      "math.comb(10, 3)               # 120",
+      "# n! / (k! * (n-k)!)  --  returns 0 when k > n"
+    ],
+    "description": "Binomial coefficient (n choose k)"
+  },
+  "Math: factorial": {
+    "prefix": "py_math_factorial",
+    "body": [
+      "# math.factorial(n) -> int",
+      "# n! = 1 * 2 * ... * n.  Raises ValueError for negative or non-integer n.",
+      "# Data analysis: permutations, probability denominators, Taylor series.",
+      "math.factorial(0)              # 1",
+      "math.factorial(5)              # 120",
+      "math.factorial(20)             # 2432902008176640000"
+    ],
+    "description": "Factorial n!"
+  },
+  "Math: gcd (greatest common divisor)": {
+    "prefix": "py_math_gcd",
+    "body": [
+      "# math.gcd(*integers) -> int",
+      "# GCD of the arguments. With no arguments returns 0.",
+      "# Data analysis: simplifying ratios, reducing fractions, periodicity.",
+      "math.gcd(12, 18)               # 6",
+      "math.gcd(12, 18, 24)           # 6",
+      "math.gcd(0, 5)                 # 5"
+    ],
+    "description": "Greatest common divisor"
+  },
+  "Math: isqrt (integer square root)": {
+    "prefix": "py_math_isqrt",
+    "body": [
+      "# math.isqrt(n) -> int",
+      "# Largest integer a such that a*a <= n.  n must be non-negative.",
+      "# Data analysis: perfect-square tests, integer grid indexing, primality.",
+      "math.isqrt(16)                 # 4",
+      "math.isqrt(17)                 # 4  (floor)",
+      "math.isqrt(0)                  # 0",
+      "# Perfect-square check:  math.isqrt(n)**2 == n"
+    ],
+    "description": "Integer square root"
+  },
+  "Math: lcm (least common multiple)": {
+    "prefix": "py_math_lcm",
+    "body": [
+      "# math.lcm(*integers) -> int  (3.9+)",
+      "# LCM of the arguments. With no arguments returns 1.",
+      "# Data analysis: synchronising cycles, aligning time series intervals.",
+      "math.lcm(4, 6)                 # 12",
+      "math.lcm(3, 4, 6)              # 12"
+    ],
+    "description": "Least common multiple"
+  },
+  "Math: perm (permutations)": {
+    "prefix": "py_math_perm",
+    "body": [
+      "# math.perm(n, k=None) -> int",
+      "# Number of ways to choose k items from n WITH order.",
+      "# If k is None, returns n! (all permutations).",
+      "# Data analysis: ranking possibilities, sequence arrangements.",
+      "math.perm(5, 2)                # 20",
+      "math.perm(5)                   # 120  (= 5!)"
+    ],
+    "description": "Permutations (nPr)"
+  },
+
+  "// ==================== MATH: FLOATING POINT ====================": {
+    "prefix": "py_section_math_float",
+    "body": ["# ============ MATH: FLOATING POINT ============"],
+    "description": "Section marker"
+  },
+
+  "Math: ceil / floor / trunc": {
+    "prefix": "py_math_ceiling",
+    "body": [
+      "# Rounding toward / away from zero",
+      "math.ceil(3.2)                 # 4   (smallest int >= x)",
+      "math.ceil(-3.2)                # -3",
+      "math.floor(3.7)                # 3   (largest int <= x)",
+      "math.floor(-3.7)               # -4",
+      "math.trunc(3.9)                # 3   (drop fractional part)",
+      "math.trunc(-3.9)               # -3"
+    ],
+    "description": "Ceiling, floor, truncation"
+  },
+  "Math: copysign": {
+    "prefix": "py_math_copysign",
+    "body": [
+      "# math.copysign(x, y) -> float",
+      "# Return a float with the magnitude of x and the sign of y.",
+      "# Data analysis: enforcing sign conventions, vector direction.",
+      "math.copysign(3, -1)           # -3.0",
+      "math.copysign(-3, 1)           # 3.0"
+    ],
+    "description": "Copy sign from y to magnitude of x"
+  },
+  "Math: fabs": {
+    "prefix": "py_math_fabs",
+    "body": [
+      "# math.fabs(x) -> float",
+      "# Absolute value as a float (unlike built-in abs which preserves type).",
+      "math.fabs(-5)                  # 5.0",
+      "math.fabs(-3.14)               # 3.14"
+    ],
+    "description": "Absolute value (float)"
+  },
+  "Math: fma (fused multiply-add)": {
+    "prefix": "py_math_fma",
+    "body": [
+      "# math.fma(x, y, z) -> float  (3.13+)",
+      "# Computes (x * y) + z with a single rounding step.",
+      "# Data analysis: numerically stable polynomial evaluation, dot products.",
+      "math.fma(2, 3, 4)              # 10.0",
+      "# More accurate than 2*3 + 4 when floats are involved"
+    ],
+    "description": "Fused multiply-add"
+  },
+  "Math: fmod": {
+    "prefix": "py_math_fmod",
+    "body": [
+      "# math.fmod(x, y) -> float",
+      "# Remainder of x / y, with sign of x (C-style).",
+      "# Unlike % operator, always returns a float.",
+      "math.fmod(7, 3)                # 1.0",
+      "math.fmod(-7, 3)               # -1.0",
+      "7 % 3                          # 1 (int)"
+    ],
+    "description": "C-style floating remainder"
+  },
+  "Math: frexp / ldexp (mantissa & exponent)": {
+    "prefix": "py_math_frexp",
+    "body": [
+      "# math.frexp(x) -> (m, e)   such that  x = m * 2**e",
+      "# math.ldexp(m, e) -> x    inverse of frexp",
+      "# Data analysis: normalising values, floating-point inspection.",
+      "m, e = math.frexp(8.0)         # (0.5, 4)   because 0.5 * 2**4 = 8",
+      "math.ldexp(0.5, 4)             # 8.0"
+    ],
+    "description": "Decompose/recompose float via mantissa and exponent"
+  },
+  "Math: modf (fractional & integer parts)": {
+    "prefix": "py_math_modf",
+    "body": [
+      "# math.modf(x) -> (fractional, integer)",
+      "# Both returned as floats, with the same sign as x.",
+      "math.modf(3.75)                # (0.75, 3.0)",
+      "math.modf(-3.75)               # (-0.75, -3.0)"
+    ],
+    "description": "Split float into fractional and integer parts"
+  },
+
+  "// ==================== MATH: FLOATING-POINT MANIPULATION ====================": {
+    "prefix": "py_section_math_fpmanip",
+    "body": ["# ============ MATH: FLOATING-POINT MANIPULATION ============"],
+    "description": "Section marker"
+  },
+
+  "Math: isclose (safe float comparison)": {
+    "prefix": "py_math_isclose",
+    "body": [
+      "# math.isclose(a, b, *, rel_tol=1e-09, abs_tol=0.0) -> bool",
+      "# Data analysis: NEVER use == for floats!  Use isclose instead.",
+      "math.isclose(0.1 + 0.2, 0.3)                # True",
+      "math.isclose(1e10, 1e10 + 1)                 # True  (rel_tol)",
+      "math.isclose(1e10, 1e10 + 1, abs_tol=0)     # False",
+      "math.isclose(0, 1e-10, abs_tol=1e-9)         # True"
+    ],
+    "description": "Compare floats within tolerance"
+  },
+  "Math: isfinite / isinf / isnan": {
+    "prefix": "py_math_isnan",
+    "body": [
+      "# Data analysis: always screen for inf/nan after division or log.",
+      "math.isfinite(5)               # True   (neither inf nor nan)",
+      "math.isfinite(math.inf)        # False",
+      "math.isinf(math.inf)           # True",
+      "math.isinf(5)                  # False",
+      "math.isnan(math.nan)           # True",
+      "math.isnan(5)                  # False",
+      "# Strip NaN:  [x for x in data if not math.isnan(x)]"
+    ],
+    "description": "Check for finite, infinite, or NaN"
+  },
+  "Math: nextafter / ulp": {
+    "prefix": "py_math_nextafter",
+    "body": [
+      "# math.nextafter(x, y, steps=1) -> float",
+      "# Smallest float after x in the direction of y.",
+      "math.nextafter(1.0, 2.0)       # 1.0000000000000002",
+      "",
+      "# math.ulp(x) -> float  (3.9+)",
+      "# Unit in the last place -- the gap between x and the next representable float.",
+      "math.ulp(1.0)                  # 2.220446049250313e-16",
+      "math.ulp(1e10)                 # 1.9073486328125e-06"
+    ],
+    "description": "Neighbouring floats and unit in the last place"
+  },
+
+  "// ==================== MATH: POWER & LOGARITHMS ====================": {
+    "prefix": "py_section_math_power",
+    "body": ["# ============ MATH: POWER & LOGARITHMS ============"],
+    "description": "Section marker"
+  },
+
+  "Math: cbrt / exp / exp2 / expm1": {
+    "prefix": "py_math_exp",
+    "body": [
+      "# math.cbrt(x) -> float  (3.11+)   cube root",
+      "math.cbrt(27)                  # 3.0",
+      "math.cbrt(-8)                  # -2.0",
+      "",
+      "# math.exp(x) -> e**x",
+      "math.exp(1)                    # 2.718281828459045",
+      "",
+      "# math.exp2(x) -> 2**x  (3.11+)",
+      "math.exp2(10)                  # 1024.0",
+      "",
+      "# math.expm1(x) -> e**x - 1   (accurate for small x)",
+      "math.expm1(1e-10)              # ~1e-10 (better than exp(1e-10) - 1)"
+    ],
+    "description": "Cube root and exponential family"
+  },
+  "Math: log / log1p / log2 / log10": {
+    "prefix": "py_math_log",
+    "body": [
+      "# math.log(x, base=e)",
+      "math.log(math.e)               # 1.0",
+      "math.log(100, 10)              # 2.0",
+      "",
+      "# math.log1p(x) -> log(1 + x)  (accurate for small x)",
+      "math.log1p(1e-10)              # ~1e-10",
+      "",
+      "# math.log2(x) / math.log10(x)  -- faster and more accurate",
+      "math.log2(1024)                # 10.0",
+      "math.log10(1000)               # 3.0",
+      "",
+      "# Data analysis: log transforms for skewed data",
+      "#   [math.log(x) for x in data if x > 0]"
+    ],
+    "description": "Logarithm family"
+  },
+  "Math: pow / sqrt": {
+    "prefix": "py_math_pow",
+    "body": [
+      "# math.pow(x, y) -> float   -- always returns float",
+      "math.pow(2, 10)                # 1024.0",
+      "math.pow(4, 0.5)               # 2.0",
+      "",
+      "# math.sqrt(x) -> float    -- x must be >= 0",
+      "math.sqrt(16)                  # 4.0",
+      "math.sqrt(2)                   # 1.4142135623730951",
+      "",
+      "# Built-in 2 ** 10 returns int;  math.pow(2, 10) returns float."
+    ],
+    "description": "Power and square root"
+  },
+
+  "// ==================== MATH: SUMMATION & PRODUCT ====================": {
+    "prefix": "py_section_math_sums",
+    "body": ["# ============ MATH: SUMMATION & PRODUCT ============"],
+    "description": "Section marker"
+  },
+
+  "Math: fsum (accurate float sum)": {
+    "prefix": "py_math_fsum",
+    "body": [
+      "# math.fsum(iterable) -> float",
+      "# Accurate floating-point sum -- avoids loss of precision from na\u00efve addition.",
+      "# Data analysis: ALWAYS prefer fsum over sum() for float data.",
+      "",
+      "data = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]",
+      "sum(data)                      # 4.499999999999999 (error)",
+      "math.fsum(data)                # 4.5              (correct)",
+      "",
+      "# Also useful for large lists of floats",
+      "math.fsum([1e100, 1, -1e100])  # 1.0"
+    ],
+    "description": "Accurate floating-point sum"
+  },
+  "Math: prod (product of iterable)": {
+    "prefix": "py_math_prod",
+    "body": [
+      "# math.prod(iterable, *, start=1) -> number  (3.8+)",
+      "# Product of all elements.  start defaults to 1 (multiplicative identity).",
+      "math.prod([2, 3, 4])           # 24",
+      "math.prod([2, 3, 4], start=10) # 240",
+      "math.prod([])                  # 1  (empty product)",
+      "",
+      "# Data analysis: compound growth, factorial-style computations",
+      "growth_rates = [1.05, 1.03, 1.07]",
+      "math.prod(growth_rates)        # 1.157... (cumulative factor)"
+    ],
+    "description": "Product of an iterable"
+  },
+  "Math: dist (Euclidean distance)": {
+    "prefix": "py_math_dist",
+    "body": [
+      "# math.dist(p, q) -> float  (3.8+)",
+      "# Euclidean distance between two points given as iterables.",
+      "# Data analysis: similarity, clustering, nearest-neighbour.",
+      "",
+      "math.dist([1, 2], [4, 6])      # 5.0",
+      "math.dist([0, 0, 0], [1, 1, 1])  # 1.732...",
+      "# Equivalent to: sqrt(sum((px - qx)**2 for px, qx in zip(p, q)))"
+    ],
+    "description": "Euclidean distance between two points"
+  },
+  "Math: hypot (Euclidean norm)": {
+    "prefix": "py_math_hypot",
+    "body": [
+      "# math.hypot(*coordinates) -> float",
+      "# Length of the vector from the origin.  Accepts n dimensions (3.8+).",
+      "math.hypot(3, 4)               # 5.0",
+      "math.hypot(1, 1, 1)            # 1.732...",
+      "# Data analysis: magnitude of feature vectors, normalisation"
+    ],
+    "description": "Euclidean norm of a vector"
+  },
+  "Math: sumprod (dot product)": {
+    "prefix": "py_math_sumprod",
+    "body": [
+      "# math.sumprod(p, q) -> float  (3.12+)",
+      "# Sum of products from two iterables -- i.e., dot product.",
+      "# Data analysis: weighted sums, linear combinations, cosine similarity numerator.",
+      "",
+      "math.sumprod([1, 2, 3], [4, 5, 6])   # 32  (1*4 + 2*5 + 3*6)",
+      "# Equivalent to: sum(a*b for a, b in zip(p, q))"
+    ],
+    "description": "Dot product of two iterables"
+  },
+
+  "// ==================== MATH: TRIGONOMETRY ====================": {
+    "prefix": "py_section_math_trig",
+    "body": ["# ============ MATH: TRIGONOMETRY ============"],
+    "description": "Section marker"
+  },
+
+  "Math: degrees / radians": {
+    "prefix": "py_math_angle",
+    "body": [
+      "math.degrees(math.pi)          # 180.0",
+      "math.radians(180)              # 3.141592653589793",
+      "math.degrees(math.pi / 2)      # 90.0"
+    ],
+    "description": "Angle conversion"
+  },
+  "Math: sin / cos / tan": {
+    "prefix": "py_math_sincos",
+    "body": [
+      "math.sin(math.pi / 2)          # 1.0",
+      "math.cos(0)                    # 1.0",
+      "math.tan(math.pi / 4)          # 0.9999999999999999 (≈ 1)"
+    ],
+    "description": "Sine, cosine, tangent"
+  },
+  "Math: asin / acos / atan / atan2": {
+    "prefix": "py_math_atan2",
+    "body": [
+      "math.asin(1)                   # pi/2",
+      "math.acos(1)                   # 0.0",
+      "math.atan(1)                   # pi/4",
+      "",
+      "# math.atan2(y, x) -- correct quadrant from signs of both args",
+      "math.atan2(1, 1)               # pi/4",
+      "math.atan2(-1, -1)             # -3*pi/4",
+      "# Data analysis: angle of a vector, phase calculation"
+    ],
+    "description": "Inverse trigonometric functions"
+  },
+  "Math: hyperbolic": {
+    "prefix": "py_math_hyperbolic",
+    "body": [
+      "math.sinh(1)                   # 1.1752...",
+      "math.cosh(1)                   # 1.5430...",
+      "math.tanh(1)                   # 0.7615...",
+      "math.asinh(1)                  # 0.8813...",
+      "math.acosh(2)                  # 1.3169...",
+      "math.atanh(0.5)                # 0.5493..."
+    ],
+    "description": "Hyperbolic functions"
+  },
+  "Math: erf / erfc / gamma / lgamma": {
+    "prefix": "py_math_special",
+    "body": [
+      "# math.erf(x) -- error function, used in normal distribution CDF",
+      "math.erf(0)                    # 0.0",
+      "math.erf(1)                    # 0.8427...",
+      "",
+      "# math.erfc(x) -- complementary error function: 1 - erf(x)",
+      "math.erfc(1)                   # 0.1577...",
+      "",
+      "# math.gamma(x) -- Gamma function: (x-1)! for integers",
+      "math.gamma(5)                  # 24.0  (= 4!)",
+      "",
+      "# math.lgamma(x) -- natural log of |gamma(x)|",
+      "math.lgamma(5)                 # log(24) ≈ 3.178..."
+    ],
+    "description": "Error and Gamma functions"
+  },
+  "Math: constants": {
+    "prefix": "py_math_constants",
+    "body": [
+      "math.pi                        # 3.141592653589793",
+      "math.e                         # 2.718281828459045",
+      "math.tau                       # 6.283185307179586  (= 2*pi)",
+      "math.inf                       # inf",
+      "math.nan                       # nan"
+    ],
+    "description": "Mathematical constants"
+  },
+
+  "// ==================== STATISTICS: CENTRAL TENDENCY ====================": {
+    "prefix": "py_section_stat_central",
+    "body": ["# ============ STATISTICS: CENTRAL TENDENCY ============"],
+    "description": "Section marker"
+  },
+
+  "Stats: mean (arithmetic)": {
+    "prefix": "py_stat_mean",
+    "body": [
+      "# statistics.mean(data) -> float or Decimal/Fraction",
+      "# Arithmetic average.  Raises StatisticsError on empty data.",
+      "# Data analysis: the most common measure of central tendency.",
+      "",
+      "data = [2, 4, 4, 4, 5, 5, 7, 9]",
+      "statistics.mean(data)          # 5.0",
+      "# Sensitive to outliers -- consider median for skewed data."
+    ],
+    "description": "Arithmetic mean"
+  },
+  "Stats: fmean (fast mean, with weights)": {
+    "prefix": "py_stat_fmean",
+    "body": [
+      "# statistics.fmean(data, weights=None) -> float  (3.8+)",
+      "# Faster than mean(); always returns float. Supports weights (3.12+).",
+      "# Data analysis: use fmean for large datasets and weighted averages.",
+      "",
+      "statistics.fmean([1, 2, 3, 4])                  # 2.5",
+      "statistics.fmean([1, 2, 3], [0.5, 0.3, 0.2])   # weighted mean",
+      "# Weights must be non-negative."
+    ],
+    "description": "Fast floating-point mean (supports weights)"
+  },
+  "Stats: geometric_mean": {
+    "prefix": "py_stat_geo_mean",
+    "body": [
+      "# statistics.geometric_mean(data) -> float",
+      "# n-th root of the product of the values.  All values must be >= 0.",
+      "# Data analysis: growth rates, ratios, log-normal distributions.",
+      "",
+      "growth = [1.05, 1.03, 1.07]",
+      "statistics.geometric_mean(growth)   # ~1.0497  (average growth factor)"
+    ],
+    "description": "Geometric mean (for ratios/growth)"
+  },
+  "Stats: harmonic_mean": {
+    "prefix": "py_stat_harm_mean",
+    "body": [
+      "# statistics.harmonic_mean(data, weights=None) -> float",
+      "# Reciprocal of the arithmetic mean of reciprocals.",
+      "# Data analysis: average rates (speed, price-per-unit), F1-score.",
+      "",
+      "# 10 km at 40 km/h, then 10 km at 60 km/h -> average speed?",
+      "speeds = [40, 60]",
+      "statistics.harmonic_mean(speeds)   # 48.0  (correct average speed)"
+    ],
+    "description": "Harmonic mean (for rates)"
+  },
+  "Stats: median / median_low / median_high": {
+    "prefix": "py_stat_median",
+    "body": [
+      "# statistics.median(data) -> middle value",
+      "# For even-length data, returns the average of the two middle values.",
+      "statistics.median([1, 3, 5])       # 3",
+      "statistics.median([1, 3, 5, 7])    # 4.0",
+      "",
+      "# median_low / median_high -- return an actual data point for even length",
+      "statistics.median_low([1, 3, 5, 7])   # 3",
+      "statistics.median_high([1, 3, 5, 7])  # 5",
+      "",
+      "# Data analysis: median is robust to outliers."
+    ],
+    "description": "Median and low/high variants"
+  },
+  "Stats: median_grouped (grouped data)": {
+    "prefix": "py_stat_median_grouped",
+    "body": [
+      "# statistics.median_grouped(data, interval=1) -> float",
+      "# 50th percentile for data grouped into class intervals of width `interval`.",
+      "# Data analysis: use when values are rounded to the nearest interval.",
+      "",
+      "statistics.median_grouped([1, 2, 3, 4])             # 2.5",
+      "statistics.median_grouped([1, 2, 3, 4], interval=2) # 3.25",
+      "",
+      "# Example: ages rounded to nearest 10",
+      "ages = [20, 30, 30, 40, 50, 50, 60]",
+      "statistics.median_grouped(ages, interval=10)        # ~40"
+    ],
+    "description": "Median of grouped continuous data"
+  },
+  "Stats: mode / multimode": {
+    "prefix": "py_stat_mode",
+    "body": [
+      "# statistics.mode(data) -> single most common value",
+      "statistics.mode([1, 2, 2, 3])          # 2",
+      "statistics.mode(['red', 'blue', 'blue'])  # 'blue'",
+      "",
+      "# statistics.multimode(data) -> list of all modes  (3.8+)",
+      "statistics.multimode([1, 2, 2, 3, 3])  # [2, 3]",
+      "statistics.multimode([1, 2, 3])        # [1, 2, 3]  (all tie)",
+      "",
+      "# Data analysis: categorical data frequency, bimodal detection."
+    ],
+    "description": "Mode and all modes"
+  },
+
+  "// ==================== STATISTICS: SPREAD ====================": {
+    "prefix": "py_section_stat_spread",
+    "body": ["# ============ STATISTICS: SPREAD ============"],
+    "description": "Section marker"
+  },
+
+  "Stats: variance / pvariance": {
+    "prefix": "py_stat_variance",
+    "body": [
+      "# statistics.variance(data, xbar=None) -> sample variance",
+      "# statistics.pvariance(data, mu=None) -> population variance",
+      "# Use sample variance when data is a sample; population when it's the whole.",
+      "",
+      "data = [2, 4, 4, 4, 5, 5, 7, 9]",
+      "statistics.variance(data)        # 4.571... (n-1 denominator)",
+      "statistics.pvariance(data)       # 4.0     (n denominator)",
+      "",
+      "# Data analysis: variance = squared spread, basis for ANOVA, PCA."
+    ],
+    "description": "Sample and population variance"
+  },
+  "Stats: stdev / pstdev": {
+    "prefix": "py_stat_stdev",
+    "body": [
+      "# statistics.stdev(data, xbar=None) -> sample standard deviation",
+      "# statistics.pstdev(data, mu=None)  -> population standard deviation",
+      "# stdev = sqrt(variance).  Same units as the data.",
+      "",
+      "data = [2, 4, 4, 4, 5, 5, 7, 9]",
+      "statistics.stdev(data)           # 2.138...",
+      "statistics.pstdev(data)          # 2.0",
+      "",
+      "# Data analysis: standard deviation quantifies typical deviation.",
+      "# 68% of values fall within 1 stdev of the mean (normal distribution)."
+    ],
+    "description": "Sample and population standard deviation"
+  },
+  "Stats: quantiles (percentiles, quartiles)": {
+    "prefix": "py_stat_quantiles",
+    "body": [
+      "# statistics.quantiles(data, *, n=4, method='exclusive') -> list of cut points",
+      "# Divides data into n continuous intervals with equal probability.",
+      "",
+      "# Quartiles (n=4) -- 25%, 50%, 75%",
+      "statistics.quantiles([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], n=4)",
+      "# -> [3.25, 5.5, 7.75]",
+      "",
+      "# Deciles (n=10) -- every 10%",
+      "statistics.quantiles([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], n=10)",
+      "",
+      "# method='exclusive' (default) -- for samples (more extreme values possible)",
+      "# method='inclusive'          -- for populations (or full samples)",
+      "statistics.quantiles(data, n=4, method='inclusive')",
+      "",
+      "# Data analysis: box plots, IQR, outlier detection."
+    ],
+    "description": "Quantiles, quartiles, percentiles"
+  },
+
+  "// ==================== STATISTICS: RELATIONS ====================": {
+    "prefix": "py_section_stat_relations",
+    "body": ["# ============ STATISTICS: RELATIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Stats: covariance": {
+    "prefix": "py_stat_covariance",
+    "body": [
+      "# statistics.covariance(x, y) -> float",
+      "# Sample covariance between two datasets of equal length.",
+      "# Positive -> x and y tend to move together; negative -> opposite.",
+      "",
+      "x = [1, 2, 3, 4, 5]",
+      "y = [2, 4, 5, 4, 5]",
+      "statistics.covariance(x, y)      # 0.75",
+      "",
+      "# Data analysis: covariance matrix, PCA, portfolio risk."
+    ],
+    "description": "Sample covariance"
+  },
+  "Stats: correlation (Pearson)": {
+    "prefix": "py_stat_correlation",
+    "body": [
+      "# statistics.correlation(x, y, *, method='linear') -> float",
+      "# Pearson correlation coefficient, between -1 and 1.",
+      "# method='linear' (default) or method='rank' (Spearman, 3.12+).",
+      "",
+      "x = [1, 2, 3, 4, 5]",
+      "y = [2, 4, 5, 4, 5]",
+      "statistics.correlation(x, y)              # 0.852...",
+      "statistics.correlation(x, y, method='rank')  # Spearman",
+      "",
+      "# Data analysis: feature relationships, multicollinearity checks."
+    ],
+    "description": "Pearson / Spearman correlation"
+  },
+  "Stats: linear_regression": {
+    "prefix": "py_stat_linreg",
+    "body": [
+      "# statistics.linear_regression(x, y, *, proportional=False) -> (slope, intercept)",
+      "# Simple ordinary least-squares regression:  y = slope * x + intercept.",
+      "",
+      "x = [1, 2, 3, 4, 5]",
+      "y = [2, 4, 5, 4, 5]",
+      "slope, intercept = statistics.linear_regression(x, y)",
+      "print(slope, intercept)          # 0.6 2.2",
+      "",
+      "# proportional=True forces intercept = 0",
+      "slope, intercept = statistics.linear_regression(x, y, proportional=True)",
+      "",
+      "# Data analysis: trend lines, predictive modelling, R^2 inputs."
+    ],
+    "description": "Simple linear regression"
+  },
+
+  "// ==================== STATISTICS: NORMAL DISTRIBUTION ====================": {
+    "prefix": "py_section_stat_normal",
+    "body": ["# ============ STATISTICS: NORMAL DISTRIBUTION ============"],
+    "description": "Section marker"
+  },
+
+  "Stats: NormalDist (create)": {
+    "prefix": "py_stat_normaldist",
+    "body": [
+      "# statistics.NormalDist(mu=0.0, sigma=1.0)  (3.8+)",
+      "# A normal (Gaussian) distribution object with mean mu and std sigma.",
+      "",
+      "dist = statistics.NormalDist(mu=100, sigma=15)   # IQ-like",
+      "dist.mean                     # 100",
+      "dist.stdev                    # 15",
+      "dist.variance                 # 225"
+    ],
+    "description": "Create a normal distribution"
+  },
+  "Stats: NormalDist (PDF / CDF)": {
+    "prefix": "py_stat_normaldist_pdf",
+    "body": [
+      "# Probability density function (PDF)",
+      "dist.pdf(100)                  # density at x=100",
+      "",
+      "# Cumulative distribution function (CDF) -- P(X <= x)",
+      "dist.cdf(115)                  # probability below 115",
+      "dist.cdf(85)                   # probability below 85",
+      "",
+      "# Inverse CDF (quantile function) -- x such that CDF(x) = p",
+      "dist.inv_cdf(0.95)             # 95th percentile",
+      "",
+      "# Data analysis: z-scores, confidence intervals, p-values.",
+      "z = (115 - dist.mean) / dist.stdev",
+      "p_below = dist.cdf(115)"
+    ],
+    "description": "PDF, CDF, and inverse CDF"
+  },
+  "Stats: NormalDist (overlap, samples, confidence)": {
+    "prefix": "py_stat_normaldist_extra",
+    "body": [
+      "# Overlap coefficient between two normal distributions",
+      "d1 = statistics.NormalDist(0, 1)",
+      "d2 = statistics.NormalDist(1, 1)",
+      "d1.overlap(d2)                 # ~0.617",
+      "",
+      "# Generate random samples",
+      "samples = d1.samples(10)       # list of 10 random values",
+      "",
+      "# Confidence interval for the mean",
+      "data = [2, 4, 4, 5, 5, 7, 9]",
+      "ci = d1.confidence_interval(0.95)   # 95% CI for the mean"
+    ],
+    "description": "Overlap, samples, confidence intervals"
+  },
+
+  "// ==================== DATA ANALYSIS WORKFLOWS ====================": {
+    "prefix": "py_section_data_workflows",
+    "body": ["# ============ DATA ANALYSIS WORKFLOWS ============"],
+    "description": "Section marker"
+  },
+
+  "Workflow: full descriptive stats": {
+    "prefix": "py_stat_full",
+    "body": [
+      "# ---- Full descriptive statistics report ----",
+      "import statistics",
+      "import math",
+      "",
+      "data = [${1:2, 4, 4, 4, 5, 5, 7, 9}]",
+      "",
+      "# Central tendency",
+      "print('mean      :', statistics.mean(data))",
+      "print('fmean     :', statistics.fmean(data))",
+      "print('median    :', statistics.median(data))",
+      "print('mode      :', statistics.multimode(data))",
+      "",
+      "# Spread",
+      "print('variance  :', statistics.variance(data))",
+      "print('stdev     :', statistics.stdev(data))",
+      "print('min / max :', min(data), max(data))",
+      "",
+      "# Quartiles",
+      "print('quartiles :', statistics.quantiles(data, n=4))",
+      "",
+      "# Shape hints",
+      "mean, med = statistics.mean(data), statistics.median(data)",
+      "print('skew hint :', 'right' if mean > med else 'left' if mean < med else 'symmetric')"
+    ],
+    "description": "Complete descriptive statistics report"
+  },
+  "Workflow: strip NaN / inf": {
+    "prefix": "py_stat_clean",
+    "body": [
+      "# ---- Clean data: remove NaN and inf before statistics ----",
+      "import math",
+      "from itertools import filterfalse",
+      "",
+      "raw = [${1:1.0, float('nan'), 2.0, float('inf'), 3.0}]",
+      "",
+      "# Remove NaN",
+      "clean = list(filterfalse(math.isnan, raw))",
+      "",
+      "# Remove both NaN and inf",
+      "clean = [x for x in raw if math.isfinite(x)]",
+      "",
+      "# Then compute statistics safely",
+      "import statistics",
+      "statistics.mean(clean)"
+    ],
+    "description": "Remove NaN and infinity before statistics"
+  },
+  "Workflow: z-scores": {
+    "prefix": "py_stat_zscore",
+    "body": [
+      "# ---- Z-scores: how many standard deviations from the mean ----",
+      "import statistics",
+      "",
+      "data = [${1:2, 4, 4, 4, 5, 5, 7, 9}]",
+      "mu = statistics.mean(data)",
+      "sigma = statistics.stdev(data)",
+      "",
+      "z_scores = [(x - mu) / sigma for x in data]",
+      "",
+      "# Flag outliers: |z| > 2 or 3",
+      "outliers = [x for x, z in zip(data, z_scores) if abs(z) > 2]"
+    ],
+    "description": "Compute z-scores and detect outliers"
+  },
+  "Workflow: outlier detection (IQR)": {
+    "prefix": "py_stat_outliers",
+    "body": [
+      "# ---- Outlier detection using the IQR rule ----",
+      "import statistics",
+      "",
+      "data = [${1:2, 4, 4, 4, 5, 5, 7, 9, 100}]",
+      "q1, _, q3 = statistics.quantiles(data, n=4)",
+      "iqr = q3 - q1",
+      "",
+      "lower = q1 - 1.5 * iqr",
+      "upper = q3 + 1.5 * iqr",
+      "",
+      "outliers = [x for x in data if x < lower or x > upper]",
+      "clean = [x for x in data if lower <= x <= upper]"
+    ],
+    "description": "IQR-based outlier detection"
+  },
+  "Workflow: weighted average": {
+    "prefix": "py_stat_weighted",
+    "body": [
+      "# ---- Weighted average with statistics.fmean ----",
+      "import statistics",
+      "",
+      "values  = [${1:80, 90, 70}]",
+      "weights = [${2:0.2, 0.5, 0.3}]   # must sum to 1",
+      "",
+      "statistics.fmean(values, weights)   # weighted mean"
+    ],
+    "description": "Weighted average with fmean"
+  },
+  "Workflow: log transform for skewed data": {
+    "prefix": "py_stat_logtransform",
+    "body": [
+      "# ---- Log transform to reduce right skew ----",
+      "import math",
+      "import statistics",
+      "",
+      "data = [${1:1, 2, 3, 4, 5, 100}]   # right-skewed",
+      "",
+      "# Only positive values can be log-transformed",
+      "log_data = [math.log(x) for x in data if x > 0]",
+      "",
+      "print('raw mean    :', statistics.mean(data))",
+      "print('log mean    :', statistics.mean(log_data))",
+      "# Geometric mean = exp(mean(log_data))",
+      "print('geo mean    :', math.exp(statistics.mean(log_data)))"
+    ],
+    "description": "Log transform skewed data"
+  }
+}

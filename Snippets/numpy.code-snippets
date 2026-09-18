@@ -1,0 +1,1255 @@
+{
+  "// ==================== 1. IMPORT & SETUP ====================": {
+    "prefix": "np_section_setup",
+    "body": ["# ============ IMPORT & SETUP ============"],
+    "description": "Section marker"
+  },
+
+  "Import NumPy": {
+    "prefix": "np_import",
+    "body": [
+      "import numpy as np",
+      "print(np.__version__)"
+    ],
+    "description": "Standard NumPy import"
+  },
+  "Reproducible random seed": {
+    "prefix": "np_seed",
+    "body": [
+      "# ---- Reproducibility for ML experiments ----",
+      "# Always set seeds before data splitting, weight init, or sampling.",
+      "# Use a single source of truth so experiments are repeatable.",
+      "SEED = ${1:42}",
+      "rng = np.random.default_rng(SEED)   # modern Generator API",
+      "",
+      "# Legacy API (still widely seen):",
+      "# np.random.seed(SEED)"
+    ],
+    "description": "Set random seed for reproducibility"
+  },
+  "Print options (debugging)": {
+    "prefix": "np_printoptions",
+    "body": [
+      "# ---- Control how arrays are printed ----",
+      "np.set_printoptions(",
+      "    precision=${1:4},      # decimal places",
+      "    suppress=True,        # no scientific notation for small floats",
+      "    linewidth=${2:120},    # wrap width",
+      "    threshold=${3:1000},   # max elements before ellipsis",
+      ")"
+    ],
+    "description": "Configure NumPy print output"
+  },
+
+  "// ==================== 2. ARRAY CREATION ====================": {
+    "prefix": "np_section_create",
+    "body": ["# ============ ARRAY CREATION ============"],
+    "description": "Section marker"
+  },
+
+  "Array from list": {
+    "prefix": "np_array",
+    "body": [
+      "# ---- Create an array from Python sequences ----",
+      "# Core data structure: ndarray (n-dimensional array).",
+      "# All elements share the same dtype -> fast vectorized math.",
+      "a = np.array([${1:1, 2, 3, 4, 5}])                 # 1D",
+      "b = np.array([[${2:1, 2, 3}, [4, 5, 6]]])           # 2D  (2 rows, 3 cols)",
+      "c = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])  # 3D"
+    ],
+    "description": "Create arrays from lists"
+  },
+  "Zeros / ones / full": {
+    "prefix": "np_zeros_ones",
+    "body": [
+      "# ---- Pre-allocate arrays (faster than growing lists) ----",
+      "zeros = np.zeros((${1:3, 4}))               # float64 zeros",
+      "ones  = np.ones((${1:3, 4}), dtype=${2:np.float32})",
+      "full  = np.full((${1:3, 4}), ${3:7.0})      # fill with 7.0",
+      "empty = np.empty((${1:3, 4}))               # uninitialized (fast, beware)"
+    ],
+    "description": "Pre-allocated arrays"
+  },
+  "Identity / eye": {
+    "prefix": "np_eye",
+    "body": [
+      "# ---- Identity matrix (linear algebra, weight init) ----",
+      "np.eye(${1:3})                       # 3x3 identity",
+      "np.eye(${1:3}, k=${2:1})              # ones on the 1st super-diagonal",
+      "np.identity(${1:3})                  # same as np.eye(n)"
+    ],
+    "description": "Identity matrix"
+  },
+  "Range: arange vs linspace": {
+    "prefix": "np_range",
+    "body": [
+      "# ---- Range generators ----",
+      "# arange: step-based (like Python range, but returns ndarray)",
+      "np.arange(${1:0}, ${2:10}, ${3:2})              # [0 2 4 6 8]",
+      "",
+      "# linspace: count-based; ideal for plotting and sweeps",
+      "np.linspace(${4:0}, ${5:1}, ${6:5})             # [0. 0.25 0.5 0.75 1.]",
+      "",
+      "# logspace: log-spaced values (learning rate sweeps!)",
+      "np.logspace(${7:-3}, ${8:-1}, ${9:3})           # [0.001 0.01 0.1]"
+    ],
+    "description": "arange, linspace, logspace"
+  },
+  "Random arrays": {
+    "prefix": "np_random_create",
+    "body": [
+      "# ---- Random arrays (use rng for reproducibility) ----",
+      "rng = np.random.default_rng(${1:42})",
+      "",
+      "rng.random((${2:3, 4}))              # uniform [0, 1)",
+      "rng.normal(0, 1, (${2:3, 4}))        # standard normal",
+      "rng.integers(0, 10, (${2:3, 4}))     # ints in [0, 10)",
+      "rng.choice([${3:'a', 'b', 'c'}], size=${4:5})",
+      "rng.permutation(${5:10})             # shuffled 0..9",
+      "rng.shuffle(${6:arr})                # in-place shuffle"
+    ],
+    "description": "Random array generators"
+  },
+  "From existing array": {
+    "prefix": "np_like",
+    "body": [
+      "# ---- Arrays with same shape/dtype as another ----",
+      "np.zeros_like(${1:arr})         # shape + dtype of arr",
+      "np.ones_like(${1:arr})",
+      "np.full_like(${1:arr}, ${2:7})",
+      "np.empty_like(${1:arr})"
+    ],
+    "description": "Create arrays matching an existing one"
+  },
+
+  "// ==================== 3. ARRAY ATTRIBUTES ====================": {
+    "prefix": "np_section_attrs",
+    "body": ["# ============ ARRAY ATTRIBUTES ============"],
+    "description": "Section marker"
+  },
+
+  "Shape / ndim / size / dtype": {
+    "prefix": "np_attrs",
+    "body": [
+      "# ---- Inspect an array ----",
+      "arr.shape      # tuple, e.g. (1000, 20)",
+      "arr.ndim       # number of dimensions",
+      "arr.size       # total elements = product of shape",
+      "arr.dtype      # element type, e.g. float64",
+      "arr.itemsize   # bytes per element",
+      "arr.nbytes     # total bytes = size * itemsize",
+      "arr.T          # transpose (view)"
+    ],
+    "description": "Core array attributes"
+  },
+  "Reshape / ravel / flatten": {
+    "prefix": "np_reshape",
+    "body": [
+      "# ---- Change shape ----",
+      "arr.reshape(${1:2, 3})        # view when possible; -1 infers one dim",
+      "arr.reshape(-1, ${2:3})       # let NumPy infer rows",
+      "arr.ravel()                 # view (C-order), fast",
+      "arr.flatten()               # always a copy",
+      "",
+      "# ML: images -> flat vectors for sklearn estimators",
+      "X = images.reshape(len(images), -1)"
+    ],
+    "description": "Reshape, flatten, ravel"
+  },
+
+  "// ==================== 4. DATA TYPES (dtype) ====================": {
+    "prefix": "np_section_dtype",
+    "body": ["# ============ DATA TYPES ============"],
+    "description": "Section marker"
+  },
+
+  "Common dtypes": {
+    "prefix": "np_dtypes",
+    "body": [
+      "# ---- NumPy dtypes ----",
+      "# int8/16/32/64, uint8/16/32/64",
+      "# float16 (half), float32 (single), float64 (double)",
+      "# complex64/128, bool_, str_, object_, datetime64, timedelta64",
+      "",
+      "np.float32     # ML standard (GPU-friendly, half memory)",
+      "np.float64     # scientific default",
+      "np.int64       # default int on 64-bit",
+      "np.bool_       # booleans"
+    ],
+    "description": "Common NumPy dtypes"
+  },
+  "Cast dtype": {
+    "prefix": "np_astype",
+    "body": [
+      "# ---- Convert dtype ----",
+      "arr.astype(${1:np.float32})     # returns a copy",
+      "",
+      "# ML: downcast float64 -> float32 to halve memory",
+      "X = X.astype(np.float32)",
+      "",
+      "# ML: one-hot labels to class indices",
+      "y = np.argmax(one_hot, axis=1)"
+    ],
+    "description": "Cast array dtype"
+  },
+  "Memory-efficient integer encoding": {
+    "prefix": "np_dtype_downcast",
+    "body": [
+      "# ---- Choose the smallest dtype that fits ----",
+      "arr.astype(np.uint8)      # values 0..255",
+      "arr.astype(np.int16)      # values within +/- 32k",
+      "",
+      "# ML: label arrays only need uint8/uint16"
+    ],
+    "description": "Downcast to save memory"
+  },
+
+  "// ==================== 5. INDEXING & SLICING ====================": {
+    "prefix": "np_section_indexing",
+    "body": ["# ============ INDEXING & SLICING ============"],
+    "description": "Section marker"
+  },
+
+  "Basic indexing": {
+    "prefix": "np_index",
+    "body": [
+      "# ---- Basic indexing ----",
+      "a[0]           # first element",
+      "a[-1]          # last element",
+      "a[2:5]         # slice -> view",
+      "a[::2]         # every other",
+      "a[::-1]        # reversed view",
+      "",
+      "m[0, 1]        # 2D: row 0, col 1",
+      "m[:, 0]        # all rows, col 0",
+      "m[1, :]        # row 1, all cols",
+      "m[1:3, :2]     # submatrix"
+    ],
+    "description": "Basic indexing and slicing"
+  },
+  "Boolean mask indexing": {
+    "prefix": "np_bool_index",
+    "body": [
+      "# ---- Boolean masks (filtering rows) ----",
+      "mask = ${1:arr} > ${2:5}",
+      "arr[mask]                    # select values > 5",
+      "",
+      "# Chain conditions with & | ~ (not and/or/not)",
+      "arr[(arr > 0) & (arr < 10)]",
+      "arr[(arr < 0) | (arr > 100)]",
+      "arr[~(arr == 0)]",
+      "",
+      "# ML: filter dataset rows",
+      "X_train[ y_train == ${3:class_id} ]"
+    ],
+    "description": "Boolean mask filtering"
+  },
+  "Fancy indexing": {
+    "prefix": "np_fancy_index",
+    "body": [
+      "# ---- Fancy indexing (integer arrays) ----",
+      "arr[[0, 2, 4]]                 # pick specific positions",
+      "arr[np.array([0, 1, 0, 1])]    # with repeats",
+      "",
+      "# 2D: pick (row, col) pairs",
+      "m[np.array([0, 1, 2]), np.array([1, 0, 2])]",
+      "",
+      "# ML: mini-batch sampling",
+      "batch = X[idx]                 # idx from rng.integers"
+    ],
+    "description": "Fancy integer-array indexing"
+  },
+  "Where (conditional select)": {
+    "prefix": "np_where",
+    "body": [
+      "# ---- np.where: vectorized if/else ----",
+      "np.where(${1:cond}, ${2:x}, ${3:y})",
+      "",
+      "# ML: ReLU activation",
+      "relu = np.where(x > 0, x, 0)",
+      "",
+      "# ML: replace outliers",
+      "clipped = np.where(x > ${4:threshold}, ${4:threshold}, x)",
+      "",
+      "# Indices where condition holds",
+      "np.where(arr > ${5:0})[0]"
+    ],
+    "description": "Vectorized conditional selection"
+  },
+  "Clip values": {
+    "prefix": "np_clip",
+    "body": [
+      "# ---- Clip to [min, max] ----",
+      "np.clip(${1:arr}, ${2:0}, ${3:1})   # e.g. probabilities",
+      "",
+      "# ML: gradient clipping to stabilize training",
+      "grads = np.clip(grads, -${4:1.0}, ${4:1.0})"
+    ],
+    "description": "Clip values to a range"
+  },
+
+  "// ==================== 6. RESHAPING & MANIPULATION ====================": {
+    "prefix": "np_section_reshape",
+    "body": ["# ============ RESHAPING & MANIPULATION ============"],
+    "description": "Section marker"
+  },
+
+  "Reshape": {
+    "prefix": "np_reshape_fn",
+    "body": [
+      "# ---- reshape: change shape without changing data ----",
+      "arr.reshape(${1:3, 4})",
+      "arr.reshape(-1, ${2:1})          # column vector",
+      "np.reshape(${3:arr}, (-1, ${4:1}))",
+      "",
+      "# ML: flatten images for MLPs, then reshape back for CNNs",
+      "flat = X.reshape(X.shape[0], -1)"
+    ],
+    "description": "Reshape arrays"
+  },
+  "Transpose / swapaxes / moveaxis": {
+    "prefix": "np_transpose",
+    "body": [
+      "# ---- Transpose & axis reorder ----",
+      "m.T                          # reverse axes",
+      "np.transpose(m)              # same as m.T",
+      "np.swapaxes(m, 0, 1)         # swap two axes",
+      "np.moveaxis(m, ${1:0}, ${2:-1})   # move axis 0 to the end",
+      "",
+      "# ML: move channels-last -> channels-first for PyTorch",
+      "x = np.moveaxis(x, -1, 1)"
+    ],
+    "description": "Transpose and reorder axes"
+  },
+  "Expand / squeeze dims": {
+    "prefix": "np_expand_dims",
+    "body": [
+      "# ---- Add or remove length-1 axes ----",
+      "np.expand_dims(arr, axis=${1:0})   # (n,) -> (1, n)",
+      "arr[:, np.newaxis]                 # (n,) -> (n, 1)",
+      "arr[None, :]                       # (n,) -> (1, n)",
+      "np.squeeze(arr)                    # drop all length-1 axes",
+      "",
+      "# ML: align shapes for broadcasting in a batch",
+      "x = x[:, None, :]"
+    ],
+    "description": "Add/remove singleton dimensions"
+  },
+  "Concatenate / vstack / hstack": {
+    "prefix": "np_concat",
+    "body": [
+      "# ---- Join arrays ----",
+      "np.concatenate([a, b], axis=${1:0})   # along existing axis",
+      "np.vstack([a, b])                     # stack rows",
+      "np.hstack([a, b])                     # stack columns",
+      "np.stack([a, b], axis=${2:0})          # new axis",
+      "",
+      "# ML: add bias column",
+      "X = np.hstack([X, np.ones((len(X), 1))])"
+    ],
+    "description": "Concatenate and stack arrays"
+  },
+  "Split arrays": {
+    "prefix": "np_split",
+    "body": [
+      "# ---- Split arrays ----",
+      "np.split(arr, ${1:3})                # into 3 equal parts",
+      "np.array_split(arr, ${2:3})          # unequal parts allowed",
+      "np.vsplit(m, ${1:2})                  # split rows",
+      "np.hsplit(m, ${1:2})                  # split columns",
+      "",
+      "# ML: manual train/val/test split",
+      "train, val, test = np.split(X, [${3:8000}, ${4:9000}])"
+    ],
+    "description": "Split arrays"
+  },
+  "Tile / repeat": {
+    "prefix": "np_tile_repeat",
+    "body": [
+      "# ---- Repeat elements ----",
+      "np.tile(arr, ${1:3})                # repeat entire array",
+      "np.repeat(arr, ${2:3})              # repeat each element",
+      "np.repeat(arr, ${2:3}, axis=0)       # along an axis",
+      "",
+      "# ML: broadcast a 1D bias vector across a batch",
+      "b = np.tile(bias, (batch_size, 1))"
+    ],
+    "description": "Tile and repeat"
+  },
+
+  "// ==================== 7. ARITHMETIC & MATH ====================": {
+    "prefix": "np_section_math",
+    "body": ["# ============ ARITHMETIC & MATH ============"],
+    "description": "Section marker"
+  },
+
+  "Element-wise arithmetic": {
+    "prefix": "np_arith",
+    "body": [
+      "# ---- Vectorized arithmetic (no loops!) ----",
+      "a + b, a - b, a * b, a / b        # element-wise",
+      "a // b                            # floor division",
+      "a % b                             # modulo",
+      "a ** b                            # power",
+      "",
+      "# Scalar broadcasting",
+      "a * ${1:2} + ${2:1}                  # scale and shift",
+      "",
+      "# ML: min-max normalisation",
+      "norm = (x - x.min()) / (x.max() - x.min())"
+    ],
+    "description": "Element-wise arithmetic"
+  },
+  "Universal functions (ufuncs)": {
+    "prefix": "np_ufunc",
+    "body": [
+      "# ---- ufuncs: element-wise math functions ----",
+      "np.sqrt(x), np.exp(x), np.log(x), np.log1p(x)",
+      "np.sin(x), np.cos(x), np.tan(x)",
+      "np.abs(x), np.sign(x), np.negative(x)",
+      "np.square(x), np.cbrt(x)",
+      "",
+      "# ML: sigmoid & softmax building blocks",
+      "sigmoid = 1 / (1 + np.exp(-x))"
+    ],
+    "description": "Element-wise math functions"
+  },
+  "Rounding / sign helpers": {
+    "prefix": "np_round",
+    "body": [
+      "# ---- Rounding ----",
+      "np.round(x, ${1:2})          # bankers rounding",
+      "np.floor(x), np.ceil(x)",
+      "np.trunc(x)",
+      "np.clip(x, ${2:0}, ${3:1})",
+      "np.rint(x)                 # round to nearest int"
+    ],
+    "description": "Rounding functions"
+  },
+  "Comparisons (element-wise)": {
+    "prefix": "np_compare",
+    "body": [
+      "# ---- Element-wise comparisons return boolean arrays ----",
+      "a > b, a >= b, a == b, a != b",
+      "np.isclose(a, b, rtol=1e-5, atol=1e-8)   # safe float compare",
+      "np.allclose(A, B)                        # array-level compare",
+      "",
+      "# ML: accuracy",
+      "acc = np.mean(preds == labels)"
+    ],
+    "description": "Element-wise comparisons"
+  },
+  "Logic (bitwise) on bool arrays": {
+    "prefix": "np_logic",
+    "body": [
+      "# ---- Combine boolean arrays ----",
+      "np.logical_and(a, b)   # or a & b",
+      "np.logical_or(a, b)    # or a | b",
+      "np.logical_not(a)      # or ~a",
+      "np.logical_xor(a, b)   # or a ^ b",
+      "",
+      "# ML: filter with multiple conditions",
+      "mask = (y == 1) & (x > 0.5)"
+    ],
+    "description": "Logical operations on bool arrays"
+  },
+
+  "// ==================== 8. BROADCASTING (ML CRITICAL) ====================": {
+    "prefix": "np_section_broadcast",
+    "body": ["# ============ BROADCASTING (ML CRITICAL) ============"],
+    "description": "Section marker"
+  },
+
+  "Broadcasting rules": {
+    "prefix": "np_broadcast_rules",
+    "body": [
+      "# ---- Broadcasting rules ----",
+      "# 1. Right-align shapes.",
+      "# 2. Dimensions of size 1 are stretched.",
+      "# 3. Mismatch (neither is 1) -> error.",
+      "#",
+      "# (3, 1) + (1, 4) -> (3, 4)",
+      "# (5, 1, 3) + (4, 3) -> (5, 4, 3)",
+      "# (3, 2) + (4, 2) -> ERROR"
+    ],
+    "description": "Broadcasting rules in one snippet"
+  },
+  "Row-wise standardization": {
+    "prefix": "np_broadcast_standardize",
+    "body": [
+      "# ---- Standardize each feature column (axis=0) ----",
+      "# batch shape (n_samples, n_features)",
+      "# mean/std shape (n_features,) broadcasts across rows.",
+      "batch = ${1:X}",
+      "mu  = batch.mean(axis=0)",
+      "sd  = batch.std(axis=0) + 1e-8   # avoid /0",
+      "X_std = (batch - mu) / sd",
+      "",
+      "# This is exactly what sklearn StandardScaler does."
+    ],
+    "description": "Column-wise standardization via broadcasting"
+  },
+  "Add bias column via broadcasting": {
+    "prefix": "np_broadcast_bias",
+    "body": [
+      "# ---- Add a bias term to every sample ----",
+      "X = np.hstack([X, np.ones((X.shape[0], 1))])",
+      "",
+      "# Or via broadcasting during the dot product:",
+      "y_pred = X @ w + b   # b is scalar or (n_features_out,)"
+    ],
+    "description": "Add bias term"
+  },
+  "Pairwise distances (broadcast trick)": {
+    "prefix": "np_broadcast_dist",
+    "body": [
+      "# ---- Pairwise squared distances without loops ----",
+      "# A: (n, d), B: (m, d)  ->  D: (n, m)",
+      "diff = A[:, None, :] - B[None, :, :]     # (n, m, d)",
+      "D = np.sum(diff ** 2, axis=-1)            # (n, m)",
+      "",
+      "# ML: k-NN, clustering, kernel methods"
+    ],
+    "description": "Pairwise distances via broadcasting"
+  },
+
+  "// ==================== 9. AGGREGATIONS & STATISTICS ====================": {
+    "prefix": "np_section_agg",
+    "body": ["# ============ AGGREGATIONS & STATISTICS ============"],
+    "description": "Section marker"
+  },
+
+  "Basic reductions": {
+    "prefix": "np_reduce",
+    "body": [
+      "# ---- Reductions (default: whole array) ----",
+      "arr.sum(), arr.mean(), arr.std(), arr.var()",
+      "arr.min(), arr.max()",
+      "arr.prod()",
+      "arr.cumsum(), arr.cumprod()",
+      "",
+      "# axis=0: collapse rows, axis=1: collapse columns",
+      "X.mean(axis=0)      # per-feature mean",
+      "X.mean(axis=1)      # per-sample mean"
+    ],
+    "description": "Basic reductions"
+  },
+  "Percentiles & quantiles": {
+    "prefix": "np_percentile",
+    "body": [
+      "# ---- Percentiles and quantiles ----",
+      "np.percentile(x, ${1:50})              # median",
+      "np.percentile(x, [25, 50, 75])         # quartiles",
+      "np.quantile(x, ${2:0.95})               # 95th percentile",
+      "",
+      "# ML: clip outliers at the 1st/99th percentile",
+      "lo, hi = np.percentile(x, [1, 99])",
+      "x = np.clip(x, lo, hi)"
+    ],
+    "description": "Percentiles and quantiles"
+  },
+  "Median / mode-like helpers": {
+    "prefix": "np_median",
+    "body": [
+      "np.median(x)",
+      "np.nanmedian(x)         # ignores NaN",
+      "np.average(x, weights=${1:w})   # weighted average",
+      "",
+      "# ML: robust metrics with NaN tolerance",
+      "mean = np.nanmean(x)"
+    ],
+    "description": "Median and weighted averages"
+  },
+  "Argmin / argmax": {
+    "prefix": "np_argminmax",
+    "body": [
+      "# ---- Indices of extremes ----",
+      "np.argmin(x), np.argmax(x)",
+      "np.argmin(x, axis=0), np.argmax(x, axis=1)",
+      "",
+      "# ML: predicted class",
+      "y_pred = np.argmax(probs, axis=1)"
+    ],
+    "description": "Argmin and argmax"
+  },
+  "Counting": {
+    "prefix": "np_count",
+    "body": [
+      "# ---- Counting matches ----",
+      "np.count_nonzero(${1:arr})",
+      "np.count_nonzero(${1:arr} > ${2:0})",
+      "np.sum(${1:arr} > ${2:0})             # equivalent",
+      "",
+      "# ML: class balance",
+      "np.bincount(y, minlength=${3:n_classes})"
+    ],
+    "description": "Count elements matching a condition"
+  },
+  "Bincount (histograms, class counts)": {
+    "prefix": "np_bincount",
+    "body": [
+      "# ---- np.bincount: fast frequency counting for non-negative ints ----",
+      "np.bincount(y)                     # class counts",
+      "np.bincount(y, minlength=${1:10})",
+      "np.bincount(y, weights=${2:w})      # weighted counts",
+      "",
+      "# ML: class priors",
+      "priors = np.bincount(y) / len(y)"
+    ],
+    "description": "Fast frequency counting"
+  },
+  "Histogram": {
+    "prefix": "np_histogram",
+    "body": [
+      "# ---- Histogram (counts + bin edges) ----",
+      "counts, edges = np.histogram(x, bins=${1:10})",
+      "counts, edges = np.histogram(x, bins='auto', density=True)",
+      "",
+      "# ML: feature distribution checks"
+    ],
+    "description": "Histogram"
+  },
+  "Covariance & correlation": {
+    "prefix": "np_cov_corr",
+    "body": [
+      "# ---- Covariance and correlation matrices ----",
+      "np.cov(X, rowvar=False)                # features as columns",
+      "np.corrcoef(X, rowvar=False)",
+      "",
+      "# ML: feature correlation check for multicollinearity"
+    ],
+    "description": "Covariance and correlation"
+  },
+
+  "// ==================== 10. LINEAR ALGEBRA ====================": {
+    "prefix": "np_section_linalg",
+    "body": ["# ============ LINEAR ALGEBRA (numpy.linalg) ============"],
+    "description": "Section marker"
+  },
+
+  "Dot / matmul / @": {
+    "prefix": "np_dot",
+    "body": [
+      "# ---- Matrix multiplication ----",
+      "np.dot(a, b)      # 1D: inner product; 2D: matrix mult",
+      "a @ b             # matrix mult (preferred)",
+      "np.matmul(a, b)   # same as @, stacks over leading dims",
+      "",
+      "# ML: linear layer",
+      "y = X @ W + b"
+    ],
+    "description": "Dot product and matrix multiplication"
+  },
+  "Outer / inner / cross": {
+    "prefix": "np_outer",
+    "body": [
+      "np.outer(a, b)    # outer product",
+      "np.inner(a, b)    # sum of element-wise products",
+      "np.cross(a, b)    # cross product (3D vectors)"
+    ],
+    "description": "Outer, inner, cross products"
+  },
+  "Norm": {
+    "prefix": "np_norm",
+    "body": [
+      "# ---- Vector and matrix norms ----",
+      "np.linalg.norm(v)             # L2 norm",
+      "np.linalg.norm(v, ord=1)      # L1",
+      "np.linalg.norm(v, ord=np.inf) # L∞",
+      "np.linalg.norm(M, ord='fro')  # Frobenius (matrices)",
+      "",
+      "# ML: L2-normalise embeddings",
+      "v = v / np.linalg.norm(v, axis=-1, keepdims=True)"
+    ],
+    "description": "Vector and matrix norms"
+  },
+  "Inverse / solve / lstsq": {
+    "prefix": "np_linalg_solve",
+    "body": [
+      "# ---- Solve linear systems ----",
+      "np.linalg.inv(A)                 # inverse (avoid in practice!)",
+      "np.linalg.pinv(A)                # Moore-Penrose pseudoinverse",
+      "np.linalg.solve(A, b)            # solve Ax = b (preferred)",
+      "np.linalg.lstsq(A, b, rcond=None) # least squares",
+      "",
+      "# ML: closed-form linear regression",
+      "w = np.linalg.lstsq(X, y, rcond=None)[0]"
+    ],
+    "description": "Linear system solvers"
+  },
+  "Decompositions": {
+    "prefix": "np_linalg_decomp",
+    "body": [
+      "# ---- Matrix decompositions ----",
+      "Q, R = np.linalg.qr(A)                 # QR",
+      "U, S, Vt = np.linalg.svd(A)            # SVD",
+      "L = np.linalg.cholesky(A)              # Cholesky",
+      "eigvals, eigvecs = np.linalg.eig(A)    # general eigenvalues",
+      "eigvals = np.linalg.eigvalsh(A)        # symmetric matrices",
+      "",
+      "# ML: PCA = SVD on centred data; use S from SVD as singular values."
+    ],
+    "description": "Matrix decompositions"
+  },
+  "Determinant / rank / trace": {
+    "prefix": "np_linalg_misc",
+    "body": [
+      "np.linalg.det(A)",
+      "np.linalg.matrix_rank(A)",
+      "np.trace(A)"
+    ],
+    "description": "Determinant, rank, trace"
+  },
+  "Einsum (elegant tensor math)": {
+    "prefix": "np_einsum",
+    "body": [
+      "# ---- np.einsum: one expression for any tensor contraction ----",
+      "np.einsum('i,i->', a, b)           # dot product",
+      "np.einsum('ij,jk->ik', A, B)       # matrix mult",
+      "np.einsum('ij,ij->ij', A, B)       # element-wise",
+      "np.einsum('ij->ji', A)             # transpose",
+      "np.einsum('ij->i', A)              # row sums",
+      "np.einsum('bij,bjk->bik', A, B)    # batched matmul",
+      "",
+      "# ML: batch attention scores = einsum('bqd,bkd->bqk', Q, K)"
+    ],
+    "description": "Einstein summation for tensors"
+  },
+
+  "// ==================== 11. RANDOM MODULE (DISTRIBUTIONS) ====================": {
+    "prefix": "np_section_random",
+    "body": ["# ============ RANDOM MODULE (DISTRIBUTIONS) ============"],
+    "description": "Section marker"
+  },
+
+  "Generator setup": {
+    "prefix": "np_rng",
+    "body": [
+      "# ---- Modern random API (NumPy >= 1.17) ----",
+      "rng = np.random.default_rng(seed=${1:42})",
+      "",
+      "# Same distributions as legacy np.random.*, but reproducible + faster."
+    ],
+    "description": "Create a Generator"
+  },
+  "Continuous distributions": {
+    "prefix": "np_dist_continuous",
+    "body": [
+      "# ---- Continuous distributions ----",
+      "rng.normal(loc=${1:0}, scale=${2:1}, size=${3:1000})       # Gaussian",
+      "rng.uniform(low=${4:0}, high=${5:1}, size=${3:1000})",
+      "rng.exponential(scale=${6:1}, size=${3:1000})",
+      "rng.beta(${7:2}, ${8:5}, size=${3:1000})",
+      "rng.gamma(shape=${9:2}, size=${3:1000})",
+      "rng.lognormal(size=${3:1000})",
+      "rng.standard_t(df=${10:5}, size=${3:1000})"
+    ],
+    "description": "Continuous distributions"
+  },
+  "Discrete distributions": {
+    "prefix": "np_dist_discrete",
+    "body": [
+      "# ---- Discrete distributions ----",
+      "rng.integers(0, ${1:10}, size=${2:1000})           # uniform ints",
+      "rng.binomial(n=${3:10}, p=${4:0.5}, size=${2:1000})  # coin flips",
+      "rng.poisson(lam=${5:3}, size=${2:1000})",
+      "rng.geometric(p=${6:0.3}, size=${2:1000})",
+      "rng.hypergeometric(ngood=${7:5}, nbad=${8:5}, nsample=${9:3}, size=${2:1000})"
+    ],
+    "description": "Discrete distributions"
+  },
+  "Sampling helpers": {
+    "prefix": "np_rng_sample",
+    "body": [
+      "# ---- Sampling helpers ----",
+      "rng.choice(${1:items}, size=${2:5}, replace=False)   # without replacement",
+      "rng.permutation(${3:n})                             # shuffled range",
+      "rng.shuffle(${4:arr})                               # in-place",
+      "",
+      "# ML: mini-batch indices",
+      "idx = rng.choice(len(X), size=${5:32}, replace=False)"
+    ],
+    "description": "Sampling helpers"
+  },
+  "Train / test split by hand": {
+    "prefix": "np_train_test_split",
+    "body": [
+      "# ---- Manual train/test split with shuffling ----",
+      "rng = np.random.default_rng(${1:42})",
+      "idx = rng.permutation(len(X))",
+      "split = int(${2:0.8} * len(X))",
+      "train_idx, test_idx = idx[:split], idx[split:]",
+      "X_train, X_test = X[train_idx], X[test_idx]",
+      "y_train, y_test = y[train_idx], y[test_idx]"
+    ],
+    "description": "Manual train/test split"
+  },
+
+  "// ==================== 12. SORTING & SEARCHING ====================": {
+    "prefix": "np_section_sort",
+    "body": ["# ============ SORTING & SEARCHING ============"],
+    "description": "Section marker"
+  },
+
+  "Sort": {
+    "prefix": "np_sort",
+    "body": [
+      "# ---- Sort (returns new array) ----",
+      "np.sort(arr)",
+      "np.sort(arr, axis=${1:1})       # sort along an axis",
+      "arr.sort()                     # in-place",
+      "",
+      "# ML: sort samples by score",
+      "order = np.argsort(scores)[::-1]",
+      "top_k = order[:${2:5}]"
+    ],
+    "description": "Sort arrays"
+  },
+  "Argsort / argpartition (top-k)": {
+    "prefix": "np_argsort",
+    "body": [
+      "# ---- Indices that sort the array ----",
+      "np.argsort(scores)                              # ascending",
+      "np.argsort(scores)[::-1]                        # descending",
+      "",
+      "# top-k in O(n) time:",
+      "top_k_idx = np.argpartition(scores, -${1:5})[-${1:5}:]",
+      "top_k_idx = top_k_idx[np.argsort(scores[top_k_idx])[::-1]]",
+      "",
+      "# ML: top-k accuracy, recommendation ranking"
+    ],
+    "description": "Argsort and top-k"
+  },
+  "Searchsorted / unique": {
+    "prefix": "np_search",
+    "body": [
+      "# ---- Searching sorted arrays ----",
+      "np.searchsorted(sorted_arr, ${1:value})",
+      "",
+      "# ---- Unique values ----",
+      "np.unique(arr)",
+      "np.unique(arr, return_counts=True)   # with frequency",
+      "np.unique(arr, return_inverse=True)  # label encoding!",
+      "",
+      "# ML: encode categorical strings to ints",
+      "labels, encoded = np.unique(cats, return_inverse=True)"
+    ],
+    "description": "Search sorted; unique values"
+  },
+
+  "// ==================== 13. SET OPERATIONS ====================": {
+    "prefix": "np_section_setops",
+    "body": ["# ============ SET OPERATIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Set ops": {
+    "prefix": "np_setops",
+    "body": [
+      "np.union1d(a, b)",
+      "np.intersect1d(a, b)",
+      "np.setdiff1d(a, b)",
+      "np.setxor1d(a, b)",
+      "np.isin(arr, ${1:test_values})",
+      "",
+      "# ML: find misclassified sample IDs",
+      "wrong = np.setdiff1d(true_ids, pred_ids)"
+    ],
+    "description": "Set operations on arrays"
+  },
+
+  "// ==================== 14. MISSING DATA / NaN / INF ====================": {
+    "prefix": "np_section_nan",
+    "body": ["# ============ MISSING DATA / NaN / INF ============"],
+    "description": "Section marker"
+  },
+
+  "Detect NaN / Inf": {
+    "prefix": "np_isnan",
+    "body": [
+      "# ---- Detect ----",
+      "np.isnan(arr)      # True where NaN",
+      "np.isinf(arr)      # True where +/- inf",
+      "np.isfinite(arr)   # True where neither NaN nor inf",
+      "",
+      "# ML: sanity check before training",
+      "assert np.isfinite(X).all(), 'non-finite values!'"
+    ],
+    "description": "Detect NaN and Inf"
+  },
+  "Handle NaN": {
+    "prefix": "np_nan_handle",
+    "body": [
+      "# ---- Handle NaN ----",
+      "np.nan_to_num(arr, nan=${1:0.0}, posinf=${2:0.0}, neginf=${2:0.0})",
+      "",
+      "# ---- NaN-aware aggregations ----",
+      "np.nanmean(arr), np.nanstd(arr), np.nanmedian(arr)",
+      "np.nansum(arr), np.nanmin(arr), np.nanmax(arr)",
+      "",
+      "# Drop rows with any NaN",
+      "mask = ~np.isnan(X).any(axis=1)",
+      "X_clean = X[mask]"
+    ],
+    "description": "Replace / skip NaN"
+  },
+
+  "// ==================== 15. PERFORMANCE & MEMORY ====================": {
+    "prefix": "np_section_perf",
+    "body": ["# ============ PERFORMANCE & MEMORY ============"],
+    "description": "Section marker"
+  },
+
+  "Vectorize (kill Python loops)": {
+    "prefix": "np_vectorize",
+    "body": [
+      "# ---- BAD: Python loop ----",
+      "# out = [f(x) for x in arr]",
+      "",
+      "# ---- GOOD: vectorized ----",
+      "out = f(arr)          # if f uses NumPy ops internally",
+      "",
+      "# ---- Last resort: apply a scalar function ----",
+      "out = np.vectorize(f)(arr)   # still slow; last resort"
+    ],
+    "description": "Vectorize over loops"
+  },
+  "Views vs copies": {
+    "prefix": "np_view_copy",
+    "body": [
+      "# ---- Views share memory; copies do not ----",
+      "v = arr[1:5]                # VIEW",
+      "v[0] = 99                   # mutates arr!",
+      "",
+      "c = arr[1:5].copy()         # COPY",
+      "c[0] = 99                   # does NOT touch arr",
+      "",
+      "# Check sharing:",
+      "np.shares_memory(arr, v)    # True",
+      "v.base is arr               # True for a view"
+    ],
+    "description": "Views vs copies"
+  },
+  "Contiguity / ascontiguousarray": {
+    "prefix": "np_contiguous",
+    "body": [
+      "# ---- Contiguous memory speeds up ops ----",
+      "arr.flags['C_CONTIGUOUS']    # bool",
+      "arr.flags['F_CONTIGUOUS']",
+      "np.ascontiguousarray(arr)    # ensure C-order copy if needed"
+    ],
+    "description": "C-contiguous memory layout"
+  },
+  "Out= to avoid allocations": {
+    "prefix": "np_out_param",
+    "body": [
+      "# ---- Reuse a preallocated buffer ----",
+      "out = np.empty_like(a)",
+      "np.multiply(a, b, out=out)",
+      "np.add(a, b, out=a)      # in-place add",
+      "",
+      "# In-place operators",
+      "a += b",
+      "a *= ${1:2}",
+      "np.clip(a, 0, 1, out=a)"
+    ],
+    "description": "In-place operations and out= parameter"
+  },
+  "Memory map (large datasets)": {
+    "prefix": "np_memmap",
+    "body": [
+      "# ---- Memory-mapped arrays: work with data larger than RAM ----",
+      "arr = np.memmap('${1:data.bin}', dtype='float32', mode='r', shape=(${2:10000, 20}))",
+      "",
+      "# Read a slice (only loads what's needed):",
+      "chunk = arr[${3:0}:${4:1000}]"
+    ],
+    "description": "Memory-mapped arrays"
+  },
+
+  "// ==================== 16. ML PRIMITIVES (VECTORIZED) ====================": {
+    "prefix": "np_section_ml",
+    "body": ["# ============ ML PRIMITIVES (VECTORIZED) ============"],
+    "description": "Section marker"
+  },
+
+  "ReLU": {
+    "prefix": "np_ml_relu",
+    "body": [
+      "# ---- ReLU activation ----",
+      "def relu(x):",
+      "    return np.maximum(0, x)"
+    ],
+    "description": "ReLU activation"
+  },
+  "Sigmoid / softmax": {
+    "prefix": "np_ml_sigmoid",
+    "body": [
+      "# ---- Sigmoid (binary classification output) ----",
+      "def sigmoid(x):",
+      "    return 1.0 / (1.0 + np.exp(-x))",
+      "",
+      "# ---- Softmax (multiclass, numerically stable) ----",
+      "def softmax(x, axis=-1):",
+      "    x = x - x.max(axis=axis, keepdims=True)   # subtract max for stability",
+      "    e = np.exp(x)",
+      "    return e / e.sum(axis=axis, keepdims=True)"
+    ],
+    "description": "Sigmoid and softmax"
+  },
+  "One-hot encoding": {
+    "prefix": "np_ml_onehot",
+    "body": [
+      "# ---- One-hot encode integer labels ----",
+      "def one_hot(y, num_classes):",
+      "    out = np.zeros((len(y), num_classes), dtype=np.float32)",
+      "    out[np.arange(len(y)), y] = 1.0",
+      "    return out",
+      "",
+      "# Reverse: one-hot -> int",
+      "# y = np.argmax(one_hot, axis=1)"
+    ],
+    "description": "One-hot encoding"
+  },
+  "Cross-entropy loss": {
+    "prefix": "np_ml_crossentropy",
+    "body": [
+      "# ---- Cross-entropy loss (from softmax probs) ----",
+      "def cross_entropy(probs, y_true):",
+      "    n = len(y_true)",
+      "    log_likelihood = -np.log(probs[np.arange(n), y_true] + 1e-12)",
+      "    return log_likelihood.mean()"
+    ],
+    "description": "Cross-entropy loss"
+  },
+  "Standardisation": {
+    "prefix": "np_ml_standardize",
+    "body": [
+      "# ---- Z-score standardisation ----",
+      "mu = X.mean(axis=0)",
+      "sd = X.std(axis=0) + 1e-8",
+      "X_std = (X - mu) / sd",
+      "",
+      "# NOTE: fit on train, apply to test with TRAIN stats!"
+    ],
+    "description": "StandardScaler by hand"
+  },
+  "Min-max scaling": {
+    "prefix": "np_ml_minmax",
+    "body": [
+      "# ---- Min-max scaling to [0, 1] ----",
+      "lo = X.min(axis=0)",
+      "hi = X.max(axis=0)",
+      "X_scaled = (X - lo) / (hi - lo + 1e-8)"
+    ],
+    "description": "MinMaxScaler by hand"
+  },
+  "PCA via SVD": {
+    "prefix": "np_ml_pca",
+    "body": [
+      "# ---- PCA: principal component analysis via SVD ----",
+      "Xc = X - X.mean(axis=0)",
+      "U, S, Vt = np.linalg.svd(Xc, full_matrices=False)",
+      "",
+      "# Project to k components:",
+      "k = ${1:2}",
+      "X_pca = U[:, :k] * S[:k]"
+    ],
+    "description": "PCA via SVD"
+  },
+  "Mini-batch iterator": {
+    "prefix": "np_ml_batches",
+    "body": [
+      "# ---- Simple mini-batch iterator ----",
+      "def iterate_minibatches(X, y, batch_size, rng=None):",
+      "    rng = rng or np.random.default_rng(0)",
+      "    idx = rng.permutation(len(X))",
+      "    for start in range(0, len(X), batch_size):",
+      "        batch = idx[start:start + batch_size]",
+      "        yield X[batch], y[batch]"
+    ],
+    "description": "Mini-batch iterator"
+  },
+  "Gradient descent step": {
+    "prefix": "np_ml_gd",
+    "body": [
+      "# ---- Linear regression gradient step ----",
+      "n = len(X)",
+      "y_pred = X @ w + b",
+      "error = y_pred - y",
+      "dw = (2 / n) * (X.T @ error)",
+      "db = (2 / n) * error.sum()",
+      "w -= lr * dw",
+      "b -= lr * db"
+    ],
+    "description": "Gradient descent step"
+  },
+
+  "// ==================== 17. INPUT / OUTPUT ====================": {
+    "prefix": "np_section_io",
+    "body": ["# ============ INPUT / OUTPUT ============"],
+    "description": "Section marker"
+  },
+
+  "Save / load single array": {
+    "prefix": "np_save",
+    "body": [
+      "# ---- .npy: binary, single array ----",
+      "np.save('${1:array.npy}', arr)",
+      "arr = np.load('${1:array.npy}')"
+    ],
+    "description": "Save/load .npy files"
+  },
+  "Save / load multiple arrays": {
+    "prefix": "np_savez",
+    "body": [
+      "# ---- .npz: binary, multiple named arrays ----",
+      "np.savez('${1:data.npz}', X=X, y=y)",
+      "d = np.load('${1:data.npz}')",
+      "X, y = d['X'], d['y']",
+      "",
+      "# Compressed version:",
+      "np.savez_compressed('${1:data.npz}', X=X, y=y)"
+    ],
+    "description": "Save/load multiple arrays"
+  },
+  "CSV read / write": {
+    "prefix": "np_csv",
+    "body": [
+      "# ---- CSV I/O (small files only; use pandas for real data) ----",
+      "arr = np.loadtxt('${1:data.csv}', delimiter=',')",
+      "arr = np.genfromtxt('${1:data.csv}', delimiter=',', missing_values='', filling_values=np.nan)",
+      "np.savetxt('${2:out.csv}', arr, delimiter=',', fmt='%.4f')"
+    ],
+    "description": "CSV read/write"
+  },
+
+  "// ==================== 18. COMMON PITFALLS ====================": {
+    "prefix": "np_section_pitfalls",
+    "body": ["# ============ COMMON PITFALLS ============"],
+    "description": "Section marker"
+  },
+
+  "Pitfall: views vs copies on slices": {
+    "prefix": "np_pitfall_view",
+    "body": [
+      "# BAD: this slice is a VIEW; modifying it changes the original",
+      "sub = arr[1:5]",
+      "sub[0] = 0        # mutates arr!",
+      "",
+      "# GOOD: copy if you need an independent array",
+      "sub = arr[1:5].copy()"
+    ],
+    "description": "Unintended mutations via views"
+  },
+  "Pitfall: chained comparisons don't work": {
+    "prefix": "np_pitfall_and",
+    "body": [
+      "# BAD: Python `and` on arrays",
+      "# mask = (a > 0) and (a < 10)   # ValueError",
+      "",
+      "# GOOD: use bitwise & and parenthesise",
+      "mask = (a > 0) & (a < 10)"
+    ],
+    "description": "Use & | ~ not and/or/not"
+  },
+  "Pitfall: integer division of ints": {
+    "prefix": "np_pitfall_intdiv",
+    "body": [
+      "# BAD: integer array division rounds down",
+      "a = np.array([1, 2, 3])",
+      "a / 2        # -> array([0.5, 1. , 1.5]) (OK, becomes float)",
+      "",
+      "# But `//` floors:",
+      "a // 2       # -> array([0, 1, 1])",
+      "",
+      "# Cast first when you need floats:",
+      "a.astype(np.float32) / 2"
+    ],
+    "description": "Integer division gotchas"
+  },
+  "Pitfall: axis confusion": {
+    "prefix": "np_pitfall_axis",
+    "body": [
+      "# Reminder: axis=N means 'collapse dimension N'",
+      "# For a (n_samples, n_features) matrix:",
+      "#   axis=0 collapses rows   -> per-feature stats, shape (n_features,)",
+      "#   axis=1 collapses columns-> per-sample stats, shape (n_samples,)",
+      "",
+      "X.mean(axis=0)   # per-feature mean",
+      "X.mean(axis=1)   # per-sample mean"
+    ],
+    "description": "axis=0 vs axis=1"
+  },
+  "Pitfall: float equality": {
+    "prefix": "np_pitfall_float_eq",
+    "body": [
+      "# BAD:",
+      "# if a == b: ...    # unreliable for floats",
+      "",
+      "# GOOD:",
+      "np.isclose(a, b, rtol=1e-5, atol=1e-8)",
+      "np.allclose(A, B)"
+    ],
+    "description": "Never compare floats with =="
+  },
+  "Pitfall: reading .npy as text": {
+    "prefix": "np_pitfall_npy",
+    "body": [
+      "# .npy / .npz are BINARY. Don't open them in a text editor.",
+      "# np.load returns the array directly."
+    ],
+    "description": ".npy is binary"
+  },
+
+  "// ==================== 19. ADVANCED: STRIDES & EINSUM ====================": {
+    "prefix": "np_section_advanced",
+    "body": ["# ============ ADVANCED: STRIDES & EINSUM ============"],
+    "description": "Section marker"
+  },
+
+  "Strides explained": {
+    "prefix": "np_strides",
+    "body": [
+      "# ---- Array layout ----",
+      "# arr.strides = bytes to step per dimension.",
+      "# C-order (row-major) example for shape (3, 4), float64:",
+      "#   strides = (32, 8)   # 4*8 bytes per row, 8 bytes per element",
+      "arr.strides",
+      "arr.flags"
+    ],
+    "description": "Strides and memory layout"
+  },
+  "as_strided (sliding windows)": {
+    "prefix": "np_as_strided",
+    "body": [
+      "# ---- Sliding-window view (advanced) ----",
+      "from numpy.lib.stride_tricks import sliding_window_view",
+      "",
+      "# Time series: (n,) -> (n - w + 1, w)",
+      "w = ${1:10}",
+      "windows = sliding_window_view(arr, w)",
+      "",
+      "# ML: build lag features for time series"
+    ],
+    "description": "Sliding window view"
+  },
+  "Einsum recipes": {
+    "prefix": "np_einsum_recipes",
+    "body": [
+      "# ---- einsum recipes (batch-aware) ----",
+      "np.einsum('i,i->', a, b)               # dot",
+      "np.einsum('ij,jk->ik', A, B)           # matmul",
+      "np.einsum('bij,bjk->bik', A, B)        # batched matmul",
+      "np.einsum('ij->ji', A)                 # transpose",
+      "np.einsum('ii->i', A)                  # diagonal",
+      "np.einsum('ii->', A)                   # trace",
+      "np.einsum('ij,ij->', A, B)             # Frobenius inner",
+      "np.einsum('bij,bjk,bkl->bil', A, B, C) # 3-way batched",
+      "",
+      "# ML: attention scores",
+      "# scores = np.einsum('bqd,bkd->bqk', Q, K)"
+    ],
+    "description": "Einsum recipes"
+  }
+}

@@ -1,0 +1,2859 @@
+{
+  "// ==================== 1. FUNDAMENTALS ====================": {
+    "prefix": "py_section_fundamentals",
+    "body": ["# ============ FUNDAMENTALS ============"],
+    "description": "Section marker"
+  },
+
+  "Print": {
+    "prefix": "py_print",
+    "body": ["print(${0:value})"],
+    "description": "Print a value"
+  },
+  "Print with sep/end": {
+    "prefix": "py_print_kwargs",
+    "body": [
+      "print(${1:'a'}, ${2:'b'}, sep='${3: - }', end='${4:\\\\n}')",
+      "print(${5:'x'}, end='')",
+      "print()                       # blank line",
+      "print(*${6:items}, sep=', ')    # unpack iterable into print"
+    ],
+    "description": "print() with sep, end, unpacking"
+  },
+  "Comment": {
+    "prefix": "py_comment",
+    "body": ["# ${0:Comment}"],
+    "description": "Single-line comment"
+  },
+  "Docstring": {
+    "prefix": "py_docstring",
+    "body": ["\"\"\"${1:Short summary.}${0}\"\"\""],
+    "description": "Triple-quoted docstring"
+  },
+  "Pass": {
+    "prefix": "py_pass",
+    "body": ["pass   # placeholder: do nothing"],
+    "description": "No-op statement"
+  },
+  "Del": {
+    "prefix": "py_del",
+    "body": ["del ${0:name}   # remove a name or item"],
+    "description": "Delete a variable or item"
+  },
+  "Global": {
+    "prefix": "py_global",
+    "body": [
+      "def ${1:func}():",
+      "    global ${0:counter}   # modify a module-level name",
+      "    ${0:counter} += 1"
+    ],
+    "description": "Modify a module-level variable"
+  },
+  "Nonlocal": {
+    "prefix": "py_nonlocal",
+    "body": [
+      "def ${1:outer}():",
+      "    ${2:count} = 0",
+      "    def ${3:inner}():",
+      "        nonlocal ${2:count}   # modify enclosing function's name",
+      "        ${2:count} += 1"
+    ],
+    "description": "Modify an enclosing function's variable"
+  },
+  "Name-main check": {
+    "prefix": "py_name_main",
+    "body": [
+      "if __name__ == '__main__':",
+      "    ${0:main()}"
+    ],
+    "description": "Only run when executed as a script"
+  },
+  "Variable assign": {
+    "prefix": "py_var",
+    "body": ["${1:name} = ${0:value}"],
+    "description": "Basic assignment"
+  },
+  "Multiple assign": {
+    "prefix": "py_var_multi",
+    "body": ["${1:a}, ${2:b}, ${3:c} = ${4:1}, ${5:2}, ${6:3}"],
+    "description": "Unpack into multiple variables"
+  },
+  "Swap variables": {
+    "prefix": "py_var_swap",
+    "body": ["${1:a}, ${2:b} = ${2:b}, ${1:a}"],
+    "description": "Swap two variables (Pythonic)"
+  },
+  "Typed variable": {
+    "prefix": "py_var_typed",
+    "body": ["${1:name}: ${2:str} = ${0:'value'}"],
+    "description": "Variable with type hint"
+  },
+  "Constants": {
+    "prefix": "py_var_const",
+    "body": [
+      "MAX_RETRIES: int = 3",
+      "TIMEOUT_SEC: float = 5.0",
+      "BASE_URL: str = 'https://example.com'"
+    ],
+    "description": "Module-level constants (UPPER_CASE)"
+  },
+  "Type conversion": {
+    "prefix": "py_var_convert",
+    "body": [
+      "# ---- Type conversions ----",
+      "int('${1:42}')          # str -> int",
+      "int('${2:ff}', 16)      # hex str -> int (255)",
+      "float('${3:3.14}')      # str -> float",
+      "str(${4:123})           # anything -> str",
+      "bool(${5:0})            # truthiness -> bool",
+      "list(${6:'abc'})        # iterable -> list",
+      "tuple([1, 2])           # list -> tuple",
+      "set([1, 1, 2])          # iterable -> set",
+      "dict([('a', 1)])        # pairs -> dict"
+    ],
+    "description": "Built-in type conversions"
+  },
+  "Type check": {
+    "prefix": "py_var_typecheck",
+    "body": [
+      "print(type(${1:value}))",
+      "print(isinstance(${1:value}, ${2:str}))    # preferred",
+      "print(issubclass(${3:bool}, ${4:int}))       # True"
+    ],
+    "description": "Inspect a value's type"
+  },
+  "Input": {
+    "prefix": "py_input",
+    "body": ["${1:name} = input('${2:Prompt: }')"],
+    "description": "Read user input"
+  },
+  "Input integer": {
+    "prefix": "py_input_int",
+    "body": ["${1:n} = int(input('${2:Number: }'))"],
+    "description": "Read an integer"
+  },
+  "Input with validation loop": {
+    "prefix": "py_input_valid",
+    "body": [
+      "while True:",
+      "    try:",
+      "        ${1:n} = int(input('${2:Number: }'))",
+      "        break",
+      "    except ValueError:",
+      "        print('Invalid number, try again.')"
+    ],
+    "description": "Retry-on-error integer input"
+  },
+  "Password input": {
+    "prefix": "py_input_password",
+    "body": [
+      "from getpass import getpass",
+      "${1:password} = getpass()"
+    ],
+    "description": "Read a password without echo"
+  },
+  "Python version at runtime": {
+    "prefix": "py_version",
+    "body": [
+      "import sys",
+      "v = sys.version_info",
+      "print(f'{v.major}.{v.minor}.{v.micro}')",
+      "# Feature check:  if sys.version_info >= (3, 11): ..."
+    ],
+    "description": "Running Python version"
+  },
+  "List of keywords": {
+    "prefix": "py_keywords",
+    "body": [
+      "import keyword",
+      "print(keyword.kwlist)",
+      "print(keyword.iskeyword('${1:True}'))   # True"
+    ],
+    "description": "Reserved keywords"
+  },
+
+  "// ==================== 2. OPERATORS ====================": {
+    "prefix": "py_section_operators",
+    "body": ["# ============ OPERATORS ============"],
+    "description": "Section marker"
+  },
+
+  "Arithmetic operators": {
+    "prefix": "py_op_arith",
+    "body": [
+      "7 + 3      # 10",
+      "7 - 3      # 4",
+      "7 * 3      # 21",
+      "7 / 3      # 2.333...  (always float)",
+      "7 // 3     # 2         (floor division)",
+      "7 % 3      # 1         (modulo)",
+      "7 ** 3     # 343       (power)",
+      "divmod(7, 3)   # (2, 1)  quotient and remainder"
+    ],
+    "description": "Arithmetic operators"
+  },
+  "Comparison operators": {
+    "prefix": "py_op_compare",
+    "body": [
+      "a == b     # equal (uses __eq__)",
+      "a != b     # not equal",
+      "a <  b     # less than",
+      "a <= b     # less or equal",
+      "a >  b     # greater than",
+      "a >= b     # greater or equal",
+      "a is b     # identity (same object)",
+      "a is not b # non-identity",
+      "0 <= x < 10   # chained comparison"
+    ],
+    "description": "Comparison operators"
+  },
+  "Logical operators": {
+    "prefix": "py_op_logical",
+    "body": [
+      "a and b    # both truthy -> returns b",
+      "a or  b    # either truthy -> returns first truthy",
+      "not a      # negation",
+      "# Short-circuit:  f() and g()  skips g() if f() is falsy"
+    ],
+    "description": "Logical operators"
+  },
+  "Bitwise operators": {
+    "prefix": "py_op_bitwise",
+    "body": [
+      "a & b      # AND",
+      "a | b      # OR",
+      "a ^ b      # XOR",
+      "~a         # NOT  (= -a - 1)",
+      "a << 2     # left shift  (multiply by 4)",
+      "a >> 2     # right shift (divide by 4)"
+    ],
+    "description": "Bitwise operators"
+  },
+  "Matrix multiply operator": {
+    "prefix": "py_op_matmul",
+    "body": [
+      "# @ is defined by __matmul__ (used by numpy, not by built-in lists)",
+      "result = ${1:matrix_a} @ ${2:matrix_b}"
+    ],
+    "description": "@ matrix-multiply operator"
+  },
+  "Augmented assignment": {
+    "prefix": "py_op_aug",
+    "body": [
+      "x += 1     # x = x + 1",
+      "x -= 1",
+      "x *= 2",
+      "x /= 2",
+      "x //= 2",
+      "x %= 2",
+      "x **= 2",
+      "x &= 1     # bitwise"
+    ],
+    "description": "In-place operators"
+  },
+  "Walrus operator": {
+    "prefix": "py_op_walrus",
+    "body": [
+      "# Assign and use in one expression (3.8+)",
+      "if (n := len(${1:items})) > 10:",
+      "    print(f'too many: {n}')",
+      "",
+      "while (line := ${2:f}.readline()):",
+      "    print(line)"
+    ],
+    "description": "Assignment expression (:=)"
+  },
+  "Identity vs equality": {
+    "prefix": "py_op_identity",
+    "body": [
+      "# 'is' compares identity; '==' compares value.",
+      "a = [1, 2, 3]",
+      "b = [1, 2, 3]",
+      "a == b     # True  (same value)",
+      "a is b     # False (different objects)",
+      "",
+      "# Use 'is' only for None, True, False, and sentinels.",
+      "if ${1:x} is None: ..."
+    ],
+    "description": "Identity vs equality"
+  },
+
+  "// ==================== 3. NUMBERS ====================": {
+    "prefix": "py_section_numbers",
+    "body": ["# ============ NUMBERS ============"],
+    "description": "Section marker"
+  },
+
+  "Number literals": {
+    "prefix": "py_num",
+    "body": [
+      "i = 42                 # int",
+      "f = 3.14               # float",
+      "big = 1_000_000        # underscore for readability",
+      "sci = 1.5e-3           # scientific notation (0.0015)",
+      "h = 0xFF               # hex (255)",
+      "o = 0o17               # octal (15)",
+      "b = 0b1010             # binary (10)",
+      "c = 1j                 # complex"
+    ],
+    "description": "Numeric literals"
+  },
+  "Base conversions": {
+    "prefix": "py_num_base",
+    "body": [
+      "bin(255)     # '0b11111111'",
+      "oct(255)     # '0o377'",
+      "hex(255)     # '0xff'",
+      "int('ff', 16)   # 255",
+      "int('777', 8)   # 511",
+      "int('1010', 2)  # 10"
+    ],
+    "description": "Convert between number bases"
+  },
+  "Int methods": {
+    "prefix": "py_num_int_methods",
+    "body": [
+      "(5).bit_length()      # 3   (bits needed to represent)",
+      "(255).to_bytes(2, 'big')   # b'\\x00\\xff'",
+      "int.from_bytes(b'\\x01\\x02', 'big')   # 258",
+      "(-5).__abs__()        # 5"
+    ],
+    "description": "Int bit and byte methods"
+  },
+  "Float methods": {
+    "prefix": "py_num_float_methods",
+    "body": [
+      "(3.14).is_integer()        # False",
+      "(3.0).is_integer()         # True",
+      "(0.5).as_integer_ratio()   # (1, 2)",
+      "(3.14).hex()               # hexadecimal float"
+    ],
+    "description": "Float methods"
+  },
+  "Rounding & math helpers": {
+    "prefix": "py_num_round",
+    "body": [
+      "round(3.14159, 2)      # 3.14",
+      "round(2.5)             # 2   (banker's rounding)",
+      "math.floor(3.7)        # 3",
+      "math.ceil(3.2)         # 4",
+      "math.trunc(3.9)        # 3",
+      "abs(-5)                # 5",
+      "divmod(17, 5)          # (3, 2)"
+    ],
+    "description": "Rounding and math helpers"
+  },
+  "Math module": {
+    "prefix": "py_num_math",
+    "body": [
+      "math.sqrt(16)          # 4.0",
+      "math.pow(2, 10)        # 1024.0",
+      "math.log(100, 10)      # 2.0",
+      "math.exp(1)            # 2.718...",
+      "math.pi                # 3.14159...",
+      "math.e                 # 2.71828...",
+      "math.inf, math.nan     # sentinel values"
+    ],
+    "description": "Common math functions"
+  },
+  "Random module": {
+    "prefix": "py_num_random",
+    "body": [
+      "random.seed(42)                    # reproducible",
+      "random.random()                    # [0.0, 1.0)",
+      "random.randint(1, 10)              # int in [1, 10]",
+      "random.uniform(0, 1)               # float",
+      "random.choice(${1:['a', 'b', 'c']})  # one item",
+      "random.choices(${1}, k=${2:3})         # with replacement",
+      "random.sample(range(100), 5)       # 5 unique",
+      "random.shuffle(${3:items})           # in place",
+      "random.gauss(0, 1)                 # normal distribution"
+    ],
+    "description": "Random module"
+  },
+  "Infinity & NaN": {
+    "prefix": "py_num_inf",
+    "body": [
+      "pos_inf = float('inf')",
+      "neg_inf = float('-inf')",
+      "nan = float('nan')",
+      "math.isinf(pos_inf)    # True",
+      "math.isnan(nan)        # True",
+      "math.isfinite(5)       # True",
+      "# NaN != NaN  -- always use math.isnan()"
+    ],
+    "description": "Infinity and NaN"
+  },
+  "Safe float comparison": {
+    "prefix": "py_num_isclose",
+    "body": [
+      "import math",
+      "# Never use == for floats",
+      "math.isclose(0.1 + 0.2, 0.3)                    # True",
+      "math.isclose(${1:a}, ${2:b}, rel_tol=1e-9)        # custom tolerance",
+      "math.isclose(${1:a}, ${2:b}, abs_tol=1e-12)"
+    ],
+    "description": "Compare floats with tolerance"
+  },
+
+  "// ==================== 4. STRINGS ====================": {
+    "prefix": "py_section_strings",
+    "body": ["# ============ STRINGS ============"],
+    "description": "Section marker"
+  },
+
+  "String literal": {
+    "prefix": "py_str",
+    "body": ["${1:s} = '${2:hello}'", "print(${1:s})"],
+    "description": "Simple string"
+  },
+  "Multiline string": {
+    "prefix": "py_str_multiline",
+    "body": [
+      "text = \"\"\"${1:Line one}",
+      "${2:Line two}\"\"\""
+    ],
+    "description": "Triple-quoted multiline string"
+  },
+  "f-string formatting": {
+    "prefix": "py_str_fstring",
+    "body": [
+      "name = '${1:World}'",
+      "print(f'Hello, {name}!')",
+      "print(f'{${2:value}:.2f}')          # 2 decimals",
+      "print(f'{${3:num}:>10}')            # right-align width 10",
+      "print(f'{${3:num}:<10}')            # left-align width 10",
+      "print(f'{${3:num}:^10}')            # center width 10",
+      "print(f'{${3:num}:,}')              # thousands separator",
+      "print(f'{${3:num}:08.2f}')          # zero-pad, 2 decimals",
+      "print(f'{${3:num}=}')               # debug: shows name=value",
+      "print(f'{${4:x}}')                  # hex",
+      "print(f'{name!r}')                  # repr()",
+      "print(f'{name!s}')                  # str()",
+      "# Conversions:  !r=repr  !s=str  !a=ascii"
+    ],
+    "description": "f-string variations"
+  },
+  "str.format()": {
+    "prefix": "py_str_format",
+    "body": [
+      "print('Hello, {}! You are {} years old.'.format(${1:name}, ${2:age}))",
+      "print('{0} and {1}'.format(${3:'a'}, ${4:'b'}))",
+      "print('{name}: {value:.2f}'.format(name=${5:'x'}, value=${6:3.14159}))"
+    ],
+    "description": "str.format()"
+  },
+  "Center / fill formatting": {
+    "prefix": "py_str_fill",
+    "body": [
+      "print('{0:*^20s}'.format('Project'))   # ******Project*******",
+      "print('{0:+^20s}'.format('Project'))   # ++++++Project+++++++",
+      "print('{0:_^30s}'.format('Project'))   # ______Project_______",
+      "",
+      "s.center(20, '-')",
+      "s.ljust(20, '.'); s.rjust(20, '.')"
+    ],
+    "description": "Pad a string with a fill character"
+  },
+  "Split & join": {
+    "prefix": "py_str_splitjoin",
+    "body": [
+      "'a,b,c'.split(',')            # ['a', 'b', 'c']",
+      "'a,b,c'.rsplit(',', 1)         # ['a,b', 'c']",
+      "'a b c'.split(maxsplit=1)      # ['a', 'b c']",
+      "'a,b,c'.splitlines()           # ['a,b,c'] (splits on newlines)",
+      "'-'.join(['a', 'b', 'c'])      # 'a-b-c'"
+    ],
+    "description": "Split and join strings"
+  },
+  "Strip variants": {
+    "prefix": "py_str_strip",
+    "body": [
+      "s.strip()           # both sides",
+      "s.lstrip()          # left",
+      "s.rstrip()          # right",
+      "'xxhelloxx'.strip('x')   # 'hello'"
+    ],
+    "description": "Strip whitespace or characters"
+  },
+  "Replace": {
+    "prefix": "py_str_replace",
+    "body": [
+      "${1:s}.replace('${2:world}', '${3:Python}')        # all",
+      "${1:s}.replace('${2:a}', '${3:b}', 1)               # first only"
+    ],
+    "description": "Replace substring"
+  },
+  "Remove prefix / suffix": {
+    "prefix": "py_str_remove",
+    "body": [
+      "${1:s}.removeprefix('${2:http://}')   # 3.9+",
+      "${1:s}.removesuffix('${3:.txt}')      # 3.9+"
+    ],
+    "description": "Remove prefix or suffix"
+  },
+  "Case methods": {
+    "prefix": "py_str_case",
+    "body": [
+      "'Hello World'.lower()       # 'hello world'",
+      "'Hello World'.upper()       # 'HELLO WORLD'",
+      "'hello world'.title()       # 'Hello World'",
+      "'hello world'.capitalize()  # 'Hello world'",
+      "'Hello World'.swapcase()    # 'hELLO wORLD'",
+      "'STRASSE'.casefold()        # 'strasse' (aggressive lower)"
+    ],
+    "description": "Case conversion methods"
+  },
+  "Search & test": {
+    "prefix": "py_str_search",
+    "body": [
+      "'world' in ${1:s}                 # membership",
+      "${1:s}.find('world')              # 6  (-1 if missing)",
+      "${1:s}.index('world')             # 6  (raises if missing)",
+      "${1:s}.startswith('hello')        # prefix test",
+      "${1:s}.endswith('world')          # suffix test",
+      "${1:s}.count('l')                 # occurrences",
+      "${1:s}.partition(',')             # ('before', ',', 'after')"
+    ],
+    "description": "Search and test strings"
+  },
+  "Slicing": {
+    "prefix": "py_str_slice",
+    "body": [
+      "s[0]        # first",
+      "s[-1]       # last",
+      "s[2:5]      # 2..4",
+      "s[:3]       # first 3",
+      "s[3:]       # from index 3",
+      "s[::2]      # every 2nd",
+      "s[::-1]     # reversed"
+    ],
+    "description": "Slicing variations"
+  },
+  "Zero-pad number string": {
+    "prefix": "py_str_zfill",
+    "body": [
+      "'${1:42}'.zfill(${2:5})           # '00042'",
+      "f'{${1:42}:0${2:5}d}'              # same, with f-string"
+    ],
+    "description": "Zero-pad a numeric string"
+  },
+  "Raw & bytes": {
+    "prefix": "py_str_raw",
+    "body": [
+      "pattern = r'\\d+'              # raw string (no escapes)",
+      "path = r'C:\\\\Users\\\\me'         # Windows path",
+      "data = b'bytes literal'        # bytes object",
+      "'héllo'.encode('utf-8')       # -> b'h\\xc3\\xa9llo'",
+      "b'h\\xc3\\xa9llo'.decode('utf-8')  # -> 'héllo'"
+    ],
+    "description": "Raw strings and bytes"
+  },
+  "Reverse & palindrome": {
+    "prefix": "py_str_reverse",
+    "body": [
+      "${1:s} = '${2:racecar}'",
+      "reversed_s = ${1:s}[::-1]",
+      "is_palindrome = ${1:s} == ${1:s}[::-1]",
+      "print(reversed_s, is_palindrome)"
+    ],
+    "description": "Reverse and palindrome check"
+  },
+  "Translate / maketrans": {
+    "prefix": "py_str_translate",
+    "body": [
+      "table = str.maketrans('${1:abc}', '${2:xyz}')",
+      "'${3:abc}'.translate(table)   # 'xyz'",
+      "# Delete characters with a third arg",
+      "table = str.maketrans('', '', '${4:aeiou}')"
+    ],
+    "description": "Character-by-character translation"
+  },
+  "Ord & chr": {
+    "prefix": "py_str_ord",
+    "body": [
+      "ord('a')   # 97   (char -> code)",
+      "chr(97)    # 'a'  (code -> char)"
+    ],
+    "description": "Character / code conversions"
+  },
+  "String & bytes to list": {
+    "prefix": "py_str_tolist",
+    "body": [
+      "list('Hello')        # ['H', 'e', 'l', 'l', 'o']",
+      "list(b'Hello')       # [72, 101, 108, 108, 111]"
+    ],
+    "description": "Convert string or bytes to list"
+  },
+  "Byte size (UTF-8)": {
+    "prefix": "py_str_bytesize",
+    "body": ["len(${1:text}.encode('utf-8'))"],
+    "description": "UTF-8 byte length"
+  },
+  "Printable ASCII": {
+    "prefix": "py_str_printable",
+    "body": [
+      "from string import printable",
+      "print(printable)",
+      "# Also: string.ascii_letters, digits, punctuation, whitespace"
+    ],
+    "description": "All printable ASCII characters"
+  },
+  "All fixed-length combinations": {
+    "prefix": "py_str_combinations",
+    "body": [
+      "from itertools import product",
+      "",
+      "text = '${1:abc}'",
+      "for combo in product(text, repeat=len(text)):",
+      "    print(''.join(combo), end=',')"
+    ],
+    "description": "Cartesian product of a string"
+  },
+
+  "// ==================== 5. BOOLEANS & NONE ====================": {
+    "prefix": "py_section_bool",
+    "body": ["# ============ BOOLEANS & NONE ============"],
+    "description": "Section marker"
+  },
+
+  "Booleans & truthiness": {
+    "prefix": "py_bool",
+    "body": [
+      "t = True",
+      "f = False",
+      "# Falsy values:  False, None, 0, 0.0, '', [], {}, set(), ()",
+      "bool(0)      # False",
+      "bool(1)      # True",
+      "bool('')     # False",
+      "bool([])     # False",
+      "bool([0])    # True  (non-empty container)",
+      "# bool is a subclass of int: True == 1, False == 0"
+    ],
+    "description": "Booleans and truthiness"
+  },
+  "None checks": {
+    "prefix": "py_none",
+    "body": [
+      "if ${1:value} is None:",
+      "    ${2:pass}",
+      "if ${1:value} is not None:",
+      "    ${0:pass}"
+    ],
+    "description": "Check for None with is / is not"
+  },
+
+  "// ==================== 6. LISTS ====================": {
+    "prefix": "py_section_lists",
+    "body": ["# ============ LISTS ============"],
+    "description": "Section marker"
+  },
+
+  "List: create": {
+    "prefix": "py_list",
+    "body": [
+      "empty = []",
+      "nums = [1, 2, 3, 4, 5]",
+      "mixed = [1, 'two', 3.0, True, None]",
+      "from_range = list(range(10))",
+      "nested = [[1, 2], [3, 4], [5, 6]]",
+      "repeated = [0] * 5               # [0, 0, 0, 0, 0]",
+      "concat = [1, 2] + [3, 4]         # [1, 2, 3, 4]"
+    ],
+    "description": "Create lists"
+  },
+  "List: add items": {
+    "prefix": "py_list_add",
+    "body": [
+      "${1:items}.append(${2:4})           # add one at end",
+      "${1:items}.extend([${3:5, 6}])        # add many (unpacked)",
+      "${1:items}.insert(0, ${4:0})         # insert at index",
+      "${1:items} += [${5:7}]               # same as extend"
+    ],
+    "description": "Add items to a list"
+  },
+  "List: remove items": {
+    "prefix": "py_list_remove",
+    "body": [
+      "${1:items}.remove(${2:value})    # remove first match (raises if missing)",
+      "last  = ${1:items}.pop()        # pop last",
+      "first = ${1:items}.pop(0)       # pop by index",
+      "del ${1:items}[0]               # delete by index",
+      "del ${1:items}[1:3]             # delete a slice",
+      "${1:items}.clear()              # empty in place"
+    ],
+    "description": "Remove items from a list"
+  },
+  "List: access & slice": {
+    "prefix": "py_list_slice",
+    "body": [
+      "${1:items}[0]        # first",
+      "${1:items}[-1]       # last",
+      "${1:items}[1:4]      # 1..3",
+      "${1:items}[:3]       # first 3",
+      "${1:items}[2:]       # from index 2",
+      "${1:items}[::2]      # every 2nd",
+      "${1:items}[::-1]     # reversed copy",
+      "${1:items}[1:4] = [${2:0, 0, 0}]   # slice assignment"
+    ],
+    "description": "Access and slicing"
+  },
+  "List: search & count": {
+    "prefix": "py_list_search",
+    "body": [
+      "${1:value} in ${2:items}          # membership",
+      "${2:items}.index(${1:value})       # first index",
+      "${2:items}.count(${1:value})       # occurrences",
+      "len(${2:items})                    # length"
+    ],
+    "description": "Search and count"
+  },
+  "List: sort & reverse": {
+    "prefix": "py_list_sort",
+    "body": [
+      "${1:items}.sort()                          # in place asc",
+      "${1:items}.sort(reverse=True)              # in place desc",
+      "copy = sorted(${1:items})                  # new list",
+      "${1:items}.reverse()                       # in place reverse",
+      "${1:items}.sort(key=len)                   # by length",
+      "${1:items}.sort(key=lambda x: x.${2:lower}())   # key function",
+      "${1:items}.sort(key=lambda x: (${3:x[0]}, ${4:-x[1]}))   # multi-key"
+    ],
+    "description": "Sort and reverse"
+  },
+  "List: copy": {
+    "prefix": "py_list_copy",
+    "body": [
+      "shallow = ${1:original}.copy()   # or original[:] or list(original)",
+      "import copy",
+      "deep = copy.deepcopy(${1:original})"
+    ],
+    "description": "Shallow vs deep copy"
+  },
+  "List: aggregate": {
+    "prefix": "py_list_agg",
+    "body": [
+      "sum(${1:items})                       # total",
+      "min(${1:items}), max(${1:items})       # extremes",
+      "len(${1:items})                       # count",
+      "sum(${1:items}) / len(${1:items})       # mean",
+      "any(x > ${2:0} for x in ${1:items})      # any true",
+      "all(x > ${2:0} for x in ${1:items})      # all true"
+    ],
+    "description": "Aggregate list values"
+  },
+  "List: filter & map": {
+    "prefix": "py_list_filter",
+    "body": [
+      "evens   = list(filter(lambda n: n % 2 == 0, ${1:nums}))",
+      "squares = list(map(lambda n: n * n, ${1:nums}))"
+    ],
+    "description": "filter() and map()"
+  },
+  "List: unique (keep order)": {
+    "prefix": "py_list_unique",
+    "body": ["unique = list(dict.fromkeys(${1:items}))"],
+    "description": "Remove duplicates, keep order"
+  },
+  "List: flatten one level": {
+    "prefix": "py_list_flatten",
+    "body": ["flat = [x for sub in ${1:nested} for x in sub]"],
+    "description": "Flatten one level"
+  },
+  "List: zip & unzip": {
+    "prefix": "py_list_zip",
+    "body": [
+      "pairs = list(zip(${1:names}, ${2:ages}))",
+      "unzipped = list(zip(*pairs))"
+    ],
+    "description": "Zip two lists and unzip"
+  },
+  "List: unpack": {
+    "prefix": "py_list_unpack",
+    "body": ["first, *middle, last = ${0:[1, 2, 3, 4, 5]}"],
+    "description": "Star unpacking"
+  },
+  "List: chunk": {
+    "prefix": "py_list_chunk",
+    "body": [
+      "def chunked(items, size):",
+      "    for i in range(0, len(items), size):",
+      "        yield items[i:i + size]",
+      "",
+      "list(chunked(${1:[1, 2, 3, 4, 5, 6, 7]}, ${2:3}))"
+    ],
+    "description": "Split into fixed-size chunks"
+  },
+  "List: sliding window": {
+    "prefix": "py_list_window",
+    "body": [
+      "def windows(items, size):",
+      "    for i in range(len(items) - size + 1):",
+      "        yield items[i:i + size]",
+      "",
+      "list(windows(${1:[1, 2, 3, 4, 5]}, ${2:3}))"
+    ],
+    "description": "Sliding window"
+  },
+  "List: transpose (zip*)": {
+    "prefix": "py_list_transpose",
+    "body": [
+      "lst = ${1:[['a', 'b'], ['c', 'd'], ['e', 'f']]}",
+      "print(list(zip(*lst)))"
+    ],
+    "description": "Transpose rows and columns"
+  },
+  "List: most frequent": {
+    "prefix": "py_list_top",
+    "body": [
+      "from collections import Counter",
+      "top = Counter(${1:lst}).most_common(${2:2})"
+    ],
+    "description": "Top-N most common items"
+  },
+  "List: group adjacent": {
+    "prefix": "py_list_group",
+    "body": [
+      "def groups(items, n):",
+      "    \"\"\"Chunk an iterable into tuples of length n.\"\"\"",
+      "    it = iter(items)",
+      "    return zip(*([it] * n))",
+      "",
+      "list(groups(${1:[1, 2, 3, 4, 5, 6]}, ${2:3}))"
+    ],
+    "description": "Chunk into groups of n"
+  },
+  "List: random choice": {
+    "prefix": "py_list_choice",
+    "body": [
+      "from random import choice",
+      "choice(${1:colors})"
+    ],
+    "description": "Pick a random item"
+  },
+  "List: shuffle": {
+    "prefix": "py_list_shuffle",
+    "body": [
+      "from random import shuffle",
+      "shuffle(${1:colors})"
+    ],
+    "description": "Shuffle a list in place"
+  },
+  "List: element-wise min": {
+    "prefix": "py_list_min_pair",
+    "body": ["list(map(min, ${1:first}, ${2:second}))"],
+    "description": "Element-wise minimum"
+  },
+  "List: zip longest": {
+    "prefix": "py_list_zip_longest",
+    "body": [
+      "from itertools import zip_longest",
+      "list(zip_longest(${1:'ABCD'}, ${2:'xy'}, fillvalue=${3:'_'}))"
+    ],
+    "description": "Zip uneven iterables"
+  },
+  "List: to frozenset": {
+    "prefix": "py_list_frozenset",
+    "body": ["frozen = frozenset(${1:lst})"],
+    "description": "Convert to an immutable frozenset"
+  },
+  "List: binary search (bisect)": {
+    "prefix": "py_list_bisect",
+    "body": [
+      "import bisect",
+      "# List must be sorted",
+      "i = bisect.bisect_left(${1:arr}, ${2:value})    # left insertion point",
+      "j = bisect.bisect_right(${1:arr}, ${2:value})   # right insertion point",
+      "bisect.insort(${1:arr}, ${3:new_value})        # insert keeping sorted"
+    ],
+    "description": "Binary search on a sorted list"
+  },
+
+  "// ==================== 7. TUPLES ====================": {
+    "prefix": "py_section_tuples",
+    "body": ["# ============ TUPLES ============"],
+    "description": "Section marker"
+  },
+
+  "Tuple: create & unpack": {
+    "prefix": "py_tuple",
+    "body": [
+      "point = (3, 4)",
+      "single = (42,)          # trailing comma required",
+      "empty = ()",
+      "x, y = point            # unpack",
+      "a, *rest = (1, 2, 3, 4) # star unpacking"
+    ],
+    "description": "Create and unpack tuples"
+  },
+  "Tuple: NamedTuple": {
+    "prefix": "py_tuple_named",
+    "body": [
+      "from typing import NamedTuple",
+      "",
+      "class Point(NamedTuple):",
+      "    x: float",
+      "    y: float",
+      "",
+      "p = Point(3.0, 4.0)",
+      "print(p.x, p.y)",
+      "print(p._asdict())   # {'x': 3.0, 'y': 4.0}"
+    ],
+    "description": "Typed, named tuple"
+  },
+  "Tuple: immutability": {
+    "prefix": "py_tuple_why",
+    "body": [
+      "# Tuples are immutable and hashable",
+      "t = (1, 2, 3)",
+      "# t[0] = 99   # TypeError",
+      "",
+      "# Use as dict keys (lists cannot be)",
+      "d = {('a', 1): 'value'}",
+      "",
+      "# Slightly smaller/faster than lists; use for fixed records"
+    ],
+    "description": "Why use tuples"
+  },
+
+  "// ==================== 8. SETS ====================": {
+    "prefix": "py_section_sets",
+    "body": ["# ============ SETS ============"],
+    "description": "Section marker"
+  },
+
+  "Set: create & basic ops": {
+    "prefix": "py_set",
+    "body": [
+      "s = {1, 2, 3}",
+      "empty = set()          # not {} (that's a dict)",
+      "s.add(4)",
+      "s.discard(1)           # no error if missing",
+      "s.remove(2)            # raises if missing",
+      "s.pop()                # remove arbitrary",
+      "s.update([5, 6])",
+      "s.clear()"
+    ],
+    "description": "Set creation and operations"
+  },
+  "Set: algebra": {
+    "prefix": "py_set_ops",
+    "body": [
+      "a | b      # union",
+      "a & b      # intersection",
+      "a - b      # difference (in a, not b)",
+      "a ^ b      # symmetric difference",
+      "a |= b     # in-place union",
+      "a &= b     # in-place intersection"
+    ],
+    "description": "Union, intersection, difference"
+  },
+  "Set: relations": {
+    "prefix": "py_set_relations",
+    "body": [
+      "a.issubset(b)     # a ⊆ b",
+      "a.issuperset(b)   # a ⊇ b",
+      "a.isdisjoint(b)   # no common elements"
+    ],
+    "description": "Set relations"
+  },
+  "Set: deduplicate fast": {
+    "prefix": "py_set_dedup",
+    "body": [
+      "# When order does not matter, sets are faster than dict.fromkeys",
+      "unique = list(set(${1:items}))"
+    ],
+    "description": "Fast deduplication (unordered)"
+  },
+
+  "// ==================== 9. DICTS ====================": {
+    "prefix": "py_section_dicts",
+    "body": ["# ============ DICTIONARIES ============"],
+    "description": "Section marker"
+  },
+
+  "Dict: create": {
+    "prefix": "py_dict",
+    "body": [
+      "empty = {}",
+      "person = {'name': 'Alice', 'age': 30}",
+      "pairs = dict([('a', 1), ('b', 2)])",
+      "from_keys = dict.fromkeys(['a', 'b'], 0)",
+      "comprehension = {k: v for k, v in pairs}"
+    ],
+    "description": "Create dicts"
+  },
+  "Dict: safe lookup": {
+    "prefix": "py_dict_get",
+    "body": [
+      "${1:d}.get('${2:key}')             # None if missing",
+      "${1:d}.get('${2:key}', ${3:0})       # default value",
+      "${1:d}['${2:key}']                 # raises KeyError if missing"
+    ],
+    "description": "Safe lookup with get()"
+  },
+  "Dict: add / update": {
+    "prefix": "py_dict_update",
+    "body": [
+      "${1:d}['${2:key}'] = ${3:value}",
+      "${1:d}.update({'${4:k}': ${5:v}})",
+      "${1:d} |= {'${6:k}': ${7:v}}          # 3.9+",
+      "${1:d}.setdefault('${8:key}', ${9:default})   # only if absent"
+    ],
+    "description": "Add or update keys"
+  },
+  "Dict: remove": {
+    "prefix": "py_dict_remove",
+    "body": [
+      "${1:d}.pop('${2:key}')            # returns value, raises if missing",
+      "${1:d}.pop('${3:key}', None)      # safe with default",
+      "del ${1:d}['${4:key}']",
+      "${1:d}.popitem()                  # remove last (FIFO in 3.7+)",
+      "${1:d}.clear()"
+    ],
+    "description": "Remove dict keys"
+  },
+  "Dict: iterate": {
+    "prefix": "py_dict_iter",
+    "body": [
+      "for key in ${1:d}:                    # iterates keys",
+      "    print(key)",
+      "for value in ${1:d}.values():",
+      "    print(value)",
+      "for key, value in ${1:d}.items():",
+      "    print(key, '=', value)"
+    ],
+    "description": "Iterate keys, values, items"
+  },
+  "Dict: merge (3 ways)": {
+    "prefix": "py_dict_merge",
+    "body": [
+      "m1 = {**${1:a}, **${2:b}}         # unpack",
+      "m2 = ${1:a} | ${2:b}              # 3.9+",
+      "m3 = {**${1:a}}; m3.update(${2:b})"
+    ],
+    "description": "Three ways to merge dicts"
+  },
+  "Dict: sort by value": {
+    "prefix": "py_dict_sort",
+    "body": [
+      "asc  = dict(sorted(${1:d}.items(), key=lambda kv: kv[1]))",
+      "desc = dict(sorted(${1:d}.items(), key=lambda kv: kv[1], reverse=True))"
+    ],
+    "description": "Sort a dict by value"
+  },
+  "Dict: invert": {
+    "prefix": "py_dict_invert",
+    "body": [
+      "inverted = {v: k for k, v in ${1:d}.items()}",
+      "# Note: values must be unique or you'll lose entries"
+    ],
+    "description": "Swap keys and values"
+  },
+  "Dict: defaultdict": {
+    "prefix": "py_dict_defaultdict",
+    "body": [
+      "from collections import defaultdict",
+      "",
+      "groups = defaultdict(list)",
+      "groups['fruit'].append('apple')   # auto-creates list",
+      "",
+      "counts = defaultdict(int)",
+      "for ch in '${1:abracadabra}':",
+      "    counts[ch] += 1"
+    ],
+    "description": "defaultdict for grouping / counting"
+  },
+  "Dict: Counter": {
+    "prefix": "py_dict_counter",
+    "body": [
+      "from collections import Counter",
+      "c = Counter('${1:abracadabra}')",
+      "print(c.most_common(${2:3}))",
+      "print(c['a'])                 # count of 'a'",
+      "print(c.total())              # total count (3.10+)",
+      "c1 + c2                       # add counts",
+      "c1 - c2                       # subtract counts"
+    ],
+    "description": "Count items with Counter"
+  },
+  "Dict: nested": {
+    "prefix": "py_dict_nested",
+    "body": [
+      "user = {",
+      "    'name': 'Alice',",
+      "    'address': {'city': 'Paris', 'zip': '75001'},",
+      "}",
+      "print(user['address']['city'])",
+      "print(user.get('address', {}).get('city'))   # safe chain"
+    ],
+    "description": "Nested dict access"
+  },
+  "Dict: two lists to dict": {
+    "prefix": "py_dict_from_lists",
+    "body": ["${1:d} = dict(zip(${2:keys}, ${3:values}))"],
+    "description": "Zip keys and values into a dict"
+  },
+  "Dict: sort a list of dicts": {
+    "prefix": "py_dict_sort_list",
+    "body": [
+      "sorted_list = sorted(${1:people}, key=lambda p: p['${2:age}'])",
+      "sorted_desc = sorted(${1:people}, key=lambda p: p['${2:age}'], reverse=True)"
+    ],
+    "description": "Sort list of dicts by a field"
+  },
+  "Dict: group list into dict of lists": {
+    "prefix": "py_dict_group",
+    "body": [
+      "from collections import defaultdict",
+      "",
+      "groups = defaultdict(list)",
+      "for item in ${1:items}:",
+      "    groups[item['${2:key}']].append(item)"
+    ],
+    "description": "Group items by a key"
+  },
+
+  "// ==================== 10. CONTROL FLOW ====================": {
+    "prefix": "py_section_controlflow",
+    "body": ["# ============ CONTROL FLOW ============"],
+    "description": "Section marker"
+  },
+
+  "If / elif / else": {
+    "prefix": "py_if",
+    "body": [
+      "if ${1:condition}:",
+      "    ${2:pass}",
+      "elif ${3:other}:",
+      "    ${4:pass}",
+      "else:",
+      "    ${0:pass}"
+    ],
+    "description": "Standard conditional"
+  },
+  "Ternary expression": {
+    "prefix": "py_if_ternary",
+    "body": ["${1:result} = ${2:a} if ${3:condition} else ${4:b}"],
+    "description": "One-line if/else"
+  },
+  "Chained comparison": {
+    "prefix": "py_if_chain",
+    "body": [
+      "if ${1:0} <= ${2:x} < ${3:10}:",
+      "    print('in range')"
+    ],
+    "description": "0 <= x < 10 style"
+  },
+  "Membership test": {
+    "prefix": "py_if_in",
+    "body": [
+      "if ${1:item} in ${2:items}:",
+      "    ${3:pass}",
+      "if ${1:item} not in ${2:items}:",
+      "    ${0:pass}"
+    ],
+    "description": "in / not in checks"
+  },
+  "None / truthy test": {
+    "prefix": "py_if_none",
+    "body": [
+      "if ${1:value} is None:",
+      "    ${2:pass}",
+      "if ${1:value} is not None:",
+      "    ${3:pass}",
+      "if not ${4:items}:",
+      "    print('empty')"
+    ],
+    "description": "None and truthiness"
+  },
+  "match / case": {
+    "prefix": "py_match",
+    "body": [
+      "match ${1:value}:",
+      "    case ${2:1}:",
+      "        ${3:print('one')}",
+      "    case [x, y]:",
+      "        print('pair', x, y)",
+      "    case {'type': t}:",
+      "        print('dict with type', t)",
+      "    case int() | float() as n if n > 0:",
+      "        print('positive number', n)",
+      "    case _:",
+      "        print('other')"
+    ],
+    "description": "Structural pattern matching (3.10+)"
+  },
+
+  "// ==================== 11. LOOPS ====================": {
+    "prefix": "py_section_loops",
+    "body": ["# ============ LOOPS ============"],
+    "description": "Section marker"
+  },
+
+  "For: basic": {
+    "prefix": "py_for",
+    "body": [
+      "for ${1:item} in ${2:items}:",
+      "    ${0:print(item)}"
+    ],
+    "description": "Basic for loop"
+  },
+  "For: range variants": {
+    "prefix": "py_for_range",
+    "body": [
+      "range(5)              # 0..4",
+      "range(2, 8)           # 2..7",
+      "range(0, 10, 2)       # 0, 2, 4, 6, 8",
+      "range(10, 0, -1)      # 10..1 countdown"
+    ],
+    "description": "All range() forms"
+  },
+  "For: enumerate": {
+    "prefix": "py_for_enum",
+    "body": [
+      "for i, item in enumerate(${1:items}):",
+      "    print(i, item)",
+      "",
+      "for i, item in enumerate(${1:items}, start=1):",
+      "    print(i, item)"
+    ],
+    "description": "for with index"
+  },
+  "For: zip": {
+    "prefix": "py_for_zip",
+    "body": [
+      "for a, b in zip(${1:list_a}, ${2:list_b}):",
+      "    print(a, b)"
+    ],
+    "description": "Loop over two sequences"
+  },
+  "For: dict": {
+    "prefix": "py_for_dict",
+    "body": [
+      "for key in ${1:d}:",
+      "    print(key)",
+      "for value in ${1:d}.values():",
+      "    print(value)",
+      "for key, value in ${1:d}.items():",
+      "    print(key, value)"
+    ],
+    "description": "Loop over dict keys/values/items"
+  },
+  "For: nested": {
+    "prefix": "py_for_nested",
+    "body": [
+      "for i in range(3):",
+      "    for j in range(3):",
+      "        print(i, j)"
+    ],
+    "description": "Nested for loops"
+  },
+  "For: break & continue": {
+    "prefix": "py_for_break",
+    "body": [
+      "for n in ${1:items}:",
+      "    if ${2:n < 0}:",
+      "        continue        # skip this iteration",
+      "    if ${3:n > 100}:",
+      "        break           # exit the loop",
+      "    print(n)"
+    ],
+    "description": "break and continue"
+  },
+  "For: else": {
+    "prefix": "py_for_else",
+    "body": [
+      "for n in ${1:items}:",
+      "    if ${2:condition}:",
+      "        break",
+      "else:",
+      "    print('no break')   # runs only if loop completed without break"
+    ],
+    "description": "for/else — else runs if no break"
+  },
+  "For: reverse iterate": {
+    "prefix": "py_for_reverse",
+    "body": ["for x in reversed(${1:items}):", "    print(x)"],
+    "description": "Iterate in reverse"
+  },
+  "For: itertools.product": {
+    "prefix": "py_for_product",
+    "body": [
+      "from itertools import product",
+      "for a, b in product(${1:[1, 2]}, ${2:['x', 'y']}):",
+      "    print(a, b)"
+    ],
+    "description": "Cartesian product (nested loop)"
+  },
+  "While: basic": {
+    "prefix": "py_while",
+    "body": [
+      "i = 0",
+      "while i < ${1:10}:",
+      "    print(i)",
+      "    i += 1"
+    ],
+    "description": "Basic while loop"
+  },
+  "While: else": {
+    "prefix": "py_while_else",
+    "body": [
+      "while ${1:condition}:",
+      "    ${2:pass}",
+      "else:",
+      "    print('loop ended normally')"
+    ],
+    "description": "while with else"
+  },
+  "While: infinite with break": {
+    "prefix": "py_while_true",
+    "body": [
+      "while True:",
+      "    ${1:cmd} = input('> ')",
+      "    if ${1:cmd} == 'quit':",
+      "        break",
+      "    print(${1:cmd})"
+    ],
+    "description": "Infinite loop with a break"
+  },
+  "Loop: consume iterator manually": {
+    "prefix": "py_for_next",
+    "body": [
+      "it = iter(${1:items})",
+      "while (item := next(it, None)) is not None:",
+      "    print(item)"
+    ],
+    "description": "Manual iteration with next()"
+  },
+
+  "// ==================== 12. COMPREHENSIONS ====================": {
+    "prefix": "py_section_comprehensions",
+    "body": ["# ============ COMPREHENSIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Comp: list": {
+    "prefix": "py_comp_list",
+    "body": ["${1:squares} = [${2:n * n} for ${3:n} in ${4:range(10)}]"],
+    "description": "Basic list comprehension"
+  },
+  "Comp: list + filter": {
+    "prefix": "py_comp_filter",
+    "body": ["${1:evens} = [${2:n} for ${3:n} in ${4:range(10)} if ${5:n % 2 == 0}]"],
+    "description": "List comp with if"
+  },
+  "Comp: list + if/else": {
+    "prefix": "py_comp_ifelse",
+    "body": ["${1:labels} = ['${2:even}' if ${3:n % 2 == 0} else '${4:odd}' for ${5:n} in ${6:range(10)}]"],
+    "description": "Ternary inside comprehension"
+  },
+  "Comp: dict": {
+    "prefix": "py_comp_dict",
+    "body": ["${1:squares} = {${2:n}: ${3:n * n} for ${4:n} in ${5:range(10)}}"],
+    "description": "Dict comprehension"
+  },
+  "Comp: dict inverted": {
+    "prefix": "py_comp_dict_invert",
+    "body": ["${1:inverted} = {v: k for k, v in ${2:d}.items()}"],
+    "description": "Invert keys and values"
+  },
+  "Comp: set": {
+    "prefix": "py_comp_set",
+    "body": ["${1:unique} = {${2:n % 3} for ${3:n} in ${4:range(10)}}"],
+    "description": "Set comprehension"
+  },
+  "Comp: generator": {
+    "prefix": "py_comp_gen",
+    "body": [
+      "${1:gen} = (${2:n * n} for ${3:n} in ${4:range(10)})",
+      "print(sum(${1:gen}))"
+    ],
+    "description": "Generator expression (lazy)"
+  },
+  "Comp: nested (flatten)": {
+    "prefix": "py_comp_nested",
+    "body": ["${1:flat} = [${2:x} for ${3:row} in ${4:matrix} for ${5:x} in ${3:row}]"],
+    "description": "Nested comprehension"
+  },
+  "Comp: with walrus": {
+    "prefix": "py_comp_walrus",
+    "body": [
+      "# Compute a value once, use it twice",
+      "[y for x in ${1:data} if (y := ${2:f(x)}) > ${3:0}]"
+    ],
+    "description": "Comprehension with walrus operator"
+  },
+
+  "// ==================== 13. FUNCTIONS ====================": {
+    "prefix": "py_section_functions",
+    "body": ["# ============ FUNCTIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Func: basic": {
+    "prefix": "py_func",
+    "body": [
+      "def ${1:name}(${2:args}):",
+      "    \"\"\"${3:Short description.}\"\"\"",
+      "    ${0:return None}"
+    ],
+    "description": "Basic function"
+  },
+  "Func: typed with docstring": {
+    "prefix": "py_func_typed",
+    "body": [
+      "def ${1:name}(${2:a}: ${3:int}, ${4:b}: ${5:int}) -> ${6:int}:",
+      "    \"\"\"${7:Short summary.}",
+      "",
+      "    Args:",
+      "        ${2:a}: ${8:First operand.}",
+      "        ${4:b}: ${9:Second operand.}",
+      "",
+      "    Returns:",
+      "        ${10:Result.}",
+      "    \"\"\"",
+      "    return ${2:a} + ${4:b}"
+    ],
+    "description": "Typed function with full docstring"
+  },
+  "Func: default args": {
+    "prefix": "py_func_default",
+    "body": [
+      "def greet(name: str, greeting: str = 'Hello') -> str:",
+      "    return f'{greeting}, {name}!'",
+      "",
+      "# WARNING: never use mutable defaults (list, dict)",
+      "def bad(items=[]): ...   # shared across calls!",
+      "def good(items=None):",
+      "    items = items if items is not None else []"
+    ],
+    "description": "Default argument values"
+  },
+  "Func: *args": {
+    "prefix": "py_func_args",
+    "body": [
+      "def total(*args: float) -> float:",
+      "    \"\"\"Sum any number of positional args.\"\"\"",
+      "    return sum(args, 0.0)"
+    ],
+    "description": "Variable positional args"
+  },
+  "Func: **kwargs": {
+    "prefix": "py_func_kwargs",
+    "body": [
+      "def show(**kwargs) -> None:",
+      "    for key, value in kwargs.items():",
+      "        print(f'{key} = {value}')"
+    ],
+    "description": "Variable keyword args"
+  },
+  "Func: args + kwargs": {
+    "prefix": "py_func_both",
+    "body": [
+      "def func(a, b=2, *args, c=3, **kwargs):",
+      "    print(a, b, args, c, kwargs)"
+    ],
+    "description": "Full signature order"
+  },
+  "Func: positional-only params": {
+    "prefix": "py_func_posonly",
+    "body": [
+      "# Everything before / is positional-only (3.8+)",
+      "def func(a, b, /, c, d, *, e, f):",
+      "    ...",
+      "#     ^ pos-only  ^ pos-or-kw   ^ kw-only"
+    ],
+    "description": "Positional-only parameters with /"
+  },
+  "Func: keyword-only params": {
+    "prefix": "py_func_kwonly",
+    "body": [
+      "# Everything after * must be passed by keyword",
+      "def func(a, b, *, ${1:verbose}: bool = False):",
+      "    ...",
+      "",
+      "func(1, 2, verbose=True)"
+    ],
+    "description": "Keyword-only parameters with *"
+  },
+  "Func: return multiple": {
+    "prefix": "py_func_multi_return",
+    "body": [
+      "def min_max(items):",
+      "    return min(items), max(items)",
+      "",
+      "lo, hi = min_max(${1:[3, 1, 4, 1, 5]})"
+    ],
+    "description": "Return multiple values"
+  },
+  "Func: lambda": {
+    "prefix": "py_func_lambda",
+    "body": ["${1:add} = lambda ${2:x}, ${3:y}: ${2:x} + ${3:y}"],
+    "description": "Anonymous function"
+  },
+  "Func: lambda as key": {
+    "prefix": "py_func_lambda_sort",
+    "body": ["sorted(${1:items}, key=lambda x: ${2:x['age']})"],
+    "description": "Lambda as sort key"
+  },
+  "Func: nested": {
+    "prefix": "py_func_nested",
+    "body": [
+      "def outer(x):",
+      "    def inner(y):",
+      "        return y * 2",
+      "    return inner(x) + 1"
+    ],
+    "description": "Function inside a function"
+  },
+  "Func: closure": {
+    "prefix": "py_func_closure",
+    "body": [
+      "def make_counter():",
+      "    count = 0",
+      "    def inc():",
+      "        nonlocal count",
+      "        count += 1",
+      "        return count",
+      "    return inc"
+    ],
+    "description": "Closure with nonlocal"
+  },
+  "Func: decorator": {
+    "prefix": "py_func_decorator",
+    "body": [
+      "from functools import wraps",
+      "",
+      "def ${1:logger}(func):",
+      "    @wraps(func)",
+      "    def wrapper(*args, **kwargs):",
+      "        print(f'calling {func.__name__}')",
+      "        result = func(*args, **kwargs)",
+      "        print(f'done {func.__name__}')",
+      "        return result",
+      "    return wrapper",
+      "",
+      "@${1:logger}",
+      "def ${2:add}(a, b):",
+      "    return a + b"
+    ],
+    "description": "Decorator template"
+  },
+  "Func: decorator with arguments": {
+    "prefix": "py_func_decorator_args",
+    "body": [
+      "from functools import wraps",
+      "",
+      "def repeat(times):",
+      "    def decorator(func):",
+      "        @wraps(func)",
+      "        def wrapper(*args, **kwargs):",
+      "            for _ in range(times):",
+      "                result = func(*args, **kwargs)",
+      "            return result",
+      "        return wrapper",
+      "    return decorator",
+      "",
+      "@repeat(${1:3})",
+      "def ${2:say}():",
+      "    print('${3:hi}')"
+    ],
+    "description": "Decorator with its own arguments"
+  },
+  "Func: recursive": {
+    "prefix": "py_func_recursive",
+    "body": [
+      "def factorial(n: int) -> int:",
+      "    if n <= 1:",
+      "        return 1",
+      "    return n * factorial(n - 1)"
+    ],
+    "description": "Recursive function"
+  },
+  "Func: generator": {
+    "prefix": "py_func_generator",
+    "body": [
+      "def ${1:count_up}(n: int):",
+      "    \"\"\"Yield numbers 0..n-1 lazily.\"\"\"",
+      "    for i in range(n):",
+      "        yield i"
+    ],
+    "description": "Generator with yield"
+  },
+  "Func: yield from": {
+    "prefix": "py_func_yield_from",
+    "body": [
+      "def chain(*iterables):",
+      "    for it in iterables:",
+      "        yield from it"
+    ],
+    "description": "Delegating generator"
+  },
+  "Func: partial": {
+    "prefix": "py_func_partial",
+    "body": [
+      "from functools import partial",
+      "",
+      "def add(a, b):",
+      "    return a + b",
+      "",
+      "add_five = partial(add, 5)"
+    ],
+    "description": "Freeze arguments with partial"
+  },
+  "Func: cache / lru_cache": {
+    "prefix": "py_func_cache",
+    "body": [
+      "from functools import cache, lru_cache",
+      "",
+      "@cache                     # unbounded (3.9+)",
+      "def fib(n: int) -> int:",
+      "    return n if n < 2 else fib(n - 1) + fib(n - 2)",
+      "",
+      "@lru_cache(maxsize=128)    # bounded",
+      "def slow(n): ..."
+    ],
+    "description": "Memoize a function"
+  },
+  "Func: singledispatch": {
+    "prefix": "py_func_singledispatch",
+    "body": [
+      "from functools import singledispatch",
+      "",
+      "@singledispatch",
+      "def show(arg):",
+      "    print('default', arg)",
+      "",
+      "@show.register",
+      "def _(arg: int):",
+      "    print('int:', arg)",
+      "",
+      "@show.register",
+      "def _(arg: list):",
+      "    print('list:', arg)"
+    ],
+    "description": "Type-based function overloading"
+  },
+  "Func: unpack at call": {
+    "prefix": "py_func_unpack_call",
+    "body": [
+      "func(*${1:args})       # unpack list/tuple",
+      "func(**${2:kwargs})      # unpack dict"
+    ],
+    "description": "Star-unpack when calling"
+  },
+  "Func: dispatch table": {
+    "prefix": "py_func_dispatch",
+    "body": [
+      "operations = {",
+      "    '1': ${1:add},",
+      "    '2': ${2:sub},",
+      "    '3': ${3:mul},",
+      "}",
+      "if ${4:choice} in operations:",
+      "    print(operations[${4:choice}](${5:a}, ${6:b}))",
+      "else:",
+      "    print('Invalid option')"
+    ],
+    "description": "Map choices to functions"
+  },
+  "Func: return annotations (Self, union)": {
+    "prefix": "py_func_self_type",
+    "body": [
+      "from typing import Self   # 3.11+",
+      "",
+      "class Builder:",
+      "    def with_x(self, x: int) -> Self:",
+      "        self.x = x",
+      "        return self"
+    ],
+    "description": "Return type Self for fluent APIs"
+  },
+
+  "// ==================== 14. EXCEPTIONS ====================": {
+    "prefix": "py_section_exceptions",
+    "body": ["# ============ EXCEPTIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Try: full block": {
+    "prefix": "py_try",
+    "body": [
+      "try:",
+      "    ${1:risky()}",
+      "except ${2:ValueError} as e:",
+      "    ${3:print('ValueError:', e)}",
+      "except (${4:TypeError, KeyError}) as e:",
+      "    ${5:print('Other:', e)}",
+      "else:",
+      "    ${6:print('no exception')}",
+      "finally:",
+      "    ${0:print('cleanup')}"
+    ],
+    "description": "Full try/except/else/finally"
+  },
+  "Try: catch all": {
+    "prefix": "py_try_all",
+    "body": [
+      "try:",
+      "    ${1:do_work()}",
+      "except Exception as e:",
+      "    ${2:print('failed:', e)}",
+      "    # Consider logging instead"
+    ],
+    "description": "Broad exception handler"
+  },
+  "Try: re-raise": {
+    "prefix": "py_try_reraise",
+    "body": [
+      "try:",
+      "    ${1:risky()}",
+      "except ${2:ValueError}:",
+      "    ${3:log_error()}",
+      "    raise   # re-raise the same exception"
+    ],
+    "description": "Log then re-raise"
+  },
+  "Raise exception": {
+    "prefix": "py_raise",
+    "body": ["raise ${1:ValueError}(f'${2:invalid value}: {${3:value}}')"],
+    "description": "Raise with context"
+  },
+  "Raise from (chaining)": {
+    "prefix": "py_raise_from",
+    "body": [
+      "try:",
+      "    ${1:do_work()}",
+      "except ${2:KeyError} as e:",
+      "    raise ${3:RuntimeError}('${4:higher level}') from e"
+    ],
+    "description": "Chain exceptions with 'raise ... from'"
+  },
+  "Custom exception class": {
+    "prefix": "py_exception_custom",
+    "body": [
+      "class ${1:MyError}(Exception):",
+      "    \"\"\"Raised when ...\"\"\"",
+      "",
+      "    def __init__(self, message: str, code: int = 0):",
+      "        super().__init__(message)",
+      "        self.code = code"
+    ],
+    "description": "Custom exception class"
+  },
+  "Custom exception hierarchy": {
+    "prefix": "py_exception_hierarchy",
+    "body": [
+      "class AppError(Exception):",
+      "    \"\"\"Base for all application errors.\"\"\"",
+      "",
+      "class NotFound(AppError): ...",
+      "class ValidationFailed(AppError): ...",
+      "",
+      "# Callers can catch AppError to handle all app-specific failures."
+    ],
+    "description": "Base + subclasses for catch-all handling"
+  },
+  "Exception group (3.11+)": {
+    "prefix": "py_exception_group",
+    "body": [
+      "try:",
+      "    raise ExceptionGroup('${1:errors}', [",
+      "        ValueError('${2:a}'),",
+      "        TypeError('${3:b}'),",
+      "    ])",
+      "except* ValueError as eg:",
+      "    print('value errors:', eg.exceptions)"
+    ],
+    "description": "Multiple exceptions (3.11+)"
+  },
+  "Assertion": {
+    "prefix": "py_assert",
+    "body": ["assert ${1:condition}, f'${2:assertion failed}: {${3:value}}'"],
+    "description": "Assert with message"
+  },
+
+  "// ==================== 15. FILES ====================": {
+    "prefix": "py_section_files",
+    "body": ["# ============ FILES ============"],
+    "description": "Section marker"
+  },
+
+  "File: read text": {
+    "prefix": "py_file_read",
+    "body": [
+      "with open(${1:'file.txt'}, 'r', encoding='utf-8') as f:",
+      "    ${2:content} = f.read()"
+    ],
+    "description": "Read whole text file"
+  },
+  "File: write text": {
+    "prefix": "py_file_write",
+    "body": [
+      "with open(${1:'out.txt'}, 'w', encoding='utf-8') as f:",
+      "    f.write(${0:content})"
+    ],
+    "description": "Write text to file"
+  },
+  "File: append": {
+    "prefix": "py_file_append",
+    "body": [
+      "with open(${1:'out.txt'}, 'a', encoding='utf-8') as f:",
+      "    f.write(${2:line} + '\\n')"
+    ],
+    "description": "Append a line"
+  },
+  "File: iterate lines": {
+    "prefix": "py_file_lines",
+    "body": [
+      "with open(${1:'file.txt'}, 'r', encoding='utf-8') as f:",
+      "    for line in f:",
+      "        print(line.rstrip())"
+    ],
+    "description": "Iterate over lines"
+  },
+  "File: read all lines": {
+    "prefix": "py_file_readlines",
+    "body": [
+      "with open(${1:'file.txt'}, encoding='utf-8') as f:",
+      "    lines = f.readlines()   # list of str with trailing \\n",
+      "    lines = [l.rstrip('\\n') for l in lines]"
+    ],
+    "description": "Read all lines into a list"
+  },
+  "File: JSON read": {
+    "prefix": "py_file_json_read",
+    "body": [
+      "import json",
+      "with open(${1:'data.json'}, encoding='utf-8') as f:",
+      "    data = json.load(f)"
+    ],
+    "description": "Load JSON from file"
+  },
+  "File: JSON write": {
+    "prefix": "py_file_json_write",
+    "body": [
+      "import json",
+      "with open(${1:'out.json'}, 'w', encoding='utf-8') as f:",
+      "    json.dump(${2:data}, f, indent=2, ensure_ascii=False)"
+    ],
+    "description": "Dump data as JSON"
+  },
+  "File: pathlib": {
+    "prefix": "py_file_pathlib",
+    "body": [
+      "from pathlib import Path",
+      "",
+      "path = Path(${1:'data'}) / ${2:'file.txt'}",
+      "path.parent.mkdir(parents=True, exist_ok=True)",
+      "path.write_text(${3:'content'}, encoding='utf-8')",
+      "text = path.read_text(encoding='utf-8')"
+    ],
+    "description": "pathlib operations"
+  },
+  "File: pathlib properties": {
+    "prefix": "py_file_pathlib_props",
+    "body": [
+      "p = Path('${1:data/file.txt}')",
+      "p.exists()          # bool",
+      "p.is_file()",
+      "p.is_dir()",
+      "p.suffix            # '.txt'",
+      "p.stem              # 'file'",
+      "p.name              # 'file.txt'",
+      "p.parent            # Path('data')",
+      "p.resolve()         # absolute path"
+    ],
+    "description": "Path inspection"
+  },
+  "File: CSV read": {
+    "prefix": "py_file_csv",
+    "body": [
+      "import csv",
+      "with open(${1:'people.csv'}, newline='', encoding='utf-8') as f:",
+      "    data = list(csv.DictReader(f))"
+    ],
+    "description": "Read a CSV as a list of dicts"
+  },
+  "File: CSV write": {
+    "prefix": "py_file_csv_write",
+    "body": [
+      "import csv",
+      "with open(${1:'out.csv'}, 'w', newline='', encoding='utf-8') as f:",
+      "    writer = csv.writer(f)",
+      "    writer.writerow(['${2:name}', '${3:age}'])",
+      "    writer.writerows(${4:rows})"
+    ],
+    "description": "Write rows to a CSV"
+  },
+  "File: temporary file": {
+    "prefix": "py_file_temp",
+    "body": [
+      "import tempfile",
+      "",
+      "with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:",
+      "    f.write('${1:data}')",
+      "    tmp_path = f.name"
+    ],
+    "description": "Create a temporary file"
+  },
+  "File: zip archive": {
+    "prefix": "py_file_zip",
+    "body": [
+      "import zipfile",
+      "",
+      "with zipfile.ZipFile('${1:archive.zip}', 'w') as zf:",
+      "    zf.write('${2:file.txt}')",
+      "",
+      "with zipfile.ZipFile('${1:archive.zip}') as zf:",
+      "    zf.extractall('${3:out_dir}')"
+    ],
+    "description": "Create or extract a zip file"
+  },
+
+  "// ==================== 16. CLASSES ====================": {
+    "prefix": "py_section_classes",
+    "body": ["# ============ CLASSES ============"],
+    "description": "Section marker"
+  },
+
+  "Class: basic": {
+    "prefix": "py_class",
+    "body": [
+      "class ${1:ClassName}:",
+      "    \"\"\"${2:Short description.}\"\"\"",
+      "",
+      "    def __init__(self, ${3:value}: ${4:type}) -> None:",
+      "        self.${3:value} = ${3:value}",
+      "",
+      "    def __repr__(self) -> str:",
+      "        return f'${1:ClassName}(${3:value}={self.${3:value}!r})'"
+    ],
+    "description": "Basic class with __init__ and __repr__"
+  },
+  "Class: __str__ vs __repr__": {
+    "prefix": "py_class_str_repr",
+    "body": [
+      "def __repr__(self) -> str:",
+      "    \"\"\"Developer-facing; unambiguous; used in REPL and lists.\"\"\"",
+      "    return f'${1:ClassName}({self.${2:x}!r})'",
+      "",
+      "def __str__(self) -> str:",
+      "    \"\"\"User-facing; friendly output from str() and print().\"\"\"",
+      "    return f'${3:Display text}'"
+    ],
+    "description": "__str__ vs __repr__"
+  },
+  "Class: full dunder set": {
+    "prefix": "py_class_dunder",
+    "body": [
+      "class ${1:Point}:",
+      "    def __init__(self, x: float, y: float) -> None:",
+      "        self.x = x",
+      "        self.y = y",
+      "",
+      "    def __repr__(self) -> str:",
+      "        return f'${1:Point}({self.x}, {self.y})'",
+      "",
+      "    def __eq__(self, other: object) -> bool:",
+      "        if not isinstance(other, ${1:Point}):",
+      "            return NotImplemented",
+      "        return (self.x, self.y) == (other.x, other.y)",
+      "",
+      "    def __hash__(self) -> int:",
+      "        return hash((self.x, self.y))"
+    ],
+    "description": "__init__, __repr__, __eq__, __hash__"
+  },
+  "Class: operator overloading": {
+    "prefix": "py_class_operators",
+    "body": [
+      "def __add__(self, other):        # +",
+      "    return ${1:ClassName}(self.x + other.x)",
+      "",
+      "def __sub__(self, other):        # -",
+      "    return ${1:ClassName}(self.x - other.x)",
+      "",
+      "def __mul__(self, scalar):       # *",
+      "    return ${1:ClassName}(self.x * scalar)",
+      "",
+      "def __lt__(self, other):         # <",
+      "    return self.x < other.x"
+    ],
+    "description": "Operator overloading"
+  },
+  "Class: property with validation": {
+    "prefix": "py_class_property",
+    "body": [
+      "@property",
+      "def ${1:name}(self) -> str:",
+      "    \"\"\"Getter.\"\"\"",
+      "    return self._${1:name}",
+      "",
+      "@${1:name}.setter",
+      "def ${1:name}(self, value: str) -> None:",
+      "    \"\"\"Setter with validation.\"\"\"",
+      "    if not value:",
+      "        raise ValueError('${1:name} cannot be empty')",
+      "    self._${1:name} = value"
+    ],
+    "description": "Property getter and setter"
+  },
+  "Class: slots": {
+    "prefix": "py_class_slots",
+    "body": [
+      "class ${1:Point}:",
+      "    __slots__ = ('x', 'y')   # no __dict__; smaller & faster",
+      "",
+      "    def __init__(self, x, y):",
+      "        self.x = x",
+      "        self.y = y"
+    ],
+    "description": "__slots__ for memory efficiency"
+  },
+  "Class: static / class methods": {
+    "prefix": "py_class_methods",
+    "body": [
+      "@staticmethod",
+      "def util(x: int) -> int:",
+      "    \"\"\"No access to instance or class.\"\"\"",
+      "    return x * 2",
+      "",
+      "@classmethod",
+      "def from_string(cls, s: str) -> '${1:ClassName}':",
+      "    \"\"\"Alternative constructor -- receives the class.\"\"\"",
+      "    return cls(s)"
+    ],
+    "description": "staticmethod and classmethod"
+  },
+  "Class: inheritance": {
+    "prefix": "py_class_inherit",
+    "body": [
+      "class ${1:Base}:",
+      "    def __init__(self, value):",
+      "        self.value = value",
+      "",
+      "    def ${2:greet}(self) -> str:",
+      "        return 'hi'",
+      "",
+      "class ${3:Child}(${1:Base}):",
+      "    def __init__(self, value, extra):",
+      "        super().__init__(value)   # init the parent",
+      "        self.extra = extra",
+      "",
+      "    def ${2:greet}(self) -> str:",
+      "        return super().${2:greet}() + ' from child'"
+    ],
+    "description": "Inheritance with super()"
+  },
+  "Class: abstract": {
+    "prefix": "py_class_abstract",
+    "body": [
+      "from abc import ABC, abstractmethod",
+      "",
+      "class ${1:Shape}(ABC):",
+      "    @abstractmethod",
+      "    def area(self) -> float:",
+      "        ...",
+      "",
+      "    @abstractmethod",
+      "    def perimeter(self) -> float:",
+      "        ..."
+    ],
+    "description": "Abstract base class"
+  },
+  "Class: dataclass": {
+    "prefix": "py_class_dataclass",
+    "body": [
+      "from dataclasses import dataclass, field",
+      "",
+      "@dataclass(frozen=True, slots=True)",
+      "class ${1:User}:",
+      "    name: str",
+      "    age: int = 0",
+      "    tags: list[str] = field(default_factory=list)"
+    ],
+    "description": "Immutable dataclass"
+  },
+  "Class: dataclass with __post_init__": {
+    "prefix": "py_class_post_init",
+    "body": [
+      "from dataclasses import dataclass, field",
+      "",
+      "@dataclass",
+      "class ${1:Order}:",
+      "    items: list[str]",
+      "    total: float = field(init=False)",
+      "",
+      "    def __post_init__(self):",
+      "        self.total = ${2:sum(len(i) for i in self.items)}"
+    ],
+    "description": "Run code after __init__ (derived fields)"
+  },
+  "Class: Enum": {
+    "prefix": "py_class_enum",
+    "body": [
+      "from enum import Enum, auto",
+      "",
+      "class ${1:Color}(Enum):",
+      "    RED = 'red'",
+      "    GREEN = 'green'",
+      "    BLUE = 'blue'",
+      "",
+      "# Or auto-assigned:",
+      "class ${2:State}(Enum):",
+      "    PENDING = auto()",
+      "    RUNNING = auto()",
+      "    DONE = auto()"
+    ],
+    "description": "Enum class"
+  },
+  "Class: context manager": {
+    "prefix": "py_class_contextmanager",
+    "body": [
+      "class ${1:Resource}:",
+      "    def __enter__(self):",
+      "        ${2:# acquire}",
+      "        return self",
+      "",
+      "    def __exit__(self, exc_type, exc, tb):",
+      "        ${3:# release}",
+      "        return False   # True to suppress exceptions"
+    ],
+    "description": "Class-based context manager"
+  },
+
+  "// ==================== 17. IMPORTS & TYPING ====================": {
+    "prefix": "py_section_imports",
+    "body": ["# ============ IMPORTS & TYPING ============"],
+    "description": "Section marker"
+  },
+
+  "Imports: standard library": {
+    "prefix": "py_imp_std",
+    "body": [
+      "import os",
+      "import sys",
+      "import re",
+      "import json",
+      "import math",
+      "import random",
+      "import logging",
+      "from pathlib import Path",
+      "from collections import defaultdict, Counter, deque, OrderedDict",
+      "from itertools import chain, product, combinations, permutations, groupby",
+      "from functools import reduce, partial, lru_cache, wraps"
+    ],
+    "description": "Common standard library imports"
+  },
+  "Imports: typing": {
+    "prefix": "py_imp_typing",
+    "body": [
+      "from typing import Any, Optional, Union, Literal, Callable, Iterable, Sequence, Mapping"
+    ],
+    "description": "Common typing imports"
+  },
+  "Typing: signatures": {
+    "prefix": "py_typing_sig",
+    "body": [
+      "x: int = 0",
+      "y: Optional[str] = None",
+      "z: Union[int, str] = 0        # or: int | str  (3.10+)",
+      "items: list[int] = []",
+      "mapping: dict[str, int] = {}",
+      "pair: tuple[int, str] = (1, 'a')",
+      "fn: Callable[[int], int] = lambda n: n"
+    ],
+    "description": "Common type hint forms"
+  },
+  "Typing: Optional / Literal": {
+    "prefix": "py_typing_optional",
+    "body": [
+      "from typing import Optional, Literal",
+      "",
+      "def find(name: str) -> Optional[int]:",
+      "    ...",
+      "",
+      "Mode = Literal['r', 'w', 'a']",
+      "def open_file(mode: Mode) -> None: ..."
+    ],
+    "description": "Optional and Literal types"
+  },
+  "Typing: TypeVar / Generic": {
+    "prefix": "py_typing_typevar",
+    "body": [
+      "from typing import TypeVar, Generic, Sequence",
+      "",
+      "T = TypeVar('T')",
+      "",
+      "def first(items: Sequence[T]) -> T:",
+      "    return items[0]",
+      "",
+      "class Stack(Generic[T]):",
+      "    def __init__(self): self._items: list[T] = []",
+      "    def push(self, item: T) -> None: self._items.append(item)"
+    ],
+    "description": "Generic functions and classes"
+  },
+  "Typing: Protocol": {
+    "prefix": "py_typing_protocol",
+    "body": [
+      "from typing import Protocol",
+      "",
+      "class Drawable(Protocol):",
+      "    def draw(self) -> None: ...",
+      "",
+      "def render(x: Drawable) -> None:",
+      "    x.draw()   # works with any object that has draw()"
+    ],
+    "description": "Structural subtyping with Protocol"
+  },
+  "Typing: overload": {
+    "prefix": "py_typing_overload",
+    "body": [
+      "from typing import overload",
+      "",
+      "@overload",
+      "def parse(x: int) -> int: ...",
+      "@overload",
+      "def parse(x: str) -> str: ...",
+      "",
+      "def parse(x):",
+      "    return x   # actual implementation"
+    ],
+    "description": "Multiple type signatures for one function"
+  },
+  "Typing: TypedDict": {
+    "prefix": "py_typing_typeddict",
+    "body": [
+      "from typing import TypedDict",
+      "",
+      "class User(TypedDict):",
+      "    name: str",
+      "    age: int",
+      "",
+      "u: User = {'name': 'Alice', 'age': 30}"
+    ],
+    "description": "Typed dictionary"
+  },
+  "Typing: Any / Never / Self": {
+    "prefix": "py_typing_special",
+    "body": [
+      "from typing import Any, Never, Self   # 3.11+",
+      "",
+      "def do(x: Any) -> None: ...",
+      "def fail() -> Never: raise RuntimeError()",
+      "def clone(self) -> Self: return self"
+    ],
+    "description": "Special typing types"
+  },
+
+  "// ==================== 18. FP & ITERTOOLS ====================": {
+    "prefix": "py_section_fp",
+    "body": ["# ============ FP & ITERTOOLS ============"],
+    "description": "Section marker"
+  },
+
+  "FP: map / filter / reduce": {
+    "prefix": "py_fp",
+    "body": [
+      "from functools import reduce",
+      "",
+      "squares = list(map(lambda n: n * n, ${1:nums}))",
+      "evens = list(filter(lambda n: n % 2 == 0, ${1:nums}))",
+      "total = reduce(lambda a, b: a + b, ${1:nums}, 0)"
+    ],
+    "description": "map, filter, reduce"
+  },
+  "FP: chain": {
+    "prefix": "py_fp_chain",
+    "body": [
+      "from itertools import chain",
+      "list(chain(${1:[1, 2]}, ${2:[3, 4]}, ${3:[5]}))",
+      "list(chain.from_iterable(${4:[[1, 2], [3, 4]]}))   # flatten"
+    ],
+    "description": "Chain iterables"
+  },
+  "FP: combinations & permutations": {
+    "prefix": "py_fp_combinations",
+    "body": [
+      "from itertools import combinations, permutations, combinations_with_replacement",
+      "list(combinations(${1:[1, 2, 3]}, ${2:2}))       # unordered, no repeats",
+      "list(permutations(${1:[1, 2, 3]}, ${2:2}))       # ordered",
+      "list(combinations_with_replacement(${1:[1, 2]}, 2))"
+    ],
+    "description": "combinations / permutations"
+  },
+  "FP: groupby (sort first!)": {
+    "prefix": "py_fp_groupby",
+    "body": [
+      "from itertools import groupby",
+      "",
+      "data = sorted(${1:data}, key=lambda x: x[0])",
+      "for key, group in groupby(data, key=lambda x: x[0]):",
+      "    print(key, list(group))"
+    ],
+    "description": "Group consecutive items"
+  },
+  "Iter: any()": {
+    "prefix": "py_iter_any",
+    "body": ["print(any([${1:1, 0, False}]))   # True if at least one truthy"],
+    "description": "Short-circuit OR"
+  },
+  "Iter: all()": {
+    "prefix": "py_iter_all",
+    "body": ["print(all([${1:1, 3, 4}]))    # True only if all truthy"],
+    "description": "Short-circuit AND"
+  },
+  "Itertools: accumulate (running total)": {
+    "prefix": "py_it_accumulate",
+    "body": [
+      "from itertools import accumulate",
+      "import operator",
+      "",
+      "list(accumulate([1, 2, 3, 4]))                    # [1, 3, 6, 10]",
+      "list(accumulate([1, 2, 3, 4], operator.mul))       # [1, 2, 6, 24]"
+    ],
+    "description": "Running totals / cumulative operations"
+  },
+  "Itertools: takewhile / dropwhile": {
+    "prefix": "py_it_while",
+    "body": [
+      "from itertools import takewhile, dropwhile",
+      "",
+      "list(takewhile(lambda x: x < 3, [1, 2, 3, 4, 1]))   # [1, 2]",
+      "list(dropwhile(lambda x: x < 3, [1, 2, 3, 4, 1]))   # [3, 4, 1]"
+    ],
+    "description": "Prefix-based slicing"
+  },
+  "Itertools: compress & starmap": {
+    "prefix": "py_it_compress",
+    "body": [
+      "from itertools import compress, starmap",
+      "",
+      "list(compress('ABCD', [1, 0, 1, 0]))          # ['A', 'C']",
+      "list(starmap(${1:pow}, [(2, 3), (3, 2)]))       # [8, 9]"
+    ],
+    "description": "Filter by mask; unpack args"
+  },
+  "Itertools: islice": {
+    "prefix": "py_it_islice",
+    "body": [
+      "from itertools import islice",
+      "",
+      "list(islice(range(100), 5))         # first 5",
+      "list(islice(range(100), 10, 20))    # 10..19",
+      "list(islice(range(100), 0, 20, 2))  # 0, 2, 4, ..., 18"
+    ],
+    "description": "Slice any iterable"
+  },
+  "Itertools: pairwise (3.10+)": {
+    "prefix": "py_it_pairwise",
+    "body": [
+      "from itertools import pairwise",
+      "list(pairwise([1, 2, 3, 4]))   # [(1,2), (2,3), (3,4)]"
+    ],
+    "description": "Consecutive pairs"
+  },
+  "Itertools: batched (3.12+)": {
+    "prefix": "py_it_batched",
+    "body": [
+      "from itertools import batched",
+      "list(batched(range(7), 3))   # [(0,1,2), (3,4,5), (6,)]"
+    ],
+    "description": "Split into fixed-size tuples"
+  },
+
+  "// ==================== 19. LOGGING & DEBUG ====================": {
+    "prefix": "py_section_logging",
+    "body": ["# ============ LOGGING & DEBUG ============"],
+    "description": "Section marker"
+  },
+
+  "Logging: setup": {
+    "prefix": "py_log_setup",
+    "body": [
+      "import logging",
+      "",
+      "logging.basicConfig(",
+      "    level=logging.INFO,",
+      "    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',",
+      ")",
+      "logger = logging.getLogger(__name__)"
+    ],
+    "description": "Logging boilerplate"
+  },
+  "Logging: calls": {
+    "prefix": "py_log_calls",
+    "body": [
+      "logger.debug('debug: %s', ${1:value})       # detail, dev-only",
+      "logger.info('info: %s', ${2:value})         # normal events",
+      "logger.warning('warn: %s', ${3:value})      # something odd",
+      "logger.error('error: %s', ${4:value})       # a failure occurred",
+      "logger.exception('failed')                 # ERROR + traceback"
+    ],
+    "description": "Logging calls at each level"
+  },
+  "Logging: file handler": {
+    "prefix": "py_log_file",
+    "body": [
+      "import logging",
+      "",
+      "handler = logging.FileHandler('${1:app.log}')",
+      "handler.setFormatter(logging.Formatter(",
+      "    '%(asctime)s [%(levelname)s] %(name)s: %(message)s'",
+      "))",
+      "logger = logging.getLogger(__name__)",
+      "logger.addHandler(handler)",
+      "logger.setLevel(logging.INFO)"
+    ],
+    "description": "Log to a file"
+  },
+  "Time a block": {
+    "prefix": "py_log_timeit",
+    "body": [
+      "import time",
+      "start = time.perf_counter()",
+      "${1:# work}",
+      "print(f'elapsed: {time.perf_counter() - start:.4f}s')"
+    ],
+    "description": "Time a code block"
+  },
+  "Breakpoint": {
+    "prefix": "py_log_breakpoint",
+    "body": ["breakpoint()   # or: import pdb; pdb.set_trace()"],
+    "description": "Debugger breakpoint"
+  },
+
+  "// ==================== 20. MAIN & CLI ====================": {
+    "prefix": "py_section_main",
+    "body": ["# ============ MAIN & CLI ============"],
+    "description": "Section marker"
+  },
+
+  "Main guard": {
+    "prefix": "py_main",
+    "body": [
+      "def main() -> None:",
+      "    ${1:pass}",
+      "",
+      "",
+      "if __name__ == '__main__':",
+      "    main()"
+    ],
+    "description": "Entry point with main()"
+  },
+  "CLI with argparse": {
+    "prefix": "py_main_argparse",
+    "body": [
+      "import argparse",
+      "",
+      "",
+      "def parse_args() -> argparse.Namespace:",
+      "    parser = argparse.ArgumentParser(description='${1:Description}')",
+      "    parser.add_argument('${2:input}', type=str, help='${3:Input path}')",
+      "    parser.add_argument('--${4:verbose}', '-v', action='store_true')",
+      "    return parser.parse_args()",
+      "",
+      "",
+      "if __name__ == '__main__':",
+      "    args = parse_args()",
+      "    print(args)"
+    ],
+    "description": "argparse CLI scaffold"
+  },
+  "sys.argv (manual parsing)": {
+    "prefix": "py_main_argv",
+    "body": [
+      "import sys",
+      "",
+      "if len(sys.argv) < ${1:2}:",
+      "    sys.exit('Usage: script.py <${2:arg}>')",
+      "${3:arg} = sys.argv[1]"
+    ],
+    "description": "Manual CLI args via sys.argv"
+  },
+
+  "// ==================== 21. DATE & TIME ====================": {
+    "prefix": "py_section_datetime",
+    "body": ["# ============ DATE & TIME ============"],
+    "description": "Section marker"
+  },
+
+  "Date: add days": {
+    "prefix": "py_date_add",
+    "body": [
+      "from datetime import datetime, timedelta",
+      "",
+      "now = datetime.now()",
+      "delta = timedelta(days=${1:10})   # also weeks, hours, minutes",
+      "future = now + delta",
+      "",
+      "fmt = '${2:%d-%m-%Y}'",
+      "print('Current:', now.strftime(fmt))",
+      "print('Future :', future.strftime(fmt))"
+    ],
+    "description": "Add a timedelta to today"
+  },
+  "Date: parse & format": {
+    "prefix": "py_date_parse",
+    "body": [
+      "from datetime import datetime",
+      "",
+      "dt = datetime.strptime('${1:2024-01-15}', '${2:%Y-%m-%d}')",
+      "print(dt.strftime('${3:%d/%m/%Y}'))"
+    ],
+    "description": "Parse and reformat a date"
+  },
+  "Date: timestamp": {
+    "prefix": "py_date_timestamp",
+    "body": [
+      "from datetime import datetime",
+      "",
+      "ts = datetime.now().timestamp()",
+      "dt = datetime.fromtimestamp(ts)"
+    ],
+    "description": "Convert between datetime and timestamp"
+  },
+  "Date: timezone-aware": {
+    "prefix": "py_date_tz",
+    "body": [
+      "from datetime import datetime, timezone",
+      "",
+      "utc = datetime.now(timezone.utc)",
+      "local = utc.astimezone()",
+      "# Always prefer timezone-aware datetimes in production"
+    ],
+    "description": "Timezone-aware datetimes"
+  },
+  "Date: ISO format": {
+    "prefix": "py_date_iso",
+    "body": [
+      "from datetime import datetime",
+      "",
+      "dt = datetime.now()",
+      "s = dt.isoformat()                # '2024-01-15T10:30:00'",
+      "dt = datetime.fromisoformat(s)    # reverse"
+    ],
+    "description": "ISO 8601 conversion"
+  },
+
+  "// ==================== 22. URL ====================": {
+    "prefix": "py_section_url",
+    "body": ["# ============ URL ============"],
+    "description": "Section marker"
+  },
+
+  "URL: join": {
+    "prefix": "py_url_join",
+    "body": [
+      "from urllib.parse import urljoin",
+      "urljoin('${1:https://www.google.com}', '${2:search?q=python}')"
+    ],
+    "description": "Safely join URLs"
+  },
+  "URL: parse": {
+    "prefix": "py_url_parse",
+    "body": [
+      "from urllib.parse import urlparse",
+      "",
+      "parsed = urlparse('${1:http://www.example.com/index?search=src}')",
+      "print(parsed.scheme)   # http",
+      "print(parsed.netloc)   # www.example.com",
+      "print(parsed.path)     # /index",
+      "print(parsed.query)    # search=src"
+    ],
+    "description": "Split a URL into parts"
+  },
+  "URL: encode / decode": {
+    "prefix": "py_url_encode",
+    "body": [
+      "from urllib.parse import quote, unquote, urlencode",
+      "",
+      "quote('${1:hello world}')             # 'hello%20world'",
+      "unquote('${2:hello%20world}')         # 'hello world'",
+      "urlencode({'q': '${3:python}', 'page': 1})   # query string"
+    ],
+    "description": "Percent encoding and query strings"
+  },
+
+  "// ==================== 23. CONTEXT MANAGERS ====================": {
+    "prefix": "py_section_context",
+    "body": ["# ============ CONTEXT MANAGERS ============"],
+    "description": "Section marker"
+  },
+
+  "Contextlib: contextmanager": {
+    "prefix": "py_contextmanager",
+    "body": [
+      "from contextlib import contextmanager",
+      "",
+      "@contextmanager",
+      "def ${1:resource}():",
+      "    ${2:# setup}",
+      "    try:",
+      "        yield ${3:value}",
+      "    finally:",
+      "        ${4:# teardown}"
+    ],
+    "description": "Generator-based context manager"
+  },
+  "Contextlib: suppress": {
+    "prefix": "py_contextlib_suppress",
+    "body": [
+      "from contextlib import suppress",
+      "",
+      "with suppress(${1:FileNotFoundError}):",
+      "    ${2:os.remove('file.txt')}"
+    ],
+    "description": "Ignore specific exceptions"
+  },
+  "Contextlib: redirect_stdout": {
+    "prefix": "py_contextlib_redirect",
+    "body": [
+      "from contextlib import redirect_stdout",
+      "import io",
+      "",
+      "buf = io.StringIO()",
+      "with redirect_stdout(buf):",
+      "    ${1:print('captured')}",
+      "output = buf.getvalue()"
+    ],
+    "description": "Capture stdout"
+  },
+  "Contextlib: ExitStack (dynamic)": {
+    "prefix": "py_contextlib_exitstack",
+    "body": [
+      "from contextlib import ExitStack",
+      "",
+      "with ExitStack() as stack:",
+      "    files = [stack.enter_context(open(p)) for p in ${1:paths}]",
+      "    ${2:# all files closed on exit, even on error}"
+    ],
+    "description": "Open variable number of context managers"
+  },
+
+  "// ==================== 24. ASYNC / AWAIT ====================": {
+    "prefix": "py_section_async",
+    "body": ["# ============ ASYNC / AWAIT ============"],
+    "description": "Section marker"
+  },
+
+  "Async: basic": {
+    "prefix": "py_async",
+    "body": [
+      "import asyncio",
+      "",
+      "async def ${1:fetch}():",
+      "    ${2:await asyncio.sleep(1)}",
+      "    return ${3:result}",
+      "",
+      "async def main():",
+      "    result = await ${1:fetch}()",
+      "    print(result)",
+      "",
+      "asyncio.run(main())"
+    ],
+    "description": "Basic coroutine"
+  },
+  "Async: gather (concurrent)": {
+    "prefix": "py_async_gather",
+    "body": [
+      "results = await asyncio.gather(",
+      "    ${1:task1}(),",
+      "    ${2:task2}(),",
+      "    return_exceptions=True,",
+      ")"
+    ],
+    "description": "Run coroutines concurrently"
+  },
+  "Async: TaskGroup (3.11+)": {
+    "prefix": "py_async_taskgroup",
+    "body": [
+      "async with asyncio.TaskGroup() as tg:",
+      "    t1 = tg.create_task(${1:task1}())",
+      "    t2 = tg.create_task(${2:task2}())",
+      "# both complete here; exceptions are grouped"
+    ],
+    "description": "Structured concurrency (3.11+)"
+  },
+  "Async: timeout": {
+    "prefix": "py_async_timeout",
+    "body": [
+      "try:",
+      "    async with asyncio.timeout(${1:5.0}):   # 3.11+",
+      "        await ${2:long_operation}()",
+      "except TimeoutError:",
+      "    print('timed out')"
+    ],
+    "description": "Timeout a coroutine"
+  },
+
+  "// ==================== 25. REGEX ====================": {
+    "prefix": "py_section_regex",
+    "body": ["# ============ REGEX ============"],
+    "description": "Section marker"
+  },
+
+  "Regex: match / search": {
+    "prefix": "py_re_match",
+    "body": [
+      "import re",
+      "",
+      "re.match(r'${1:pattern}', ${2:text})     # only at start",
+      "re.search(r'${1:pattern}', ${2:text})    # anywhere",
+      "re.fullmatch(r'${1:pattern}', ${2:text})   # whole string"
+    ],
+    "description": "Three matching functions"
+  },
+  "Regex: findall / finditer": {
+    "prefix": "py_re_find",
+    "body": [
+      "import re",
+      "",
+      "re.findall(r'${1:\\\\d+}', ${2:text})      # list of strings",
+      "for m in re.finditer(r'${1:\\\\d+}', ${2:text}):",
+      "    print(m.group(), m.start(), m.end())"
+    ],
+    "description": "Find all matches"
+  },
+  "Regex: sub / split": {
+    "prefix": "py_re_sub",
+    "body": [
+      "import re",
+      "",
+      "re.sub(r'${1:\\\\s+}', ' ', ${2:text})           # replace all",
+      "re.sub(r'${1:\\\\s+}', ' ', ${2:text}, count=1)    # first only",
+      "re.split(r'${3:\\\\s*,\\\\s*}', ${4:text})             # split on pattern"
+    ],
+    "description": "Regex replace and split"
+  },
+  "Regex: compile (reuse)": {
+    "prefix": "py_re_compile",
+    "body": [
+      "import re",
+      "",
+      "pattern = re.compile(r'${1:\\\\d{4}-\\\\d{2}-\\\\d{2}}')",
+      "pattern.findall(${2:text})",
+      "pattern.search(${2:text})",
+      "# Compile once, use many times"
+    ],
+    "description": "Compile a regex for reuse"
+  },
+  "Regex: named groups": {
+    "prefix": "py_re_named",
+    "body": [
+      "import re",
+      "",
+      "m = re.match(r'(?P<year>\\\\d{4})-(?P<month>\\\\d{2})', '${1:2024-01}')",
+      "if m:",
+      "    print(m.group('year'), m.group('month'))",
+      "    print(m.groupdict())   # {'year': '2024', 'month': '01'}"
+    ],
+    "description": "Named capture groups"
+  },
+  "Regex: flags": {
+    "prefix": "py_re_flags",
+    "body": [
+      "import re",
+      "",
+      "re.findall(r'${1:pattern}', ${2:text}, re.IGNORECASE | re.MULTILINE)",
+      "# Common flags:",
+      "#   re.IGNORECASE / re.I",
+      "#   re.MULTILINE  / re.M  (^ and $ match line boundaries)",
+      "#   re.DOTALL     / re.S  (. matches newline)",
+      "#   re.VERBOSE    / re.X  (allow whitespace + comments)"
+    ],
+    "description": "Regex flags"
+  },
+
+  "// ==================== 26. COMMON PATTERNS ====================": {
+    "prefix": "py_section_patterns",
+    "body": ["# ============ COMMON PATTERNS ============"],
+    "description": "Section marker"
+  },
+
+  "Pattern: cache with dictionary": {
+    "prefix": "py_pattern_cache",
+    "body": [
+      "cache = {}",
+      "",
+      "def ${1:get}(${2:key}):",
+      "    if ${2:key} not in cache:",
+      "        cache[${2:key}] = ${3:compute(${2:key})}",
+      "    return cache[${2:key}]"
+    ],
+    "description": "Manual memoization"
+  },
+  "Pattern: retry with backoff": {
+    "prefix": "py_pattern_retry",
+    "body": [
+      "import time",
+      "",
+      "def retry(func, attempts=3, delay=1.0):",
+      "    for i in range(attempts):",
+      "        try:",
+      "            return func()",
+      "        except Exception as e:",
+      "            if i == attempts - 1:",
+      "                raise",
+      "            time.sleep(delay * 2 ** i)"
+    ],
+    "description": "Exponential-backoff retry"
+  },
+  "Pattern: flatten nested iterables": {
+    "prefix": "py_pattern_flatten",
+    "body": [
+      "def flatten(iterable):",
+      "    for item in iterable:",
+      "        if isinstance(item, (list, tuple, set)):",
+      "            yield from flatten(item)",
+      "        else:",
+      "            yield item"
+    ],
+    "description": "Recursive flatten"
+  },
+  "Pattern: chunked reader (batches)": {
+    "prefix": "py_pattern_batches",
+    "body": [
+      "def batches(iterable, size):",
+      "    batch = []",
+      "    for item in iterable:",
+      "        batch.append(item)",
+      "        if len(batch) == size:",
+      "            yield batch",
+      "            batch = []",
+      "    if batch:",
+      "        yield batch"
+    ],
+    "description": "Iterate in fixed-size batches"
+  },
+  "Pattern: timing decorator": {
+    "prefix": "py_pattern_timer",
+    "body": [
+      "import time",
+      "from functools import wraps",
+      "",
+      "def timed(func):",
+      "    @wraps(func)",
+      "    def wrapper(*args, **kwargs):",
+      "        t0 = time.perf_counter()",
+      "        result = func(*args, **kwargs)",
+      "        print(f'{func.__name__}: {time.perf_counter() - t0:.4f}s')",
+      "        return result",
+      "    return wrapper"
+    ],
+    "description": "Timing decorator"
+  },
+  "Pattern: chunked reading of large file": {
+    "prefix": "py_pattern_filechunks",
+    "body": [
+      "def read_in_chunks(path, size=8192):",
+      "    with open(path, 'rb') as f:",
+      "        while chunk := f.read(size):",
+      "            yield chunk"
+    ],
+    "description": "Read a large file in chunks"
+  }
+}

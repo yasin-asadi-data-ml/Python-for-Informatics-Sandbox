@@ -1,0 +1,913 @@
+{
+  "// ==================== 1. IMPORT & SETUP ====================": {
+    "prefix": "sns_section_setup",
+    "body": ["# ============ IMPORT & SETUP ============"],
+    "description": "Section marker"
+  },
+
+  "Import Seaborn": {
+    "prefix": "sns_import",
+    "body": [
+      "import seaborn as sns",
+      "import matplotlib.pyplot as plt",
+      "import pandas as pd",
+      "import numpy as np",
+      "print(sns.__version__)"
+    ],
+    "description": "Standard Seaborn import"
+  },
+  "Set theme": {
+    "prefix": "sns_theme",
+    "body": [
+      "# ---- Apply a theme (style + palette + context) ----",
+      "sns.set_theme(",
+      "    style='${1:whitegrid}',   # darkgrid, whitegrid, dark, white, ticks",
+      "    palette='${2:deep}',      # deep, muted, pastel, bright, dark, colorblind",
+      "    context='${3:notebook}',  # paper, notebook, talk, poster",
+      "    font_scale=${4:1.0},",
+      ")"
+    ],
+    "description": "Set global theme"
+  },
+  "Set figure size globally": {
+    "prefix": "sns_rc",
+    "body": [
+      "sns.set_theme(rc={",
+      "    'figure.figsize': (${1:10}, ${2:6}),",
+      "    'figure.dpi': ${3:100},",
+      "    'axes.titlesize': ${4:14},",
+      "    'axes.labelsize': ${5:12},",
+      "})"
+    ],
+    "description": "Global rc settings via seaborn"
+  },
+  "Reset to matplotlib defaults": {
+    "prefix": "sns_reset",
+    "body": ["sns.reset_orig()"],
+    "description": "Reset to matplotlib defaults"
+  },
+
+  "// ==================== 2. FIGURE-LEVEL vs AXES-LEVEL ====================": {
+    "prefix": "sns_section_api",
+    "body": ["# ============ FIGURE-LEVEL vs AXES-LEVEL ============"],
+    "description": "Section marker"
+  },
+  "API overview": {
+    "prefix": "sns_api",
+    "body": [
+      "# ---- Two APIs ----",
+      "# AXES-LEVEL: plots onto a matplotlib Axes (ax=)",
+      "#   sns.scatterplot, lineplot, histplot, boxplot, ...",
+      "#   -> returns an Axes; use for subplots",
+      "#",
+      "# FIGURE-LEVEL: creates its own figure + facets",
+      "#   sns.relplot, displot, catplot, lmplot, jointplot, pairplot, clustermap",
+      "#   -> returns a FacetGrid / JointGrid; use for faceting"
+    ],
+    "description": "Which API to use"
+  },
+  "Axes-level with subplots": {
+    "prefix": "sns_axes_level",
+    "body": [
+      "# ---- Place an axes-level plot into an existing figure ----",
+      "fig, axes = plt.subplots(1, 2, figsize=(12, 4))",
+      "sns.histplot(data=df, x='${1:col}', ax=axes[0])",
+      "sns.boxplot(data=df, x='${2:cat}', y='${3:val}', ax=axes[1])",
+      "fig.tight_layout()"
+    ],
+    "description": "Axes-level into subplots"
+  },
+  "Figure-level returns a grid": {
+    "prefix": "sns_fig_level",
+    "body": [
+      "# ---- Figure-level returns a FacetGrid; access .ax or .axes ----",
+      "g = sns.relplot(data=df, x='${1:x}', y='${2:y}', hue='${3:cat}')",
+      "g.set_axis_labels('${4:X label}', '${5:Y label}')",
+      "g.set(title='${6:Title}')",
+      "g.figure.tight_layout()"
+    ],
+    "description": "Figure-level return value"
+  },
+
+  "// ==================== 3. RELATIONAL PLOTS ====================": {
+    "prefix": "sns_section_relational",
+    "body": ["# ============ RELATIONAL PLOTS ============"],
+    "description": "Section marker"
+  },
+  "Scatter plot": {
+    "prefix": "sns_scatter",
+    "body": [
+      "# ---- Scatter: relationship between two numeric features ----",
+      "sns.scatterplot(",
+      "    data=df, x='${1:x}', y='${2:y}',",
+      "    hue='${3:category}',     # color by category",
+      "    size='${4:size_col}',    # bubble size",
+      "    style='${5:style_col}',  # marker shape",
+      "    alpha=${6:0.7},",
+      "    palette='${7:deep}',",
+      ")"
+    ],
+    "description": "Scatter plot"
+  },
+  "Relplot with facets": {
+    "prefix": "sns_relplot",
+    "body": [
+      "# ---- Figure-level scatter: add facets ----",
+      "sns.relplot(",
+      "    data=df, x='${1:x}', y='${2:y}',",
+      "    hue='${3:cat}',",
+      "    col='${4:col_facet}',    # one column per category",
+      "    row='${5:row_facet}',    # optional row facet",
+      "    kind='${6:scatter}',      # 'scatter' or 'line'",
+      "    height=${7:3}, aspect=${8:1.3},",
+      ")"
+    ],
+    "description": "Relational plot with facets"
+  },
+  "Line plot (trends)": {
+    "prefix": "sns_lineplot",
+    "body": [
+      "# ---- Line: trend over a continuous variable (time series) ----",
+      "# By default shows the mean and 95% CI at each x.",
+      "sns.lineplot(",
+      "    data=df, x='${1:date}', y='${2:value}',",
+      "    hue='${3:series}',",
+      "    errorbar='${4:ci}',   # 'ci' (default), 'sd', None",
+      ")"
+    ],
+    "description": "Line plot with CI"
+  },
+
+  "// ==================== 4. DISTRIBUTION PLOTS ====================": {
+    "prefix": "sns_section_dist",
+    "body": ["# ============ DISTRIBUTION PLOTS ============"],
+    "description": "Section marker"
+  },
+  "Histogram": {
+    "prefix": "sns_histplot",
+    "body": [
+      "# ---- Histogram (distribution of a single feature) ----",
+      "sns.histplot(",
+      "    data=df, x='${1:value}',",
+      "    bins=${2:30},",
+      "    kde=${3:True},         # overlay a kernel density estimate",
+      "    hue='${4:cat}',         # separate by category",
+      "    multiple='${5:stack}',  # 'layer', 'dodge', 'stack', 'fill'",
+      "    stat='${6:count}',      # 'count', 'density', 'probability', 'percent'",
+      ")"
+    ],
+    "description": "Histogram"
+  },
+  "KDE plot": {
+    "prefix": "sns_kdeplot",
+    "body": [
+      "# ---- Kernel density estimate: smooth distribution ----",
+      "sns.kdeplot(",
+      "    data=df, x='${1:value}',",
+      "    hue='${2:cat}',",
+      "    fill=${3:True},",
+      "    common_norm=False,   # normalize each hue separately",
+      "    clip=(${4:None}, ${5:None}),",
+      ")"
+    ],
+    "description": "KDE plot"
+  },
+  "2D KDE / bivariate density": {
+    "prefix": "sns_kdeplot_2d",
+    "body": [
+      "# ---- 2D density: joint distribution of two features ----",
+      "sns.kdeplot(",
+      "    data=df, x='${1:x}', y='${2:y}',",
+      "    fill=True, cmap='${3:viridis}', levels=${4:10},",
+      ")"
+    ],
+    "description": "2D KDE"
+  },
+  "ECDF plot": {
+    "prefix": "sns_ecdf",
+    "body": [
+      "# ---- Empirical CDF: P(X <= x) for each x ----",
+      "# Great for comparing distributions without binning choices.",
+      "sns.ecdfplot(data=df, x='${1:value}', hue='${2:cat}')"
+    ],
+    "description": "ECDF plot"
+  },
+  "Rug plot": {
+    "prefix": "sns_rugplot",
+    "body": [
+      "# ---- Rug: one tick per observation ----",
+      "# Combine with hist/kde for a clearer view.",
+      "sns.rugplot(data=df, x='${1:value}', height=${2:0.05})"
+    ],
+    "description": "Rug plot"
+  },
+  "Displot (figure-level distribution)": {
+    "prefix": "sns_displot",
+    "body": [
+      "# ---- Figure-level distribution with faceting ----",
+      "sns.displot(",
+      "    data=df, x='${1:value}',",
+      "    kind='${2:hist}',    # 'hist', 'kde', 'ecdf'",
+      "    hue='${3:cat}',",
+      "    col='${4:facet}',",
+      "    kde=True,",
+      "    height=${5:4}, aspect=${6:1.3},",
+      ")"
+    ],
+    "description": "Displot"
+  },
+  "QQ-plot (normality check)": {
+    "prefix": "sns_qqplot",
+    "body": [
+      "# ---- QQ-plot: compare to a theoretical distribution ----",
+      "import scipy.stats as stats",
+      "stats.probplot(df['${1:value}'], dist='${2:norm}', plot=plt)",
+      "# Straight line => data follows the distribution"
+    ],
+    "description": "QQ plot for normality"
+  },
+
+  "// ==================== 5. CATEGORICAL PLOTS ====================": {
+    "prefix": "sns_section_categorical",
+    "body": ["# ============ CATEGORICAL PLOTS ============"],
+    "description": "Section marker"
+  },
+  "Strip plot": {
+    "prefix": "sns_stripplot",
+    "body": [
+      "# ---- Strip: one dot per observation, jittered ----",
+      "sns.stripplot(",
+      "    data=df, x='${1:category}', y='${2:value}',",
+      "    hue='${3:subcat}',",
+      "    jitter=True, dodge=True, alpha=0.6,",
+      ")"
+    ],
+    "description": "Strip plot"
+  },
+  "Swarm plot": {
+    "prefix": "sns_swarmplot",
+    "body": [
+      "# ---- Swarm: non-overlapping dots (slow for many points) ----",
+      "sns.swarmplot(data=df, x='${1:category}', y='${2:value}', size=${3:4})"
+    ],
+    "description": "Swarm plot"
+  },
+  "Box plot": {
+    "prefix": "sns_boxplot",
+    "body": [
+      "# ---- Box: median, quartiles, and outliers ----",
+      "sns.boxplot(",
+      "    data=df, x='${1:category}', y='${2:value}',",
+      "    hue='${3:subcat}',",
+      "    showfliers=${4:True},",
+      "    palette='${5:Set2}',",
+      ")"
+    ],
+    "description": "Box plot"
+  },
+  "Violin plot": {
+    "prefix": "sns_violinplot",
+    "body": [
+      "# ---- Violin: box + KDE, shows full distribution shape ----",
+      "sns.violinplot(",
+      "    data=df, x='${1:category}', y='${2:value}',",
+      "    hue='${3:subcat}',",
+      "    split=${4:True},      # split two hues side-by-side",
+      "    inner='${5:quart}',   # 'box', 'quart', 'point', 'stick', None",
+      ")"
+    ],
+    "description": "Violin plot"
+  },
+  "Boxen plot": {
+    "prefix": "sns_boxenplot",
+    "body": [
+      "# ---- Boxen: letter-value plot, better for large data ----",
+      "sns.boxenplot(data=df, x='${1:category}', y='${2:value}')"
+    ],
+    "description": "Boxen (letter-value) plot"
+  },
+  "Bar plot (with CI)": {
+    "prefix": "sns_barplot",
+    "body": [
+      "# ---- Bar: mean per category with confidence interval ----",
+      "sns.barplot(",
+      "    data=df, x='${1:category}', y='${2:value}',",
+      "    hue='${3:subcat}',",
+      "    estimator='${4:mean}',   # 'mean', 'median', 'sum', or callable",
+      "    errorbar=('ci', 95),    # 'ci', 'sd', 'se', None",
+      "    capsize=${5:0.1},",
+      ")"
+    ],
+    "description": "Bar plot with error bars"
+  },
+  "Point plot": {
+    "prefix": "sns_pointplot",
+    "body": [
+      "# ---- Point: mean per category + CI, good for interactions ----",
+      "sns.pointplot(data=df, x='${1:category}', y='${2:value}', hue='${3:subcat}', dodge=True)"
+    ],
+    "description": "Point plot"
+  },
+  "Count plot": {
+    "prefix": "sns_countplot",
+    "body": [
+      "# ---- Count: bar chart of category frequencies ----",
+      "sns.countplot(",
+      "    data=df, x='${1:category}',",
+      "    hue='${2:subcat}',",
+      "    order=df['${1:category}'].value_counts().index,   # sort by count",
+      ")"
+    ],
+    "description": "Count plot"
+  },
+  "Catplot (figure-level categorical)": {
+    "prefix": "sns_catplot",
+    "body": [
+      "# ---- Figure-level categorical: swap kind + add facets ----",
+      "sns.catplot(",
+      "    data=df, x='${1:category}', y='${2:value}',",
+      "    kind='${3:box}',    # strip, swarm, box, violin, boxen, point, bar, count",
+      "    hue='${4:subcat}',",
+      "    col='${5:facet}',",
+      "    height=${6:4}, aspect=${7:1.2},",
+      ")"
+    ],
+    "description": "Catplot"
+  },
+
+  "// ==================== 6. REGRESSION PLOTS ====================": {
+    "prefix": "sns_section_reg",
+    "body": ["# ============ REGRESSION PLOTS ============"],
+    "description": "Section marker"
+  },
+  "Regplot (linear fit)": {
+    "prefix": "sns_regplot",
+    "body": [
+      "# ---- Scatter + linear regression fit + CI band ----",
+      "sns.regplot(",
+      "    data=df, x='${1:x}', y='${2:y}',",
+      "    ci=${3:95},",
+      "    order=${4:1},        # polynomial degree",
+      "    scatter_kws={'alpha': 0.5, 's': 20},",
+      ")"
+    ],
+    "description": "Regression plot"
+  },
+  "Lmplot (figure-level regression with facets)": {
+    "prefix": "sns_lmplot",
+    "body": [
+      "# ---- Figure-level regression with faceting ----",
+      "sns.lmplot(",
+      "    data=df, x='${1:x}', y='${2:y}',",
+      "    hue='${3:cat}',",
+      "    col='${4:facet}',",
+      "    height=${5:4},",
+      "    scatter_kws={'alpha': 0.5},",
+      ")"
+    ],
+    "description": "Lmplot with facets"
+  },
+  "Residual plot": {
+    "prefix": "sns_residplot",
+    "body": [
+      "# ---- Residuals vs fitted: check for patterns ----",
+      "sns.residplot(data=df, x='${1:x}', y='${2:y}', lowess=${3:True})",
+      "# Ideally random scatter around 0; patterns indicate misspecification."
+    ],
+    "description": "Residual plot"
+  },
+
+  "// ==================== 7. MATRIX PLOTS ====================": {
+    "prefix": "sns_section_matrix",
+    "body": ["# ============ MATRIX PLOTS ============"],
+    "description": "Section marker"
+  },
+  "Heatmap": {
+    "prefix": "sns_heatmap",
+    "body": [
+      "# ---- Heatmap: matrix of values as colors ----",
+      "sns.heatmap(",
+      "    ${1:matrix},",
+      "    annot=${2:True},       # show values in cells",
+      "    fmt='${3:.2f}',",
+      "    cmap='${4:coolwarm}',",
+      "    center=${5:0},",
+      "    linewidths=${6:0.5},",
+      "    cbar_kws={'label': '${7:value}'},",
+      ")"
+    ],
+    "description": "Heatmap"
+  },
+  "Correlation heatmap": {
+    "prefix": "sns_corr_heatmap",
+    "body": [
+      "# ---- Correlation matrix of numeric features ----",
+      "corr = df.select_dtypes('number').corr()",
+      "",
+      "# Mask the upper triangle (redundant since corr is symmetric):",
+      "mask = np.triu(np.ones_like(corr, dtype=bool))",
+      "",
+      "sns.heatmap(",
+      "    corr,",
+      "    mask=mask,",
+      "    annot=True, fmt='.2f',",
+      "    cmap='coolwarm', center=0,",
+      "    square=True, linewidths=0.5,",
+      "    cbar_kws={'shrink': 0.8},",
+      ")"
+    ],
+    "description": "Correlation heatmap"
+  },
+  "Confusion matrix heatmap": {
+    "prefix": "sns_confusion_heatmap",
+    "body": [
+      "# ---- Confusion matrix as a heatmap ----",
+      "from sklearn.metrics import confusion_matrix",
+      "",
+      "cm = confusion_matrix(y_true, y_pred)",
+      "sns.heatmap(",
+      "    cm, annot=True, fmt='d',",
+      "    cmap='Blues', cbar=False,",
+      "    xticklabels=${1:class_names}, yticklabels=${1:class_names},",
+      ")",
+      "plt.xlabel('Predicted'); plt.ylabel('True')"
+    ],
+    "description": "Confusion matrix heatmap"
+  },
+  "Clustermap": {
+    "prefix": "sns_clustermap",
+    "body": [
+      "# ---- Clustermap: heatmap + hierarchical clustering on rows/cols ----",
+      "sns.clustermap(",
+      "    ${1:matrix},",
+      "    method='${2:ward}',",
+      "    metric='${3:euclidean}',",
+      "    cmap='${4:vlag}',",
+      "    standard_scale='${5:0}',   # 0=rows, 1=cols, None",
+      "    figsize=(${6:10}, ${6:10}),",
+      ")"
+    ],
+    "description": "Clustermap"
+  },
+
+  "// ==================== 8. MULTI-PLOT GRIDS ====================": {
+    "prefix": "sns_section_grids",
+    "body": ["# ============ MULTI-PLOT GRIDS ============"],
+    "description": "Section marker"
+  },
+  "Jointplot (bivariate + marginals)": {
+    "prefix": "sns_jointplot",
+    "body": [
+      "# ---- Jointplot: scatter + marginal distributions ----",
+      "sns.jointplot(",
+      "    data=df, x='${1:x}', y='${2:y}',",
+      "    kind='${3:scatter}',   # scatter, kde, hex, reg, resid",
+      "    hue='${4:cat}',",
+      "    height=${5:7},",
+      ")"
+    ],
+    "description": "Jointplot"
+  },
+  "Hexbin jointplot": {
+    "prefix": "sns_jointplot_hex",
+    "body": [
+      "# ---- Hexbin: best for very dense scatter data ----",
+      "sns.jointplot(data=df, x='${1:x}', y='${2:y}', kind='hex', gridsize=${3:30})"
+    ],
+    "description": "Hexbin jointplot"
+  },
+  "Pairplot (all pairwise)": {
+    "prefix": "sns_pairplot",
+    "body": [
+      "# ---- Pairplot: every pairwise scatter + diagonals ----",
+      "sns.pairplot(",
+      "    df,",
+      "    hue='${1:cat}',",
+      "    vars=[${2:'col1', 'col2', 'col3'}],   # optional subset",
+      "    diag_kind='${3:kde}',      # 'hist' or 'kde'",
+      "    plot_kws={'alpha': 0.5, 's': 15},",
+      "    corner=${4:True},          # only lower triangle",
+      ")"
+    ],
+    "description": "Pairplot"
+  },
+  "PairGrid (custom pairplot)": {
+    "prefix": "sns_pairgrid",
+    "body": [
+      "# ---- PairGrid: full control over upper/lower/diagonal ----",
+      "g = sns.PairGrid(df, hue='${1:cat}', height=${2:2.5})",
+      "g.map_upper(sns.scatterplot, alpha=0.5, s=15)",
+      "g.map_lower(sns.kdeplot, fill=True)",
+      "g.map_diag(sns.histplot, kde=True)",
+      "g.add_legend()"
+    ],
+    "description": "PairGrid with different plots per cell"
+  },
+  "FacetGrid (custom facets)": {
+    "prefix": "sns_facetgrid",
+    "body": [
+      "# ---- FacetGrid: manual multi-panel layout ----",
+      "g = sns.FacetGrid(df, col='${1:col_facet}', row='${2:row_facet}', hue='${3:cat}', height=${4:3})",
+      "g.map(sns.scatterplot, '${5:x}', '${6:y}', alpha=0.6)",
+      "g.add_legend()",
+      "g.set_axis_labels('${7:X}', '${8:Y}')",
+      "g.set_titles('{col_name} | {row_name}')"
+    ],
+    "description": "FacetGrid custom layout"
+  },
+
+  "// ==================== 9. COLOR PALETTES ====================": {
+    "prefix": "sns_section_palettes",
+    "body": ["# ============ COLOR PALETTES ============"],
+    "description": "Section marker"
+  },
+  "Built-in palettes": {
+    "prefix": "sns_palettes",
+    "body": [
+      "# ---- Qualitative (categorical) ----",
+      "# 'deep', 'muted', 'pastel', 'bright', 'dark', 'colorblind',",
+      "# 'Set1', 'Set2', 'Set3', 'Paired', 'tab10', 'Accent'",
+      "",
+      "# ---- Sequential (ordered numeric) ----",
+      "# 'Blues', 'Greens', 'Oranges', 'Reds', 'Purples', 'viridis',",
+      "# 'mako', 'rocket', 'flare', 'crest', 'icefire'",
+      "",
+      "# ---- Diverging (centered around 0) ----",
+      "# 'coolwarm', 'RdBu_r', 'vlag', 'icefire', 'Spectral'",
+      "",
+      "# ---- Perceptually uniform ----",
+      "# 'viridis', 'plasma', 'inferno', 'magma', 'cividis'"
+    ],
+    "description": "Palette categories"
+  },
+  "Use a palette": {
+    "prefix": "sns_palette",
+    "body": [
+      "sns.set_palette('${1:deep}')",
+      "sns.color_palette('${2:Set2}', n_colors=${3:5})   # sample N colors",
+      "sns.color_palette('${4:viridis}', as_cmap=True)   # as a colormap"
+    ],
+    "description": "Apply a palette"
+  },
+  "Custom palette": {
+    "prefix": "sns_palette_custom",
+    "body": [
+      "# ---- Custom palette from hex codes ----",
+      "custom = ['#${1:1f77b4}', '#${2:ff7f0e}', '#${3:2ca02c}', '#${4:d62728}']",
+      "sns.set_palette(custom)",
+      "",
+      "# Named dict for hue mapping:",
+      "palette = {'${5:A}': '#1f77b4', '${6:B}': '#ff7f0e'}",
+      "sns.scatterplot(data=df, x='x', y='y', hue='${7:cat}', palette=palette)"
+    ],
+    "description": "Custom hex palette"
+  },
+  "Highlight a subgroup": {
+    "prefix": "sns_palette_highlight",
+    "body": [
+      "# ---- Grey out everything except the series of interest ----",
+      "focus = '${1:target_group}'",
+      "palette = {k: ('#d62728' if k == focus else '#cccccc') for k in df['${2:cat}'].unique()}",
+      "sns.scatterplot(data=df, x='${3:x}', y='${4:y}', hue='${2:cat}', palette=palette)"
+    ],
+    "description": "Highlight a subgroup"
+  },
+
+  "// ==================== 10. STATISTICAL ANNOTATIONS ====================": {
+    "prefix": "sns_section_annot",
+    "body": ["# ============ STATISTICAL ANNOTATIONS ============"],
+    "description": "Section marker"
+  },
+  "Confidence intervals in barplot/pointplot": {
+    "prefix": "sns_ci",
+    "body": [
+      "# ---- CI options in barplot / pointplot / lineplot ----",
+      "errorbar='${1:ci}'          # default: 95% bootstrap CI",
+      "errorbar=('ci', 90)      # custom level",
+      "errorbar='sd'            # standard deviation",
+      "errorbar='se'            # standard error",
+      "errorbar=None            # no error bars"
+    ],
+    "description": "Confidence intervals"
+  },
+  "Annotate a bar chart": {
+    "prefix": "sns_annotate_bars",
+    "body": [
+      "ax = sns.barplot(data=df, x='${1:category}', y='${2:value}')",
+      "for container in ax.containers:",
+      "    ax.bar_label(container, fmt='%.1f', padding=3)"
+    ],
+    "description": "Add labels to bars"
+  },
+  "Significance bracket": {
+    "prefix": "sns_sig_bracket",
+    "body": [
+      "# ---- Add a significance bracket between two categories ----",
+      "def add_sig(ax, x1, x2, y, text='*'):",
+      "    ax.plot([x1, x1, x2, x2], [y, y + 0.5, y + 0.5, y], lw=1.5, c='k')",
+      "    ax.text((x1 + x2) / 2, y + 0.6, text, ha='center')",
+      "",
+      "add_sig(ax, ${1:0}, ${2:1}, ${3:value_y})"
+    ],
+    "description": "Add significance bracket"
+  },
+
+  "// ==================== 11. ML DIAGNOSTIC PLOTS ====================": {
+    "prefix": "sns_section_ml",
+    "body": ["# ============ ML DIAGNOSTIC PLOTS ============"],
+    "description": "Section marker"
+  },
+  "Distribution of classes (imbalance)": {
+    "prefix": "sns_ml_class_balance",
+    "body": [
+      "# ---- Class balance check ----",
+      "sns.countplot(data=df, x='${1:target}', order=df['${1:target}'].value_counts().index)",
+      "plt.title('Class balance')",
+      "",
+      "# Or percentages:",
+      "df['${1:target}'].value_counts(normalize=True).mul(100).round(2)"
+    ],
+    "description": "Check class balance"
+  },
+  "Feature vs target by class": {
+    "prefix": "sns_ml_feature_class",
+    "body": [
+      "# ---- How does a feature distribute across classes? ----",
+      "sns.violinplot(data=df, x='${1:target}', y='${2:feature}', split=False)",
+      "sns.boxplot(data=df, x='${1:target}', y='${2:feature}')"
+    ],
+    "description": "Feature distribution per class"
+  },
+  "Correlation with target": {
+    "prefix": "sns_ml_corr_target",
+    "body": [
+      "# ---- Correlations of features with the target ----",
+      "corr = df.select_dtypes('number').corr()['${1:target}'].drop('${1:target}').sort_values()",
+      "sns.barplot(x=corr.values, y=corr.index)",
+      "plt.axvline(0, color='k', lw=0.5)",
+      "plt.title('Correlation with ${1:target}')"
+    ],
+    "description": "Correlation with target"
+  },
+  "Feature importance": {
+    "prefix": "sns_ml_importance",
+    "body": [
+      "# ---- Plot feature importances from a fitted model ----",
+      "importances = pd.Series(${1:model}.feature_importances_, index=feature_names)",
+      "importances = importances.sort_values(ascending=False).head(${2:15})",
+      "",
+      "sns.barplot(x=importances.values, y=importances.index)",
+      "plt.xlabel('Importance'); plt.ylabel('Feature')",
+      "plt.title('Feature importances')"
+    ],
+    "description": "Feature importance bar plot"
+  },
+  "ROC curve (multi-model)": {
+    "prefix": "sns_ml_roc",
+    "body": [
+      "from sklearn.metrics import roc_curve, auc",
+      "",
+      "for name, scores in ${1:model_scores}.items():",
+      "    fpr, tpr, _ = roc_curve(y_test, scores)",
+      "    plt.plot(fpr, tpr, label=f'{name} (AUC={auc(fpr, tpr):.3f})')",
+      "plt.plot([0, 1], [0, 1], 'k--', label='Chance')",
+      "plt.xlabel('FPR'); plt.ylabel('TPR'); plt.legend(loc='lower right')"
+    ],
+    "description": "Multi-model ROC"
+  },
+  "Residuals diagnostic panel": {
+    "prefix": "sns_ml_residuals",
+    "body": [
+      "# ---- 3-panel regression diagnostic ----",
+      "y_pred = ${1:model}.predict(X_test)",
+      "residuals = y_test - y_pred",
+      "",
+      "fig, axes = plt.subplots(1, 3, figsize=(15, 4))",
+      "sns.scatterplot(x=y_pred, y=residuals, ax=axes[0]); axes[0].axhline(0, ls='--', color='r')",
+      "sns.histplot(residuals, kde=True, ax=axes[1])",
+      "import scipy.stats as stats",
+      "stats.probplot(residuals, plot=axes[2])",
+      "fig.tight_layout()"
+    ],
+    "description": "Residual diagnostic panel"
+  },
+  "Predicted vs actual": {
+    "prefix": "sns_ml_pred_actual",
+    "body": [
+      "sns.scatterplot(x=y_test, y=y_pred, alpha=0.5)",
+      "lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]",
+      "plt.plot(lims, lims, 'r--', label='Perfect')",
+      "plt.xlabel('Actual'); plt.ylabel('Predicted'); plt.legend()"
+    ],
+    "description": "Predicted vs actual"
+  },
+  "Cluster visualization": {
+    "prefix": "sns_ml_clusters",
+    "body": [
+      "# ---- Visualize 2D clusters (e.g., after PCA/UMAP) ----",
+      "sns.scatterplot(x=X_2d[:, 0], y=X_2d[:, 1], hue=labels, palette='${1:tab10}', s=${2:20}, alpha=0.7)",
+      "plt.xlabel('${3:PC1 / UMAP-1}'); plt.ylabel('${4:PC2 / UMAP-2}')"
+    ],
+    "description": "Cluster visualization"
+  },
+  "Train vs validation metric curves": {
+    "prefix": "sns_ml_train_val",
+    "body": [
+      "# ---- Learning curves: train vs validation ----",
+      "sns.lineplot(x=sizes, y=train_scores, label='Train', marker='o')",
+      "sns.lineplot(x=sizes, y=val_scores, label='Validation', marker='s')",
+      "plt.xlabel('Training size'); plt.ylabel('Score')",
+      "plt.title('Learning curve'); plt.legend()"
+    ],
+    "description": "Learning curve plot"
+  },
+
+  "// ==================== 12. TIME SERIES PLOTS ====================": {
+    "prefix": "sns_section_ts",
+    "body": ["# ============ TIME SERIES PLOTS ============"],
+    "description": "Section marker"
+  },
+  "Line plot over time": {
+    "prefix": "sns_ts_line",
+    "body": [
+      "sns.lineplot(data=df, x='${1:date}', y='${2:value}', hue='${3:series}', errorbar=None)",
+      "plt.xlabel(''); plt.ylabel('${2:value}')"
+    ],
+    "description": "Time series line"
+  },
+  "Time series with CI": {
+    "prefix": "sns_ts_ci",
+    "body": [
+      "# ---- Shows mean + 95% CI across observations per time point ----",
+      "sns.lineplot(data=df, x='${1:date}', y='${2:value}', estimator='${3:mean}', errorbar=('ci', 95))"
+    ],
+    "description": "Time series with CI"
+  },
+  "Seasonal subplots": {
+    "prefix": "sns_ts_seasonal",
+    "body": [
+      "# ---- Seasonality by month/day-of-week ----",
+      "df['${1:month}'] = df['${2:date}'].dt.month",
+      "sns.boxplot(data=df, x='${1:month}', y='${3:value}')",
+      "plt.title('Seasonal pattern')"
+    ],
+    "description": "Seasonal boxplot"
+  },
+
+  "// ==================== 13. ADVANCED ====================": {
+    "prefix": "sns_section_advanced",
+    "body": ["# ============ ADVANCED ============"],
+    "description": "Section marker"
+  },
+  "Combine axes-level + manual elements": {
+    "prefix": "sns_advanced_combine",
+    "body": [
+      "fig, ax = plt.subplots(figsize=(9, 5))",
+      "sns.histplot(data=df, x='${1:value}', kde=True, ax=ax)",
+      "ax.axvline(df['${1:value}'].mean(), color='r', ls='--', label='mean')",
+      "ax.axvline(df['${1:value}'].median(), color='g', ls=':', label='median')",
+      "ax.legend()"
+    ],
+    "description": "Combine seaborn with matplotlib elements"
+  },
+  "Overlay box on violin": {
+    "prefix": "sns_advanced_box_on_violin",
+    "body": [
+      "sns.violinplot(data=df, x='${1:cat}', y='${2:value}', inner=None)",
+      "sns.boxplot(data=df, x='${1:cat}', y='${2:value}',",
+      "            width=0.15, boxprops={'facecolor': 'white', 'zorder': 3})"
+    ],
+    "description": "Box on violin overlay"
+  },
+  "Custom FacetGrid with multiple plot types": {
+    "prefix": "sns_advanced_facet_mixed",
+    "body": [
+      "g = sns.FacetGrid(df, col='${1:facet}', height=4, aspect=1.2)",
+      "g.map_dataframe(sns.scatterplot, x='${2:x}', y='${3:y}', alpha=0.5)",
+      "g.map_dataframe(sns.regplot, x='${2:x}', y='${3:y}', scatter=False, color='red')",
+      "g.set_titles('{col_name}'); g.set_axis_labels('${4:X}', '${5:Y}')"
+    ],
+    "description": "FacetGrid with mixed plot types"
+  },
+  "Regression with polynomial fit": {
+    "prefix": "sns_advanced_poly_reg",
+    "body": [
+      "sns.regplot(data=df, x='${1:x}', y='${2:y}', order=${3:2}, ci=${4:95})",
+      "plt.title('Polynomial fit (order=${3:2})')"
+    ],
+    "description": "Polynomial regression fit"
+  },
+  "Robust regression (no outlier influence)": {
+    "prefix": "sns_advanced_robust",
+    "body": [
+      "sns.regplot(data=df, x='${1:x}', y='${2:y}', robust=True)",
+      "# robust=True uses statsmodels RLM (Huber) -- less sensitive to outliers"
+    ],
+    "description": "Robust regression"
+  },
+  "Log scale on axes": {
+    "prefix": "sns_advanced_log",
+    "body": [
+      "sns.scatterplot(data=df, x='${1:x}', y='${2:y}')",
+      "plt.xscale('${3:log}'); plt.yscale('${4:log}')"
+    ],
+    "description": "Log scale axes"
+  },
+  "Animate / save": {
+    "prefix": "sns_advanced_save",
+    "body": [
+      "plt.tight_layout()",
+      "plt.savefig('${1:plot.png}', dpi=${2:300}, bbox_inches='tight')",
+      "plt.close()"
+    ],
+    "description": "Save a seaborn figure"
+  },
+
+  "// ==================== 14. COMMON PITFALLS ====================": {
+    "prefix": "sns_section_pitfalls",
+    "body": ["# ============ COMMON PITFALLS ============"],
+    "description": "Section marker"
+  },
+  "Pitfall: figure-level vs axes-level confusion": {
+    "prefix": "sns_pitfall_api",
+    "body": [
+      "# BAD: sns.relplot() returns a FacetGrid, not an Axes.",
+      "# g = sns.relplot(...); g.set_xlabel(...)  # AttributeError",
+      "",
+      "# GOOD: use grid methods or .ax:",
+      "g = sns.relplot(...)",
+      "g.set_axis_labels('x', 'y')",
+      "g.ax.set_xlabel('x')"
+    ],
+    "description": "Which API returns what"
+  },
+  "Pitfall: seaborn in existing axes": {
+    "prefix": "sns_pitfall_axes",
+    "body": [
+      "# Figure-level functions (relplot, displot, catplot, lmplot, jointplot, pairplot)",
+      "# do NOT accept ax=. Only axes-level functions do.",
+      "",
+      "# For subplots, use the axes-level version:",
+      "fig, ax = plt.subplots()",
+      "sns.scatterplot(data=df, x='x', y='y', ax=ax)   # OK"
+    ],
+    "description": "Figure-level ignores ax"
+  },
+  "Pitfall: too many categories in legend": {
+    "prefix": "sns_pitfall_legend",
+    "body": [
+      "# High-cardinality categorical hues produce unreadable legends.",
+      "# Options:",
+      "#   - keep only top N categories",
+      "top = df['${1:cat}'].value_counts().head(${2:10}).index",
+      "df = df[df['${1:cat}'].isin(top)]",
+      "#   - or bin/aggregate the category first",
+      "#   - or use a col= facet instead"
+    ],
+    "description": "Legend with many categories"
+  },
+  "Pitfall: colorscheme not perceptually uniform": {
+    "prefix": "sns_pitfall_cmap",
+    "body": [
+      "# Avoid 'jet' and 'rainbow' for continuous data -- not perceptually uniform.",
+      "# Prefer 'viridis', 'mako', 'rocket', 'crest', 'flare', 'coolwarm' (diverging)."
+    ],
+    "description": "Colormap choice"
+  },
+  "Pitfall: bar plot on non-zero baseline": {
+    "prefix": "sns_pitfall_baseline",
+    "body": [
+      "# Bar charts must start at y=0, otherwise differences look exaggerated.",
+      "ax = sns.barplot(data=df, x='${1:cat}', y='${2:val}')",
+      "ax.set_ylim(0, None)",
+      "",
+      "# For a zoomed comparison, use pointplot or a strip/swarm instead."
+    ],
+    "description": "Bar chart baseline"
+  },
+  "Pitfall: default CI in lineplot hides variability": {
+    "prefix": "sns_pitfall_ci",
+    "body": [
+      "# sns.lineplot default shows MEAN + 95% CI, which may hide groups.",
+      "# If each 'series' is a single line (one row per x):",
+      "sns.lineplot(data=df, x='x', y='y', errorbar=None)",
+      "",
+      "# Or show every sample:",
+      "sns.lineplot(data=df, x='x', y='y', units='${1:id}', estimator=None, alpha=0.3)"
+    ],
+    "description": "Hide CI in lineplot"
+  },
+  "Pitfall: order of categories is alphabetical": {
+    "prefix": "sns_pitfall_order",
+    "body": [
+      "# Default order is alphabetical. Control it explicitly:",
+      "order = ['${1:low}', '${2:med}', '${3:high}']",
+      "sns.barplot(data=df, x='${4:cat}', y='${5:val}', order=order)",
+      "",
+      "# Or by frequency:",
+      "order = df['${4:cat}'].value_counts().index",
+      "sns.countplot(data=df, x='${4:cat}', order=order)"
+    ],
+    "description": "Control category order"
+  }
+}

@@ -1,0 +1,798 @@
+{
+  "// ==================== LIST COMPREHENSIONS ====================": {
+    "prefix": "py_section_comp_list",
+    "body": ["# ============ LIST COMPREHENSIONS ============"],
+    "description": "Section marker"
+  },
+
+  "List comp: basic": {
+    "prefix": "py_lc",
+    "body": ["[${1:expr} for ${2:item} in ${3:iterable}]"],
+    "description": "Minimal list comprehension"
+  },
+  "List comp: with filter (if)": {
+    "prefix": "py_lc_if",
+    "body": ["[${1:expr} for ${2:item} in ${3:iterable} if ${4:condition}]"],
+    "description": "Filter items with a trailing if"
+  },
+  "List comp: with if/else (ternary)": {
+    "prefix": "py_lc_ifelse",
+    "body": [
+      "# if/else in the EXPRESSION transforms each item",
+      "[${1:a} if ${2:condition} else ${3:b} for ${4:item} in ${5:iterable}]"
+    ],
+    "description": "Ternary inside the expression"
+  },
+  "List comp: filter then transform": {
+    "prefix": "py_lc_filter_map",
+    "body": [
+      "# 1) `if` filters items (skips them)",
+      "# 2) `if/else` in expression transforms every item",
+      "[${1:f(x)} for ${2:x} in ${3:items} if ${4:x > 0}]"
+    ],
+    "description": "Combined filter and transform"
+  },
+  "List comp: multiple if clauses (AND)": {
+    "prefix": "py_lc_multi_if",
+    "body": [
+      "# Multiple `if`s act like AND",
+      "[${1:x} for ${2:x} in ${3:items} if ${4:x > 0} if ${5:x % 2 == 0}]",
+      "# Equivalent to: if x > 0 and x % 2 == 0"
+    ],
+    "description": "Multiple filter conditions"
+  },
+  "List comp: nested for (cartesian product)": {
+    "prefix": "py_lc_nested_for",
+    "body": [
+      "# Inner loop runs for every outer iteration (like nested loops)",
+      "[(${1:a}, ${2:b}) for ${3:a} in ${4:list_a} for ${5:b} in ${6:list_b}]"
+    ],
+    "description": "Nested for loops"
+  },
+  "List comp: flatten a matrix": {
+    "prefix": "py_lc_flatten",
+    "body": [
+      "# Flatten one level of nesting",
+      "[${1:item} for ${2:row} in ${3:matrix} for ${4:item} in ${2:row}]"
+    ],
+    "description": "Flatten nested list (one level)"
+  },
+  "List comp: transpose a matrix": {
+    "prefix": "py_lc_transpose",
+    "body": [
+      "# Transpose a rectangular matrix (all rows same length)",
+      "[[${1:row[i]} for ${2:row} in ${3:matrix}] for ${4:i} in range(len(${3:matrix}[0]))]"
+    ],
+    "description": "Transpose rows and columns"
+  },
+  "List comp: cartesian with condition": {
+    "prefix": "py_lc_cartesian_filter",
+    "body": [
+      "# Pairs where first < second",
+      "[(a, b) for a in ${1:range(5)} for b in ${2:range(5)} if a < b]"
+    ],
+    "description": "Cartesian product with filter"
+  },
+  "List comp: apply a function": {
+    "prefix": "py_lc_apply",
+    "body": [
+      "# Apply a function to every element",
+      "[${1:func(x)} for x in ${2:items}]"
+    ],
+    "description": "Map a function over an iterable"
+  },
+  "List comp: method call": {
+    "prefix": "py_lc_method",
+    "body": [
+      "# Call a method on every item",
+      "[${1:s.strip().lower()} for ${2:s} in ${3:lines}]"
+    ],
+    "description": "Method call per item"
+  },
+  "List comp: with enumerate": {
+    "prefix": "py_lc_enum",
+    "body": [
+      "# Keep or use the index",
+      "[(${1:i}, ${2:x}) for ${1:i}, ${2:x} in enumerate(${3:items})]",
+      "[${2:x} for ${1:i}, ${2:x} in enumerate(${3:items}) if ${1:i} % 2 == 0]"
+    ],
+    "description": "Comprehension with index"
+  },
+  "List comp: with zip": {
+    "prefix": "py_lc_zip",
+    "body": [
+      "# Pair items from two iterables",
+      "[(${1:a}, ${2:b}) for ${1:a}, ${2:b} in zip(${3:list_a}, ${4:list_b})]"
+    ],
+    "description": "Comprehension over zip"
+  },
+  "List comp: with walrus (:=)": {
+    "prefix": "py_lc_walrus",
+    "body": [
+      "# Compute once, use twice (3.8+)",
+      "[${1:y} for ${2:x} in ${3:data} if (${1:y} := ${4:f(x)}) > ${5:0}]"
+    ],
+    "description": "Avoid computing an expression twice"
+  },
+  "List comp: if/else in condition (unusual)": {
+    "prefix": "py_lc_filter_ifelse",
+    "body": [
+      "# if/else IN THE EXPRESSION is different from if/else AFTER for.",
+      "# This keeps every item but changes its value:",
+      "[${1:'+' if x >= 0 else '-'} for x in ${2:nums}]",
+      "",
+      "# This filters items (drops those that don't match):",
+      "[${1:x} for x in ${2:nums} if x >= 0]"
+    ],
+    "description": "Distinguish filter vs transform"
+  },
+  "List comp: filter truthiness": {
+    "prefix": "py_lc_truthy",
+    "body": [
+      "# Drop falsy items (None, '', 0, [], {}, ...)",
+      "[${1:x} for x in ${2:items} if ${1:x}]"
+    ],
+    "description": "Keep only truthy items"
+  },
+  "List comp: deduplicate while preserving order": {
+    "prefix": "py_lc_dedup",
+    "body": [
+      "# Preserve order (dict insertion order is guaranteed 3.7+)",
+      "list(dict.fromkeys([${1:item} for ${2:item} in ${3:items}]))",
+      "# For hashable items only:",
+      "list(dict.fromkeys(${3:items}))"
+    ],
+    "description": "Unique items, order preserved"
+  },
+  "List comp: flatten dict of lists": {
+    "prefix": "py_lc_flatten_dict",
+    "body": [
+      "[${1:item} for ${2:values} in ${3:d}.values() for ${1:item} in ${2:values}]"
+    ],
+    "description": "Flatten all values of a dict"
+  },
+  "List comp: filter with any/all": {
+    "prefix": "py_lc_anyall",
+    "body": [
+      "# Items that match any forbidden word",
+      "[s for s in ${1:lines} if any(w in s for w in ${2:bad_words})]",
+      "",
+      "# Items where all numbers are positive",
+      "[row for row in ${3:rows} if all(x > 0 for x in row)]"
+    ],
+    "description": "Filter using any/all"
+  },
+  "List comp: conditional counting": {
+    "prefix": "py_lc_count",
+    "body": [
+      "# Count matches with sum of booleans",
+      "sum(1 for ${1:x} in ${2:items} if ${3:condition})",
+      "# Or with list comprehension:",
+      "len([${1:x} for ${1:x} in ${2:items} if ${3:condition}])"
+    ],
+    "description": "Count items matching a condition"
+  },
+  "List comp: side-effect (avoid!)": {
+    "prefix": "py_lc_sideeffect",
+    "body": [
+      "# BAD: comprehension built for side effects",
+      "# [print(x) for x in items]",
+      "",
+      "# GOOD: use a normal for loop",
+      "for ${1:x} in ${2:items}:",
+      "    print(${1:x})"
+    ],
+    "description": "Do not use comprehensions for side effects"
+  },
+
+  "// ==================== GENERATOR EXPRESSIONS ====================": {
+    "prefix": "py_section_comp_gen",
+    "body": ["# ============ GENERATOR EXPRESSIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Gen expr: basic": {
+    "prefix": "py_ge",
+    "body": ["(${1:expr} for ${2:item} in ${3:iterable})"],
+    "description": "Generator expression (lazy)"
+  },
+  "Gen expr: with filter": {
+    "prefix": "py_ge_if",
+    "body": ["(${1:expr} for ${2:item} in ${3:iterable} if ${4:condition})"],
+    "description": "Generator expression with filter"
+  },
+  "Gen expr: with if/else": {
+    "prefix": "py_ge_ifelse",
+    "body": ["(${1:a} if ${2:condition} else ${3:b} for ${4:item} in ${5:iterable})"],
+    "description": "Ternary inside a generator expression"
+  },
+  "Gen expr: to tuple (the \"tuple comprehension\")": {
+    "prefix": "py_tuple_comp",
+    "body": [
+      "# Python has NO tuple comprehension syntax.",
+      "# (x for x in ...) returns a GENERATOR, not a tuple.",
+      "# Wrap in tuple(...) to get a tuple:",
+      "tuple(${1:expr} for ${2:item} in ${3:iterable})",
+      "",
+      "# Or for a fixed value:",
+      "tuple([${1:expr} for ${2:item} in ${3:iterable}])"
+    ],
+    "description": "Tuple from a generator expression"
+  },
+  "Gen expr: sum / min / max / any / all": {
+    "prefix": "py_ge_reduce",
+    "body": [
+      "sum(${1:x * x} for x in ${2:range(10)})         # sum without building a list",
+      "min(${1:x} for x in ${2:items} if ${3:x > 0})",
+      "max(${1:x} for x in ${2:items})",
+      "any(${1:x > 10} for x in ${2:items})",
+      "all(${1:x > 0} for x in ${2:items})"
+    ],
+    "description": "Reduce a generator lazily"
+  },
+  "Gen expr: join without a list": {
+    "prefix": "py_ge_join",
+    "body": [
+      "','.join(${1:str(x)} for x in ${2:items})",
+      "# No intermediate list is built"
+    ],
+    "description": "join over a generator"
+  },
+  "Gen expr: as a function argument": {
+    "prefix": "py_ge_arg",
+    "body": [
+      "# Parentheses can be omitted when the generator is the only argument",
+      "sum(${1:x} for ${2:x} in ${3:items})",
+      "# Equivalent to:",
+      "sum((${1:x} for ${2:x} in ${3:items}))"
+    ],
+    "description": "Generator as a single argument"
+  },
+  "Gen expr: infinite stream (itertools)": {
+    "prefix": "py_ge_infinite",
+    "body": [
+      "from itertools import count, islice",
+      "",
+      "# Take the first 5 even numbers from an infinite counter",
+      "list(islice((n for n in count() if n % 2 == 0), 5))"
+    ],
+    "description": "Lazy slicing of an infinite generator"
+  },
+  "Gen expr: pipeline": {
+    "prefix": "py_ge_pipeline",
+    "body": [
+      "# Chain lazy operations",
+      "evens = (n for n in ${1:range(20)} if n % 2 == 0)",
+      "squares = (n * n for n in evens)",
+      "print(list(squares))   # [0, 4, 16, 36, 64, ...]"
+    ],
+    "description": "Compose generator pipelines"
+  },
+  "Gen expr: memory comparison": {
+    "prefix": "py_ge_memory",
+    "body": [
+      "# List comprehension builds everything in memory:",
+      "list_comp = [x * x for x in range(1_000_000)]   # ~8 MB+",
+      "",
+      "# Generator expression is lazy (streams one item at a time):",
+      "gen_expr = (x * x for x in range(1_000_000))    # tiny footprint",
+      "",
+      "# Prefer gen expr for large data when you only iterate once."
+    ],
+    "description": "List vs generator memory footprint"
+  },
+
+  "// ==================== SET COMPREHENSIONS ====================": {
+    "prefix": "py_section_comp_set",
+    "body": ["# ============ SET COMPREHENSIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Set comp: basic": {
+    "prefix": "py_sc",
+    "body": ["{${1:expr} for ${2:item} in ${3:iterable}}"],
+    "description": "Minimal set comprehension"
+  },
+  "Set comp: with filter": {
+    "prefix": "py_sc_if",
+    "body": ["{${1:expr} for ${2:item} in ${3:iterable} if ${4:condition}}"],
+    "description": "Set comprehension with filter"
+  },
+  "Set comp: with if/else": {
+    "prefix": "py_sc_ifelse",
+    "body": ["{${1:a} if ${2:condition} else ${3:b} for ${4:item} in ${5:iterable}}"],
+    "description": "Ternary inside set comprehension"
+  },
+  "Set comp: deduplicate in one pass": {
+    "prefix": "py_sc_dedup",
+    "body": [
+      "# Fast way to deduplicate (order is not preserved)",
+      "{${1:item.lower()} for ${1:item} in ${2:words}}"
+    ],
+    "description": "Deduplicate while transforming"
+  },
+  "Set comp: unique characters": {
+    "prefix": "py_sc_chars",
+    "body": [
+      "# Unique characters in a string",
+      "{ch for ch in ${1:text}}",
+      "# Lower-cased unique characters:",
+      "{ch.lower() for ch in ${1:text} if ch.isalpha()}"
+    ],
+    "description": "Unique characters"
+  },
+  "Set comp: intersect / union of iterables": {
+    "prefix": "py_sc_set_ops",
+    "body": [
+      "# All unique values across multiple iterables",
+      "{x for lst in ${1:list_of_lists} for x in lst}",
+      "",
+      "# Common values",
+      "{x for x in ${2:a} if x in set(${3:b})}"
+    ],
+    "description": "Set algebra via comprehensions"
+  },
+  "Set comp: type note": {
+    "prefix": "py_sc_note",
+    "body": [
+      "# Braces {} make a set comprehension...",
+      "{x for x in ${1:items}}",
+      "",
+      "# ...but an empty brace pair is a DICT, not a set:",
+      "{}                 # empty dict",
+      "set()              # empty set",
+      "",
+      "# And {k: v for ...} is a DICT comprehension, not a set."
+    ],
+    "description": "Set vs dict comprehension braces"
+  },
+
+  "// ==================== DICT COMPREHENSIONS ====================": {
+    "prefix": "py_section_comp_dict",
+    "body": ["# ============ DICT COMPREHENSIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Dict comp: basic": {
+    "prefix": "py_dc",
+    "body": ["{${1:key}: ${2:value} for ${3:item} in ${4:iterable}}"],
+    "description": "Minimal dict comprehension"
+  },
+  "Dict comp: with filter": {
+    "prefix": "py_dc_if",
+    "body": ["{${1:key}: ${2:value} for ${3:item} in ${4:iterable} if ${5:condition}}"],
+    "description": "Dict comp with filter"
+  },
+  "Dict comp: with if/else": {
+    "prefix": "py_dc_ifelse",
+    "body": [
+      "{${1:key}: ${2:a} if ${3:condition} else ${4:b} for ${5:item} in ${6:iterable}}"
+    ],
+    "description": "Ternary inside the value"
+  },
+  "Dict comp: from two lists": {
+    "prefix": "py_dc_zip",
+    "body": ["{${1:k}: ${2:v} for ${1:k}, ${2:v} in zip(${3:keys}, ${4:values})}"],
+    "description": "Build a dict from parallel lists"
+  },
+  "Dict comp: invert a dict": {
+    "prefix": "py_dc_invert",
+    "body": [
+      "# Requires unique values, otherwise later keys overwrite earlier ones",
+      "{${1:v}: ${2:k} for ${1:k}, ${2:v} in ${3:d}.items()}"
+    ],
+    "description": "Swap keys and values"
+  },
+  "Dict comp: transform values": {
+    "prefix": "py_dc_values",
+    "body": ["{${1:k}: ${2:func(v)} for ${1:k}, ${2:v} in ${3:d}.items()}"],
+    "description": "Transform every value"
+  },
+  "Dict comp: transform keys": {
+    "prefix": "py_dc_keys",
+    "body": ["{${1:k.strip().lower()}: ${2:v} for ${1:k}, ${2:v} in ${3:d}.items()}"],
+    "description": "Normalize every key"
+  },
+  "Dict comp: filter by value": {
+    "prefix": "py_dc_filter_value",
+    "body": ["{${1:k}: ${2:v} for ${1:k}, ${2:v} in ${3:d}.items() if ${2:v} > ${4:0}}"],
+    "description": "Keep entries whose value passes a test"
+  },
+  "Dict comp: filter by key": {
+    "prefix": "py_dc_filter_key",
+    "body": ["{${1:k}: ${2:v} for ${1:k}, ${2:v} in ${3:d}.items() if ${1:k}.startswith('${4:prefix}')}"],
+    "description": "Keep entries whose key passes a test"
+  },
+  "Dict comp: index a list": {
+    "prefix": "py_dc_index",
+    "body": [
+      "# Map each item to its index (last wins on duplicates)",
+      "{${1:item}: ${2:i} for ${2:i}, ${1:item} in enumerate(${3:items})}"
+    ],
+    "description": "Value → index lookup"
+  },
+  "Dict comp: lookup table from list of pairs": {
+    "prefix": "py_dc_pairs",
+    "body": ["{${1:k}: ${2:v} for ${1:k}, ${2:v} in ${3:pairs}}"],
+    "description": "Convert list of tuples to dict"
+  },
+  "Dict comp: group by key (count)": {
+    "prefix": "py_dc_count",
+    "body": [
+      "# Count items per key (simple version -- a Counter is usually better)",
+      "{${1:k}: sum(1 for x in ${2:items} if ${3:f(x)} == ${1:k})",
+      " for ${1:k} in {${3:f(x)} for x in ${2:items}}}"
+    ],
+    "description": "Manual counting"
+  },
+  "Dict comp: group by key (list)": {
+    "prefix": "py_dc_group",
+    "body": [
+      "# Group items into lists by key",
+      "{${1:k}: [x for x in ${2:items} if ${3:key_of(x)} == ${1:k}]",
+      " for ${1:k} in {${3:key_of(x)} for x in ${2:items}}}"
+    ],
+    "description": "Group into dict of lists"
+  },
+  "Dict comp: nested dict": {
+    "prefix": "py_dc_nested",
+    "body": [
+      "# Dict of dicts",
+      "{${1:outer}: {${2:inner}: ${3:value}} for ${1:outer}, ${2:inner}, ${3:value} in ${4:rows}}"
+    ],
+    "description": "Build nested dicts from triples"
+  },
+  "Dict comp: from enumerate": {
+    "prefix": "py_dc_enum",
+    "body": ["{${1:i}: ${2:item} for ${1:i}, ${2:item} in enumerate(${3:items})}"],
+    "description": "Index → value dict"
+  },
+  "Dict comp: multiple for clauses": {
+    "prefix": "py_dc_multi_for",
+    "body": [
+      "{(${1:a}, ${2:b}): ${3:f(a, b)} for ${1:a} in ${4:list_a} for ${2:b} in ${5:list_b}}"
+    ],
+    "description": "Cartesian keys"
+  },
+  "Dict comp: conditional key": {
+    "prefix": "py_dc_cond_key",
+    "body": [
+      "# Key transforms depending on the item",
+      "{(${1:k} if ${2:cond} else ${3:alt}): ${4:v} for ${1:k}, ${4:v} in ${5:d}.items()}"
+    ],
+    "description": "Conditional key selection"
+  },
+
+  "// ==================== COMPARISONS & CHOICES ====================": {
+    "prefix": "py_section_comp_choices",
+    "body": ["# ============ COMPARISONS & CHOICES ============"],
+    "description": "Section marker"
+  },
+
+  "Choice: comp vs map/filter": {
+    "prefix": "py_comp_vs_map",
+    "body": [
+      "# map + filter",
+      "squares_of_evens = list(map(lambda x: x * x, filter(lambda x: x % 2 == 0, ${1:nums})))",
+      "",
+      "# list comprehension -- usually clearer",
+      "squares_of_evens = [x * x for x in ${1:nums} if x % 2 == 0]",
+      "",
+      "# Rule of thumb: prefer comprehensions when a lambda would be needed."
+    ],
+    "description": "Comprehension vs map/filter"
+  },
+  "Choice: which comprehension?": {
+    "prefix": "py_comp_choose",
+    "body": [
+      "# [x for x in it]         list    -- ordered, mutable, eager",
+      "# (x for x in it)         genexpr -- lazy, streaming, single-pass",
+      "# {x for x in it}         set     -- unique, unordered",
+      "# {k: v for ...}          dict    -- keyed, ordered (3.7+), mutable",
+      "# tuple(x for x in it)    tuple   -- immutable snapshot"
+    ],
+    "description": "Pick the right comprehension type"
+  },
+  "Choice: eager vs lazy": {
+    "prefix": "py_comp_eager_lazy",
+    "body": [
+      "# EAGER (list/set/dict): consumed immediately, kept in memory",
+      "squares = [x * x for x in range(10)]",
+      "",
+      "# LAZY (generator): produced on demand, memory-light",
+      "squares_gen = (x * x for x in range(10))",
+      "",
+      "# Iterate many times -> list.",
+      "# Iterate once, large data -> generator."
+    ],
+    "description": "Eager vs lazy trade-offs"
+  },
+
+  "// ==================== COMMON PATTERNS ====================": {
+    "prefix": "py_section_comp_patterns",
+    "body": ["# ============ COMMON PATTERNS ============"],
+    "description": "Section marker"
+  },
+
+  "Pattern: word frequency via dict comp": {
+    "prefix": "py_comp_wordcount",
+    "body": [
+      "text = '${1:the quick brown fox jumps over the lazy dog}'",
+      "words = text.lower().split()",
+      "freq = {w: words.count(w) for w in set(words)}",
+      "",
+      "# For real work, use collections.Counter(words) instead."
+    ],
+    "description": "Word frequency table"
+  },
+  "Pattern: conditional matrix fill": {
+    "prefix": "py_comp_matrix",
+    "body": [
+      "# Build a 5x5 grid",
+      "grid = [[${1:i * 5 + j} for j in range(5)] for i in range(5)]",
+      "",
+      "# Identity matrix",
+      "identity = [[1 if i == j else 0 for j in range(4)] for i in range(4)]"
+    ],
+    "description": "Build matrices with nested comps"
+  },
+  "Pattern: pair adjacent items": {
+    "prefix": "py_comp_pairs",
+    "body": [
+      "# Consecutive pairs from a sequence",
+      "pairs = [(${1:items}[i], ${1:items}[i + 1]) for i in range(len(${1:items}) - 1)]"
+    ],
+    "description": "Build consecutive pairs"
+  },
+  "Pattern: batch into chunks": {
+    "prefix": "py_comp_chunks",
+    "body": [
+      "# Split a list into chunks of n (last chunk may be smaller)",
+      "n = ${1:3}",
+      "chunks = [${2:items}[i:i + n] for i in range(0, len(${2:items}), n)]"
+    ],
+    "description": "Split into fixed-size chunks"
+  },
+  "Pattern: transpose list of lists": {
+    "prefix": "py_comp_zip_transpose",
+    "body": [
+      "# Transpose with zip(*) -- cleaner than comprehension",
+      "transposed = [list(row) for row in zip(*${1:matrix})]",
+      "# Keep as tuples:",
+      "transposed = list(zip(*${1:matrix}))"
+    ],
+    "description": "Transpose using zip(*)"
+  },
+  "Pattern: CSV rows to dicts": {
+    "prefix": "py_comp_csv_dicts",
+    "body": [
+      "# rows is a list of tuples, header is a list of column names",
+      "records = [dict(zip(${1:header}, row)) for row in ${2:rows}]"
+    ],
+    "description": "Tabular rows to dicts"
+  },
+  "Pattern: dict of dicts by key": {
+    "prefix": "py_comp_indexby",
+    "body": [
+      "# Index records by a field, like a database primary key",
+      "by_id = {${1:r['id']}: ${1:r} for ${1:r} in ${2:records}}"
+    ],
+    "description": "Index records by ID"
+  },
+  "Pattern: filter dict of dicts": {
+    "prefix": "py_comp_filterdict",
+    "body": [
+      "# Keep records matching a predicate",
+      "[r for r in ${1:records} if ${2:r['age'] >= 18}]"
+    ],
+    "description": "Filter a list of dicts"
+  },
+  "Pattern: sort by computed key": {
+    "prefix": "py_comp_sortkey",
+    "body": [
+      "# Sort using a comprehension to compute keys",
+      "sorted(${1:items}, key=lambda x: ${2:(x[0], -x[1])})",
+      "",
+      "# Equivalent with a precomputed key list:",
+      "keys = [${2:(x[0], -x[1])} for x in ${1:items}]",
+      "ordered = [x for _, x in sorted(zip(keys, ${1:items}))]"
+    ],
+    "description": "Sort by computed key"
+  },
+  "Pattern: dictionary inversion with list values": {
+    "prefix": "py_comp_invert_lists",
+    "body": [
+      "# When values collide, collect them in a list",
+      "from collections import defaultdict",
+      "inv = defaultdict(list)",
+      "for k, v in ${1:d}.items():",
+      "    inv[v].append(k)",
+      "inv = dict(inv)   # plain dict if you prefer"
+    ],
+    "description": "Invert dict when values repeat"
+  },
+  "Pattern: pivot / spread": {
+    "prefix": "py_comp_pivot",
+    "body": [
+      "# rows: [(date, symbol, price), ...]",
+      "# Build {symbol: [prices in date order]}",
+      "pivot = {}",
+      "for date, symbol, price in sorted(${1:rows}):",
+      "    pivot.setdefault(symbol, []).append(price)"
+    ],
+    "description": "Pivot rows into a dict of lists"
+  },
+  "Pattern: flatten nested dicts": {
+    "prefix": "py_comp_flatten_dict",
+    "body": [
+      "# {'a': {'x': 1}, 'b': {'x': 2}}  ->  {'a.x': 1, 'b.x': 2}",
+      "{f'{k}.{ik}': iv for k, inner in ${1:d}.items() for ik, iv in inner.items()}"
+    ],
+    "description": "Flatten one level of nested dict"
+  },
+  "Pattern: parse key=value pairs": {
+    "prefix": "py_comp_kv",
+    "body": [
+      "# 'a=1 b=2 c=3' -> {'a': '1', 'b': '2', 'c': '3'}",
+      "{k: v for pair in ${1:text}.split() for k, v in [pair.split('=')]}"
+    ],
+    "description": "Parse key=value string"
+  },
+
+  "// ==================== PITFALLS ====================": {
+    "prefix": "py_section_comp_pitfalls",
+    "body": ["# ============ PITFALLS ============"],
+    "description": "Section marker"
+  },
+
+  "Pitfall: late binding in closures": {
+    "prefix": "py_comp_latebinding",
+    "body": [
+      "# BAD: all lambdas capture the SAME `x` (the last value)",
+      "funcs = [lambda: x for x in range(3)]",
+      "[f() for f in funcs]                 # [2, 2, 2]",
+      "",
+      "# GOOD: bind x as a default argument",
+      "funcs = [lambda x=x: x for x in range(3)]",
+      "[f() for f in funcs]                 # [0, 1, 2]"
+    ],
+    "description": "Late binding in comprehensions"
+  },
+  "Pitfall: variable leak (Python 2 only)": {
+    "prefix": "py_comp_noleak",
+    "body": [
+      "# In Python 3 the loop variable is scoped to the comprehension:",
+      "[x for x in range(3)]",
+      "print(x)   # NameError -- x does not leak",
+      "",
+      "# In Python 2 it leaked; this is no longer an issue."
+    ],
+    "description": "Comprehension variables don't leak (Py3)"
+  },
+  "Pitfall: too complex": {
+    "prefix": "py_comp_toocomplex",
+    "body": [
+      "# If a comprehension needs more than 2 lines to read,",
+      "# use a for loop instead. Readability > cleverness.",
+      "",
+      "# Hard to read:",
+      "# [f(x) for x in a if g(x) if h(x) if k(x)]",
+      "",
+      "# Prefer:",
+      "result = []",
+      "for x in ${1:a}:",
+      "    if ${2:g(x)} and ${3:h(x)}:",
+      "        result.append(${4:f(x)})"
+    ],
+    "description": "When a comprehension is too complex"
+  },
+  "Pitfall: side effects": {
+    "prefix": "py_comp_pitfall_sideeffect",
+    "body": [
+      "# Comprehensions are for BUILDING values, not running side effects.",
+      "# Avoid:",
+      "#   [print(x) for x in items]",
+      "#   [db.save(x) for x in items]",
+      "",
+      "# Use a for loop when you need side effects."
+    ],
+    "description": "Comprehensions should not produce side effects"
+  },
+  "Pitfall: mutating while iterating": {
+    "prefix": "py_comp_pitfall_mutate",
+    "body": [
+      "# BAD: mutating the source while iterating",
+      "# [items.pop() for _ in items]   -- skips items, hard to reason about",
+      "",
+      "# GOOD: build a new collection",
+      "remaining = [x for x in ${1:items} if ${2:keep(x)}]"
+    ],
+    "description": "Don't mutate the source"
+  },
+  "Pitfall: enormous memory use": {
+    "prefix": "py_comp_pitfall_memory",
+    "body": [
+      "# A list comprehension materializes everything at once:",
+      "total = sum([x * x for x in range(10_000_000)])   # big list first",
+      "",
+      "# Use a generator expression instead -- same result, tiny memory:",
+      "total = sum(x * x for x in range(10_000_000))"
+    ],
+    "description": "Prefer generators for large reductions"
+  },
+
+  "// ==================== SPEED & IDIOMS ====================": {
+    "prefix": "py_section_comp_speed",
+    "body": ["# ============ SPEED & IDIOMS ============"],
+    "description": "Section marker"
+  },
+
+  "Speed: comprehension vs loop": {
+    "prefix": "py_comp_speed_loop",
+    "body": [
+      "# Comprehensions run in C and are usually faster than a loop + append:",
+      "",
+      "# Slower",
+      "out = []",
+      "for x in ${1:range(1000)}:",
+      "    out.append(x * 2)",
+      "",
+      "# Faster (same result)",
+      "out = [x * 2 for x in ${1:range(1000)}]"
+    ],
+    "description": "Comprehension vs explicit loop"
+  },
+  "Speed: avoid repeated attribute lookup": {
+    "prefix": "py_comp_speed_lookup",
+    "body": [
+      "# BAD: attribute lookup inside the loop body",
+      "[obj.${1:method}(x) for x in ${2:items}]",
+      "",
+      "# GOOD: hoist the bound method out",
+      "m = obj.${1:method}",
+      "[m(x) for x in ${2:items}]"
+    ],
+    "description": "Hoist method lookups"
+  },
+  "Speed: precompute set for membership": {
+    "prefix": "py_comp_speed_set",
+    "body": [
+      "# BAD: `in list` inside the filter is O(n) per item",
+      "[x for x in ${1:items} if x in ${2:allowed_list}]",
+      "",
+      "# GOOD: convert the target to a set once",
+      "allowed = set(${2:allowed_list})",
+      "[x for x in ${1:items} if x in allowed]"
+    ],
+    "description": "Use a set for membership tests"
+  },
+  "Idiom: any / all short-circuits": {
+    "prefix": "py_comp_any_all",
+    "body": [
+      "# any() stops at the first truthy value",
+      "has_negative = any(x < 0 for x in ${1:nums})",
+      "",
+      "# all() stops at the first falsy value",
+      "all_positive = all(x > 0 for x in ${1:nums})"
+    ],
+    "description": "Short-circuit aggregations"
+  },
+  "Idiom: min / max with key": {
+    "prefix": "py_comp_minmax_key",
+    "body": [
+      "min(${1:records}, key=lambda r: r['${2:score}'])",
+      "max(${1:records}, key=lambda r: r['${2:score}'])",
+      "# or with a generator:",
+      "max(${1:x['${2:score}']} for x in ${1:records})"
+    ],
+    "description": "min/max with a key function"
+  },
+  "Idiom: dict from keys with default": {
+    "prefix": "py_comp_fromkeys",
+    "body": [
+      "dict.fromkeys(${1:keys}, ${2:0})",
+      "# Values must be immutable if shared: 0, '', None, () -- not [] or {}"
+    ],
+    "description": "Build a dict with a constant value"
+  }
+}

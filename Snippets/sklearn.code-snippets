@@ -1,0 +1,1386 @@
+{
+  "// ==================== 1. IMPORT & SETUP ====================": {
+    "prefix": "sk_section_setup",
+    "body": ["# ============ IMPORT & SETUP ============"],
+    "description": "Section marker"
+  },
+
+  "Import sklearn (common)": {
+    "prefix": "sk_import",
+    "body": [
+      "import numpy as np",
+      "import pandas as pd",
+      "import sklearn",
+      "print(sklearn.__version__)",
+      "",
+      "# Common imports:",
+      "from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV",
+      "from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder, LabelEncoder",
+      "from sklearn.pipeline import Pipeline, make_pipeline",
+      "from sklearn.compose import ColumnTransformer",
+      "from sklearn.impute import SimpleImputer",
+      "from sklearn.metrics import accuracy_score, classification_report, confusion_matrix"
+    ],
+    "description": "Common sklearn imports"
+  },
+  "Reproducibility": {
+    "prefix": "sk_seed",
+    "body": [
+      "# ---- Fix random_state EVERYWHERE for reproducibility ----",
+      "# sklearn estimators accept random_state=; pass a constant for experiments.",
+      "SEED = ${1:42}",
+      "np.random.seed(SEED)"
+    ],
+    "description": "Fix random_state"
+  },
+  "Global config": {
+    "prefix": "sk_config",
+    "body": [
+      "# ---- Global config (3.0+) ----",
+      "from sklearn import set_config",
+      "set_config(display='${1:diagram}', transform_output='${2:default}')",
+      "# display: 'text' or 'diagram' (Jupyter)",
+      "# transform_output: 'default' or 'pandas' (keep column names)"
+    ],
+    "description": "sklearn global config"
+  },
+
+  "// ==================== 2. DATASETS ====================": {
+    "prefix": "sk_section_datasets",
+    "body": ["# ============ DATASETS ============"],
+    "description": "Section marker"
+  },
+  "Toy dataset": {
+    "prefix": "sk_dataset_toy",
+    "body": [
+      "from sklearn.datasets import load_iris, load_diabetes, load_digits, load_wine",
+      "",
+      "data = load_${1:iris}()",
+      "X, y = data.data, data.target",
+      "print(data.DESCR[:500])"
+    ],
+    "description": "Load a built-in toy dataset"
+  },
+  "Make synthetic data": {
+    "prefix": "sk_dataset_make",
+    "body": [
+      "from sklearn.datasets import make_classification, make_regression, make_blobs, make_moons",
+      "",
+      "# ---- Classification ----",
+      "X, y = make_classification(n_samples=${1:1000}, n_features=${2:20}, n_informative=${3:10}, random_state=42)",
+      "",
+      "# ---- Regression ----",
+      "X, y = make_regression(n_samples=1000, n_features=20, noise=0.1, random_state=42)",
+      "",
+      "# ---- Clustering ----",
+      "X, y = make_blobs(n_samples=500, centers=${4:3}, random_state=42)",
+      "",
+      "# ---- Non-linear (moons) ----",
+      "X, y = make_moons(n_samples=500, noise=0.1, random_state=42)"
+    ],
+    "description": "Synthetic datasets for experiments"
+  },
+
+  "// ==================== 3. TRAIN/TEST SPLIT ====================": {
+    "prefix": "sk_section_split",
+    "body": ["# ============ TRAIN/TEST SPLIT ============"],
+    "description": "Section marker"
+  },
+  "Basic train/test split": {
+    "prefix": "sk_split",
+    "body": [
+      "# ---- Train/test split ----",
+      "X_train, X_test, y_train, y_test = train_test_split(",
+      "    X, y,",
+      "    test_size=${1:0.2},",
+      "    random_state=${2:42},",
+      "    stratify=${3:y},   # keep class proportions (classification)",
+      ")"
+    ],
+    "description": "Split into train/test"
+  },
+  "Train/val/test split": {
+    "prefix": "sk_split_three",
+    "body": [
+      "# ---- Train / validation / test ----",
+      "# First split off test",
+      "X_temp, X_test, y_temp, y_test = train_test_split(",
+      "    X, y, test_size=${1:0.2}, random_state=42, stratify=y,",
+      ")",
+      "# Then split the rest into train/val",
+      "X_train, X_val, y_train, y_val = train_test_split(",
+      "    X_temp, y_temp, test_size=${2:0.25}, random_state=42, stratify=y_temp,",
+      ")",
+      "# => train 60%, val 20%, test 20%"
+    ],
+    "description": "Train/val/test split"
+  },
+  "Time-series split": {
+    "prefix": "sk_split_time",
+    "body": [
+      "# ---- Time-series split (NO shuffling!) ----",
+      "from sklearn.model_selection import TimeSeriesSplit",
+      "",
+      "tscv = TimeSeriesSplit(n_splits=${1:5})",
+      "for train_idx, test_idx in tscv.split(X):",
+      "    X_train, X_test = X[train_idx], X[test_idx]",
+      "    y_train, y_test = y[train_idx], y[test_idx]"
+    ],
+    "description": "Time-series-aware split"
+  },
+  "Group-aware split": {
+    "prefix": "sk_split_group",
+    "body": [
+      "# ---- Keep groups together (no leakage across train/test) ----",
+      "from sklearn.model_selection import GroupShuffleSplit, GroupKFold",
+      "",
+      "gss = GroupShuffleSplit(n_splits=1, test_size=${1:0.2}, random_state=42)",
+      "for train_idx, test_idx in gss.split(X, y, groups=groups):",
+      "    X_train, X_test = X[train_idx], X[test_idx]"
+    ],
+    "description": "Group-aware split"
+  },
+  "K-fold cross-validation": {
+    "prefix": "sk_kfold",
+    "body": [
+      "from sklearn.model_selection import KFold, StratifiedKFold",
+      "",
+      "# ---- Classification: StratifiedKFold keeps class proportions ----",
+      "cv = StratifiedKFold(n_splits=${1:5}, shuffle=True, random_state=42)",
+      "",
+      "# ---- Regression: plain KFold ----",
+      "cv = KFold(n_splits=5, shuffle=True, random_state=42)"
+    ],
+    "description": "K-fold cross-validation"
+  },
+
+  "// ==================== 4. PREPROCESSING ====================": {
+    "prefix": "sk_section_preproc",
+    "body": ["# ============ PREPROCESSING ============"],
+    "description": "Section marker"
+  },
+  "StandardScaler": {
+    "prefix": "sk_scaler_standard",
+    "body": [
+      "# ---- StandardScaler: mean 0, std 1 ----",
+      "# Best when features are roughly Gaussian and on different scales.",
+      "# IMPORTANT: fit on train only!",
+      "from sklearn.preprocessing import StandardScaler",
+      "",
+      "scaler = StandardScaler()",
+      "X_train_scaled = scaler.fit_transform(X_train)",
+      "X_test_scaled  = scaler.transform(X_test)"
+    ],
+    "description": "Standardize features"
+  },
+  "MinMaxScaler": {
+    "prefix": "sk_scaler_minmax",
+    "body": [
+      "# ---- MinMaxScaler: scale to [0, 1] ----",
+      "# Use when you need bounded values (some neural nets, image data).",
+      "from sklearn.preprocessing import MinMaxScaler",
+      "",
+      "scaler = MinMaxScaler(feature_range=(${1:0}, ${2:1}))",
+      "X_train_s = scaler.fit_transform(X_train)",
+      "X_test_s  = scaler.transform(X_test)"
+    ],
+    "description": "Min-max scaling"
+  },
+  "RobustScaler": {
+    "prefix": "sk_scaler_robust",
+    "body": [
+      "# ---- RobustScaler: uses median + IQR (robust to outliers) ----",
+      "from sklearn.preprocessing import RobustScaler",
+      "",
+      "scaler = RobustScaler()",
+      "X_train_s = scaler.fit_transform(X_train)",
+      "X_test_s  = scaler.transform(X_test)"
+    ],
+    "description": "Robust scaling"
+  },
+  "PowerTransformer": {
+    "prefix": "sk_scaler_power",
+    "body": [
+      "# ---- PowerTransformer: make data more Gaussian ----",
+      "from sklearn.preprocessing import PowerTransformer",
+      "",
+      "pt = PowerTransformer(method='${1:yeo-johnson}')   # 'yeo-johnson' or 'box-cox'",
+      "X_train_t = pt.fit_transform(X_train)",
+      "X_test_t  = pt.transform(X_test)"
+    ],
+    "description": "Power transform"
+  },
+  "Label encoding": {
+    "prefix": "sk_encoder_label",
+    "body": [
+      "# ---- LabelEncoder: category -> integer ----",
+      "# Use for TARGET variables, not features.",
+      "from sklearn.preprocessing import LabelEncoder",
+      "",
+      "le = LabelEncoder()",
+      "y_encoded = le.fit_transform(y)",
+      "y_original = le.inverse_transform(y_encoded)"
+    ],
+    "description": "Label encoding"
+  },
+  "Ordinal encoding": {
+    "prefix": "sk_encoder_ordinal",
+    "body": [
+      "# ---- OrdinalEncoder: ordered categories -> integers ----",
+      "# Use when categories have a natural order (low < med < high).",
+      "from sklearn.preprocessing import OrdinalEncoder",
+      "",
+      "oe = OrdinalEncoder(categories=[[${1:'low', 'med', 'high'}]])",
+      "X_encoded = oe.fit_transform(X[[${2:'size'}]])"
+    ],
+    "description": "Ordinal encoding"
+  },
+  "One-hot encoding": {
+    "prefix": "sk_encoder_onehot",
+    "body": [
+      "# ---- OneHotEncoder: each category -> its own 0/1 column ----",
+      "from sklearn.preprocessing import OneHotEncoder",
+      "",
+      "ohe = OneHotEncoder(",
+      "    handle_unknown='${1:ignore}',",
+      "    drop='${2:first}',       # drop first column to avoid collinearity",
+      "    sparse_output=False,    # dense output for small data",
+      ")",
+      "X_train_enc = ohe.fit_transform(X_train[[${3:'cat_col'}]]])",
+      "X_test_enc  = ohe.transform(X_test[[${3:'cat_col'}]]])",
+      "",
+      "# Get column names:",
+      "ohe.get_feature_names_out()"
+    ],
+    "description": "One-hot encoding"
+  },
+  "Binary encoding": {
+    "prefix": "sk_encoder_binary",
+    "body": [
+      "# ---- BinaryEncoder (via category_encoders): compact high-cardinality ----",
+      "# pip install category_encoders",
+      "from category_encoders import BinaryEncoder, TargetEncoder",
+      "",
+      "be = BinaryEncoder(cols=[${1:'cat_col'}])",
+      "X_enc = be.fit_transform(X)"
+    ],
+    "description": "Binary / target encoding"
+  },
+  "KBinsDiscretizer": {
+    "prefix": "sk_discretize",
+    "body": [
+      "# ---- Bin a continuous feature into discrete buckets ----",
+      "from sklearn.preprocessing import KBinsDiscretizer",
+      "",
+      "kb = KBinsDiscretizer(n_bins=${1:5}, encode='${2:ordinal}', strategy='${3:quantile}')",
+      "X_binned = kb.fit_transform(X[[${4:'value'}]])"
+    ],
+    "description": "Discretization / binning"
+  },
+  "Polynomial features": {
+    "prefix": "sk_poly",
+    "body": [
+      "# ---- PolynomialFeatures: add x^2, x^3, and interactions ----",
+      "from sklearn.preprocessing import PolynomialFeatures",
+      "",
+      "poly = PolynomialFeatures(degree=${1:2}, include_bias=False, interaction_only=False)",
+      "X_poly = poly.fit_transform(X)"
+    ],
+    "description": "Polynomial and interaction features"
+  },
+
+  "// ==================== 5. MISSING DATA ====================": {
+    "prefix": "sk_section_impute",
+    "body": ["# ============ MISSING DATA ============"],
+    "description": "Section marker"
+  },
+  "SimpleImputer": {
+    "prefix": "sk_imputer_simple",
+    "body": [
+      "# ---- SimpleImputer: replace NaN with a summary statistic ----",
+      "from sklearn.impute import SimpleImputer",
+      "",
+      "imp = SimpleImputer(strategy='${1:mean}')   # mean, median, most_frequent, constant",
+      "X_train_imp = imp.fit_transform(X_train)",
+      "X_test_imp  = imp.transform(X_test)",
+      "",
+      "# Per-column strategy:",
+      "# imp = SimpleImputer(strategy='constant', fill_value=0)"
+    ],
+    "description": "Simple imputation"
+  },
+  "IterativeImputer": {
+    "prefix": "sk_imputer_iterative",
+    "body": [
+      "# ---- IterativeImputer: model each feature from the others ----",
+      "from sklearn.experimental import enable_iterative_imputer  # noqa",
+      "from sklearn.impute import IterativeImputer",
+      "",
+      "imp = IterativeImputer(max_iter=${1:10}, random_state=42)",
+      "X_imp = imp.fit_transform(X)"
+    ],
+    "description": "Iterative (multivariate) imputation"
+  },
+  "KNNImputer": {
+    "prefix": "sk_imputer_knn",
+    "body": [
+      "# ---- KNNImputer: average of k nearest neighbors ----",
+      "from sklearn.impute import KNNImputer",
+      "",
+      "imp = KNNImputer(n_neighbors=${1:5})",
+      "X_imp = imp.fit_transform(X)"
+    ],
+    "description": "KNN imputation"
+  },
+
+  "// ==================== 6. PIPELINES & COLUMN TRANSFORMER ====================": {
+    "prefix": "sk_section_pipeline",
+    "body": ["# ============ PIPELINES & COLUMN TRANSFORMER ============"],
+    "description": "Section marker"
+  },
+  "Pipeline (simple)": {
+    "prefix": "sk_pipeline",
+    "body": [
+      "# ---- Pipeline: chain preprocessing + model into one object ----",
+      "# Prevents data leakage (fit only on train), simplifies CV,",
+      "# and lets you grid-search over the whole workflow.",
+      "from sklearn.pipeline import Pipeline",
+      "from sklearn.preprocessing import StandardScaler",
+      "from sklearn.linear_model import LogisticRegression",
+      "",
+      "pipe = Pipeline([",
+      "    ('scaler', StandardScaler()),",
+      "    ('clf', LogisticRegression(random_state=42)),",
+      "])",
+      "",
+      "pipe.fit(X_train, y_train)",
+      "y_pred = pipe.predict(X_test)"
+    ],
+    "description": "Simple pipeline"
+  },
+  "make_pipeline": {
+    "prefix": "sk_make_pipeline",
+    "body": [
+      "# ---- make_pipeline: no names needed ----",
+      "from sklearn.pipeline import make_pipeline",
+      "",
+      "pipe = make_pipeline(",
+      "    StandardScaler(),",
+      "    ${1:LogisticRegression(random_state=42)},",
+      ")"
+    ],
+    "description": "make_pipeline shortcut"
+  },
+  "ColumnTransformer (mixed types)": {
+    "prefix": "sk_column_transformer",
+    "body": [
+      "# ---- ColumnTransformer: different preprocessing per column group ----",
+      "from sklearn.compose import ColumnTransformer",
+      "from sklearn.preprocessing import StandardScaler, OneHotEncoder",
+      "from sklearn.impute import SimpleImputer",
+      "",
+      "numeric_cols = [${1:'age', 'income'}]",
+      "categorical_cols = [${2:'city', 'gender'}]",
+      "",
+      "preprocessor = ColumnTransformer([",
+      "    ('num', Pipeline([",
+      "        ('imputer', SimpleImputer(strategy='median')),",
+      "        ('scaler',  StandardScaler()),",
+      "    ]), numeric_cols),",
+      "    ('cat', Pipeline([",
+      "        ('imputer', SimpleImputer(strategy='most_frequent')),",
+      "        ('ohe',     OneHotEncoder(handle_unknown='ignore')),",
+      "    ]), categorical_cols),",
+      "])"
+    ],
+    "description": "ColumnTransformer for mixed types"
+  },
+  "Full pipeline (mixed types + model)": {
+    "prefix": "sk_pipeline_full",
+    "body": [
+      "# ---- End-to-end pipeline: preprocessing + model ----",
+      "from sklearn.pipeline import Pipeline",
+      "from sklearn.compose import ColumnTransformer",
+      "from sklearn.preprocessing import StandardScaler, OneHotEncoder",
+      "from sklearn.impute import SimpleImputer",
+      "",
+      "numeric_pipe = Pipeline([",
+      "    ('imputer', SimpleImputer(strategy='median')),",
+      "    ('scaler',  StandardScaler()),",
+      "])",
+      "categorical_pipe = Pipeline([",
+      "    ('imputer', SimpleImputer(strategy='most_frequent')),",
+      "    ('ohe',     OneHotEncoder(handle_unknown='ignore')),",
+      "])",
+      "preprocessor = ColumnTransformer([",
+      "    ('num', numeric_pipe, ${1:numeric_cols}),",
+      "    ('cat', categorical_pipe, ${2:categorical_cols}),",
+      "])",
+      "",
+      "full_pipe = Pipeline([",
+      "    ('prep', preprocessor),",
+      "    ('clf',  ${3:LogisticRegression(random_state=42)}),",
+      "])",
+      "",
+      "full_pipe.fit(X_train, y_train)",
+      "y_pred = full_pipe.predict(X_test)"
+    ],
+    "description": "Full pipeline with preprocessing + model"
+  },
+  "Select model step": {
+    "prefix": "sk_pipeline_get",
+    "body": [
+      "# ---- Access pipeline steps ----",
+      "pipe.named_steps['${1:clf}']",
+      "pipe[:-1]                     # all but last step",
+      "",
+      "# Get feature names after ColumnTransformer:",
+      "pipe.named_steps['prep'].get_feature_names_out()"
+    ],
+    "description": "Access pipeline internals"
+  },
+
+  "// ==================== 7. FEATURE SELECTION ====================": {
+    "prefix": "sk_section_fs",
+    "body": ["# ============ FEATURE SELECTION ============"],
+    "description": "Section marker"
+  },
+  "Variance threshold": {
+    "prefix": "sk_fs_variance",
+    "body": [
+      "# ---- Drop near-constant features ----",
+      "from sklearn.feature_selection import VarianceThreshold",
+      "",
+      "vt = VarianceThreshold(threshold=${1:0.0})",
+      "X_sel = vt.fit_transform(X)"
+    ],
+    "description": "Remove low-variance features"
+  },
+  "Univariate selection (f_classif / f_regression)": {
+    "prefix": "sk_fs_univariate",
+    "body": [
+      "# ---- SelectKBest: keep top k features by univariate score ----",
+      "from sklearn.feature_selection import SelectKBest, f_classif, f_regression, chi2, mutual_info_classif",
+      "",
+      "selector = SelectKBest(score_func=${1:f_classif}, k=${2:10})",
+      "X_sel = selector.fit_transform(X, y)",
+      "",
+      "# Get scores and selected columns:",
+      "scores = selector.scores_",
+      "cols = selector.get_support(indices=True)"
+    ],
+    "description": "Univariate feature selection"
+  },
+  "Model-based selection (L1 / trees)": {
+    "prefix": "sk_fs_model",
+    "body": [
+      "# ---- SelectFromModel: use a fitted model's importances ----",
+      "from sklearn.feature_selection import SelectFromModel",
+      "from sklearn.linear_model import LassoCV",
+      "from sklearn.ensemble import RandomForestClassifier",
+      "",
+      "model = ${1:LassoCV(cv=5)}",
+      "selector = SelectFromModel(model, threshold='${2:median}')   # or numeric",
+      "X_sel = selector.fit_transform(X, y)"
+    ],
+    "description": "Model-based feature selection"
+  },
+  "RFE (Recursive Feature Elimination)": {
+    "prefix": "sk_fs_rfe",
+    "body": [
+      "# ---- RFE: iteratively remove weakest features ----",
+      "from sklearn.feature_selection import RFE, RFECV",
+      "from sklearn.linear_model import LogisticRegression",
+      "",
+      "rfe = RFE(LogisticRegression(max_iter=1000), n_features_to_select=${1:10})",
+      "rfe.fit(X, y)",
+      "",
+      "# Or cross-validated number of features:",
+      "rfecv = RFECV(LogisticRegression(max_iter=1000), cv=5, scoring='accuracy')",
+      "rfecv.fit(X, y)"
+    ],
+    "description": "Recursive feature elimination"
+  },
+  "Sequential feature selection": {
+    "prefix": "sk_fs_sfs",
+    "body": [
+      "# ---- SFS: forward or backward stepwise selection ----",
+      "from sklearn.feature_selection import SequentialFeatureSelector",
+      "from sklearn.linear_model import LogisticRegression",
+      "",
+      "sfs = SequentialFeatureSelector(",
+      "    LogisticRegression(max_iter=1000),",
+      "    n_features_to_select=${1:10},",
+      "    direction='${2:forward}',   # 'forward' or 'backward'",
+      "    cv=5,",
+      ")",
+      "sfs.fit(X, y)"
+    ],
+    "description": "Sequential feature selection"
+  },
+  "Permutation importance": {
+    "prefix": "sk_perm_importance",
+    "body": [
+      "# ---- Model-agnostic feature importance ----",
+      "from sklearn.inspection import permutation_importance",
+      "",
+      "result = permutation_importance(",
+      "    ${1:model}, X_test, y_test,",
+      "    n_repeats=${2:10}, random_state=42, scoring='${3:accuracy}',",
+      ")",
+      "importances = pd.Series(result.importances_mean, index=feature_names)",
+      "print(importances.sort_values(ascending=False).head(10))"
+    ],
+    "description": "Permutation importance"
+  },
+
+  "// ==================== 8. LINEAR MODELS ====================": {
+    "prefix": "sk_section_linear",
+    "body": ["# ============ LINEAR MODELS ============"],
+    "description": "Section marker"
+  },
+  "Linear regression": {
+    "prefix": "sk_linear_reg",
+    "body": [
+      "from sklearn.linear_model import LinearRegression",
+      "",
+      "model = LinearRegression(fit_intercept=True)",
+      "model.fit(X_train, y_train)",
+      "",
+      "y_pred = model.predict(X_test)",
+      "print('coefs:', model.coef_)",
+      "print('intercept:', model.intercept_)"
+    ],
+    "description": "Ordinary Least Squares"
+  },
+  "Ridge / Lasso / ElasticNet": {
+    "prefix": "sk_linear_reg_reg",
+    "body": [
+      "from sklearn.linear_model import Ridge, Lasso, ElasticNet",
+      "",
+      "# L2 regularization (Ridge) -- shrinks coefficients, handles collinearity",
+      "Ridge(alpha=${1:1.0})",
+      "",
+      "# L1 regularization (Lasso) -- sparse coefficients (feature selection)",
+      "Lasso(alpha=${2:0.01})",
+      "",
+      "# ElasticNet -- mix of L1 and L2",
+      "ElasticNet(alpha=${3:0.01}, l1_ratio=${4:0.5})"
+    ],
+    "description": "Regularized linear models"
+  },
+  "Linear regression with CV": {
+    "prefix": "sk_linear_reg_cv",
+    "body": [
+      "from sklearn.linear_model import RidgeCV, LassoCV",
+      "",
+      "model = RidgeCV(alphas=${1:np.logspace(-3, 3, 20)}, cv=5)",
+      "model.fit(X_train, y_train)",
+      "print('best alpha:', model.alpha_)"
+    ],
+    "description": "Cross-validated regularization"
+  },
+  "Logistic regression": {
+    "prefix": "sk_logistic",
+    "body": [
+      "# ---- Logistic regression for binary or multiclass ----",
+      "from sklearn.linear_model import LogisticRegression",
+      "",
+      "model = LogisticRegression(",
+      "    C=${1:1.0},                  # inverse regularization (small = strong)",
+      "    penalty='${2:l2}',           # l1, l2, elasticnet, none",
+      "    solver='${3:lbfgs}',          # lbfgs, saga (for l1)",
+      "    max_iter=${4:1000},",
+      "    class_weight='${5:balanced}', # handle imbalance",
+      "    random_state=42,",
+      ")",
+      "model.fit(X_train, y_train)",
+      "",
+      "# Probabilities:",
+      "probs = model.predict_proba(X_test)"
+    ],
+    "description": "Logistic regression"
+  },
+
+  "// ==================== 9. TREE MODELS ====================": {
+    "prefix": "sk_section_trees",
+    "body": ["# ============ TREE MODELS ============"],
+    "description": "Section marker"
+  },
+  "Decision Tree": {
+    "prefix": "sk_tree",
+    "body": [
+      "from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor",
+      "",
+      "model = DecisionTreeClassifier(",
+      "    max_depth=${1:5},",
+      "    min_samples_leaf=${2:5},",
+      "    random_state=42,",
+      ")",
+      "model.fit(X_train, y_train)",
+      "",
+      "# ---- Visualize ----",
+      "from sklearn.tree import plot_tree",
+      "# plot_tree(model, feature_names=feature_names, filled=True)",
+      "",
+      "# ---- Feature importance ----",
+      "importances = pd.Series(model.feature_importances_, index=feature_names)"
+    ],
+    "description": "Decision tree"
+  },
+  "Random Forest": {
+    "prefix": "sk_random_forest",
+    "body": [
+      "# ---- Random Forest: bag of decision trees ----",
+      "from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor",
+      "",
+      "model = RandomForestClassifier(",
+      "    n_estimators=${1:200},",
+      "    max_depth=${2:None},",
+      "    min_samples_leaf=${3:1},",
+      "    max_features='${4:sqrt}',    # 'sqrt' (clf), 'log2', None, float",
+      "    class_weight='${5:balanced}',",
+      "    n_jobs=-1,",
+      "    random_state=42,",
+      ")",
+      "model.fit(X_train, y_train)",
+      "",
+      "# ---- Feature importances ----",
+      "pd.Series(model.feature_importances_, index=feature_names).sort_values(ascending=False)"
+    ],
+    "description": "Random Forest"
+  },
+  "Extra Trees": {
+    "prefix": "sk_extra_trees",
+    "body": [
+      "# ---- ExtraTrees: more randomness, faster, sometimes better ----",
+      "from sklearn.ensemble import ExtraTreesClassifier, ExtraTreesRegressor",
+      "",
+      "model = ExtraTreesClassifier(n_estimators=${1:200}, n_jobs=-1, random_state=42)",
+      "model.fit(X_train, y_train)"
+    ],
+    "description": "Extremely Randomized Trees"
+  },
+
+  "// ==================== 10. GRADIENT BOOSTING ====================": {
+    "prefix": "sk_section_boosting",
+    "body": ["# ============ GRADIENT BOOSTING ============"],
+    "description": "Section marker"
+  },
+  "GradientBoosting": {
+    "prefix": "sk_gbm",
+    "body": [
+      "# ---- Classic Gradient Boosting (sequential trees) ----",
+      "from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor",
+      "",
+      "model = GradientBoostingClassifier(",
+      "    n_estimators=${1:200},",
+      "    learning_rate=${2:0.05},",
+      "    max_depth=${3:3},",
+      "    subsample=${4:0.8},",
+      "    random_state=42,",
+      ")",
+      "model.fit(X_train, y_train)"
+    ],
+    "description": "Gradient boosting"
+  },
+  "HistGradientBoosting": {
+    "prefix": "sk_hgb",
+    "body": [
+      "# ---- HistGradientBoosting: fast, handles missing values natively ----",
+      "from sklearn.ensemble import HistGradientBoostingClassifier, HistGradientBoostingRegressor",
+      "",
+      "model = HistGradientBoostingClassifier(",
+      "    max_iter=${1:500},",
+      "    learning_rate=${2:0.05},",
+      "    max_leaf_nodes=${3:31},",
+      "    early_stopping=True,",
+      "    validation_fraction=0.1,",
+      "    random_state=42,",
+      ")",
+      "model.fit(X_train, y_train)"
+    ],
+    "description": "Histogram-based gradient boosting"
+  },
+  "AdaBoost": {
+    "prefix": "sk_adaboost",
+    "body": [
+      "from sklearn.ensemble import AdaBoostClassifier",
+      "",
+      "model = AdaBoostClassifier(n_estimators=${1:100}, learning_rate=${2:1.0}, random_state=42)",
+      "model.fit(X_train, y_train)"
+    ],
+    "description": "AdaBoost"
+  },
+
+  "// ==================== 11. SVM & KNN ====================": {
+    "prefix": "sk_section_svm_knn",
+    "body": ["# ============ SVM & KNN ============"],
+    "description": "Section marker"
+  },
+  "SVC (Support Vector Classifier)": {
+    "prefix": "sk_svm",
+    "body": [
+      "# ---- SVM: effective on medium-sized data, high-dimensional ----",
+      "# Requires scaling!",
+      "from sklearn.svm import SVC, SVR, LinearSVC",
+      "",
+      "model = SVC(",
+      "    C=${1:1.0},",
+      "    kernel='${2:rbf}',   # linear, poly, rbf, sigmoid",
+      "    gamma='${3:scale}',",
+      "    probability=True,    # needed for predict_proba (slow)",
+      "    random_state=42,",
+      ")",
+      "model.fit(X_train_scaled, y_train)"
+    ],
+    "description": "Support Vector Classifier"
+  },
+  "K-Nearest Neighbors": {
+    "prefix": "sk_knn",
+    "body": [
+      "# ---- k-NN: simple, no training, but slow at predict time ----",
+      "# Requires scaling!",
+      "from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor",
+      "",
+      "model = KNeighborsClassifier(",
+      "    n_neighbors=${1:5},",
+      "    weights='${2:distance}',   # 'uniform' or 'distance'",
+      "    metric='${3:minkowski}',",
+      "    n_jobs=-1,",
+      ")",
+      "model.fit(X_train_scaled, y_train)"
+    ],
+    "description": "K-Nearest Neighbors"
+  },
+  "Naive Bayes": {
+    "prefix": "sk_naive_bayes",
+    "body": [
+      "from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB",
+      "",
+      "# Continuous features:",
+      "GaussianNB()",
+      "",
+      "# Count features (e.g., text bag-of-words):",
+      "MultinomialNB(alpha=${1:1.0})",
+      "",
+      "# Binary features:",
+      "BernoulliNB(alpha=1.0)"
+    ],
+    "description": "Naive Bayes variants"
+  },
+
+  "// ==================== 12. CLUSTERING ====================": {
+    "prefix": "sk_section_clustering",
+    "body": ["# ============ CLUSTERING ============"],
+    "description": "Section marker"
+  },
+  "KMeans": {
+    "prefix": "sk_kmeans",
+    "body": [
+      "# ---- KMeans: centroid-based, requires k upfront ----",
+      "from sklearn.cluster import KMeans",
+      "",
+      "km = KMeans(",
+      "    n_clusters=${1:3},",
+      "    init='${2:k-means++}',",
+      "    n_init=${3:10},",
+      "    max_iter=${4:300},",
+      "    random_state=42,",
+      ")",
+      "labels = km.fit_predict(X_scaled)",
+      "inertia = km.inertia_",
+      "",
+      "# Elbow method to pick k:",
+      "# inertias = [KMeans(k).fit(X).inertia_ for k in range(1, 11)]"
+    ],
+    "description": "K-Means clustering"
+  },
+  "DBSCAN": {
+    "prefix": "sk_dbscan",
+    "body": [
+      "# ---- DBSCAN: density-based, finds arbitrary shapes, detects outliers ----",
+      "from sklearn.cluster import DBSCAN",
+      "",
+      "db = DBSCAN(eps=${1:0.5}, min_samples=${2:5})",
+      "labels = db.fit_predict(X_scaled)",
+      "# Label -1 = outlier"
+    ],
+    "description": "DBSCAN"
+  },
+  "Agglomerative": {
+    "prefix": "sk_agglomerative",
+    "body": [
+      "# ---- Agglomerative (hierarchical) clustering ----",
+      "from sklearn.cluster import AgglomerativeClustering",
+      "",
+      "model = AgglomerativeClustering(",
+      "    n_clusters=${1:3},",
+      "    linkage='${2:ward}',   # ward, complete, average, single",
+      "    metric='${3:euclidean}',",
+      ")",
+      "labels = model.fit_predict(X_scaled)"
+    ],
+    "description": "Agglomerative clustering"
+  },
+  "Gaussian Mixture Model": {
+    "prefix": "sk_gmm",
+    "body": [
+      "# ---- GMM: soft clustering with probabilities ----",
+      "from sklearn.mixture import GaussianMixture",
+      "",
+      "gmm = GaussianMixture(",
+      "    n_components=${1:3},",
+      "    covariance_type='${2:full}',   # full, tied, diag, spherical",
+      "    random_state=42,",
+      ")",
+      "gmm.fit(X_scaled)",
+      "",
+      "labels = gmm.predict(X_scaled)",
+      "probs  = gmm.predict_proba(X_scaled)",
+      "",
+      "# Model selection:",
+      "# bic = gmm.bic(X_scaled)"
+    ],
+    "description": "Gaussian Mixture Model"
+  },
+  "Clustering metrics": {
+    "prefix": "sk_cluster_metrics",
+    "body": [
+      "from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score",
+      "",
+      "silhouette_score(X, labels)      # higher is better (-1 to 1)",
+      "davies_bouldin_score(X, labels)  # lower is better",
+      "calinski_harabasz_score(X, labels)  # higher is better"
+    ],
+    "description": "Clustering quality metrics"
+  },
+
+  "// ==================== 13. DIMENSIONALITY REDUCTION ====================": {
+    "prefix": "sk_section_dr",
+    "body": ["# ============ DIMENSIONALITY REDUCTION ============"],
+    "description": "Section marker"
+  },
+  "PCA": {
+    "prefix": "sk_pca",
+    "body": [
+      "# ---- PCA: linear, unsupervised dimensionality reduction ----",
+      "from sklearn.decomposition import PCA",
+      "",
+      "pca = PCA(n_components=${1:0.95})   # 95% explained variance",
+      "X_pca = pca.fit_transform(X_scaled)",
+      "",
+      "print('explained variance:', pca.explained_variance_ratio_)",
+      "print('cumulative:', np.cumsum(pca.explained_variance_ratio_))"
+    ],
+    "description": "PCA"
+  },
+  "Truncated SVD": {
+    "prefix": "sk_svd",
+    "body": [
+      "# ---- TruncatedSVD: like PCA but works on sparse matrices ----",
+      "# Use for LSA on text (TF-IDF) data.",
+      "from sklearn.decomposition import TruncatedSVD",
+      "",
+      "svd = TruncatedSVD(n_components=${1:100})",
+      "X_reduced = svd.fit_transform(X_sparse)"
+    ],
+    "description": "Truncated SVD (LSA)"
+  },
+  "t-SNE": {
+    "prefix": "sk_tsne",
+    "body": [
+      "# ---- t-SNE: non-linear 2D/3D visualization (NOT for ML features) ----",
+      "from sklearn.manifold import TSNE",
+      "",
+      "X_2d = TSNE(",
+      "    n_components=2,",
+      "    perplexity=${1:30},   # typical: 5-50",
+      "    learning_rate='${2:auto}',",
+      "    init='${3:pca}',",
+      "    random_state=42,",
+      ").fit_transform(X_scaled)"
+    ],
+    "description": "t-SNE embedding"
+  },
+  "UMAP": {
+    "prefix": "sk_umap",
+    "body": [
+      "# ---- UMAP: fast, preserves both global and local structure ----",
+      "# pip install umap-learn",
+      "import umap",
+      "",
+      "reducer = umap.UMAP(n_neighbors=${1:15}, min_dist=${2:0.1}, random_state=42)",
+      "X_2d = reducer.fit_transform(X_scaled)"
+    ],
+    "description": "UMAP embedding"
+  },
+
+  "// ==================== 14. MODEL EVALUATION ====================": {
+    "prefix": "sk_section_eval",
+    "body": ["# ============ MODEL EVALUATION ============"],
+    "description": "Section marker"
+  },
+  "Classification report": {
+    "prefix": "sk_report",
+    "body": [
+      "from sklearn.metrics import classification_report, accuracy_score",
+      "",
+      "y_pred = model.predict(X_test)",
+      "print(classification_report(y_test, y_pred, digits=4))",
+      "print('Accuracy:', accuracy_score(y_test, y_pred))"
+    ],
+    "description": "Classification report"
+  },
+  "Confusion matrix": {
+    "prefix": "sk_confusion",
+    "body": [
+      "from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay",
+      "",
+      "cm = confusion_matrix(y_test, y_pred)",
+      "print(cm)",
+      "",
+      "# Plot:",
+      "# ConfusionMatrixDisplay(cm, display_labels=classes).plot()"
+    ],
+    "description": "Confusion matrix"
+  },
+  "Classification metrics": {
+    "prefix": "sk_metrics_clf",
+    "body": [
+      "from sklearn.metrics import (",
+      "    accuracy_score, precision_score, recall_score, f1_score,",
+      "    roc_auc_score, average_precision_score, matthews_corrcoef, cohen_kappa_score,",
+      ")",
+      "",
+      "accuracy_score(y_test, y_pred)",
+      "precision_score(y_test, y_pred, average='${1:weighted}')",
+      "recall_score(y_test, y_pred, average='${1:weighted}')",
+      "f1_score(y_test, y_pred, average='${1:weighted}')",
+      "roc_auc_score(y_test, y_proba[:, 1])   # needs probabilities",
+      "average_precision_score(y_test, y_proba[:, 1])   # PR-AUC",
+      "matthews_corrcoef(y_test, y_pred)      # good for imbalance"
+    ],
+    "description": "Classification metrics"
+  },
+  "Regression metrics": {
+    "prefix": "sk_metrics_reg",
+    "body": [
+      "from sklearn.metrics import (",
+      "    mean_absolute_error, mean_squared_error,",
+      "    root_mean_squared_error, r2_score, mean_absolute_percentage_error,",
+      ")",
+      "",
+      "mean_absolute_error(y_test, y_pred)",
+      "mean_squared_error(y_test, y_pred)",
+      "root_mean_squared_error(y_test, y_pred)",
+      "r2_score(y_test, y_pred)",
+      "mean_absolute_percentage_error(y_test, y_pred)"
+    ],
+    "description": "Regression metrics"
+  },
+  "ROC / PR curves": {
+    "prefix": "sk_roc",
+    "body": [
+      "from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score",
+      "",
+      "fpr, tpr, _ = roc_curve(y_test, y_proba[:, 1])",
+      "roc_auc = auc(fpr, tpr)",
+      "",
+      "prec, rec, _ = precision_recall_curve(y_test, y_proba[:, 1])",
+      "ap = average_precision_score(y_test, y_proba[:, 1])"
+    ],
+    "description": "ROC and PR curves"
+  },
+  "Cross-validation scores": {
+    "prefix": "sk_cv_scores",
+    "body": [
+      "from sklearn.model_selection import cross_val_score, cross_validate",
+      "",
+      "# ---- Simple CV score ----",
+      "scores = cross_val_score(model, X, y, cv=5, scoring='${1:accuracy}', n_jobs=-1)",
+      "print(f'{scores.mean():.4f} ± {scores.std():.4f}')",
+      "",
+      "# ---- Multiple metrics at once ----",
+      "results = cross_validate(",
+      "    model, X, y, cv=5,",
+      "    scoring=['accuracy', 'f1_weighted', 'roc_auc'],",
+      "    return_train_score=True,",
+      ")"
+    ],
+    "description": "Cross-validation scores"
+  },
+
+  "// ==================== 15. HYPERPARAMETER TUNING ====================": {
+    "prefix": "sk_section_tuning",
+    "body": ["# ============ HYPERPARAMETER TUNING ============"],
+    "description": "Section marker"
+  },
+  "GridSearchCV": {
+    "prefix": "sk_grid_search",
+    "body": [
+      "# ---- Exhaustive search over a parameter grid ----",
+      "from sklearn.model_selection import GridSearchCV",
+      "",
+      "param_grid = {",
+      "    'clf__C': [${1:0.1, 1, 10}],",
+      "    'clf__penalty': ['l2'],",
+      "    'clf__solver': ['lbfgs'],",
+      "}",
+      "",
+      "grid = GridSearchCV(",
+      "    pipe, param_grid,",
+      "    cv=${2:5},",
+      "    scoring='${3:accuracy}',",
+      "    n_jobs=-1,",
+      "    verbose=1,",
+      ")",
+      "grid.fit(X_train, y_train)",
+      "",
+      "print('Best params:', grid.best_params_)",
+      "print('Best score :', grid.best_score_)",
+      "y_pred = grid.predict(X_test)"
+    ],
+    "description": "Grid search"
+  },
+  "RandomizedSearchCV": {
+    "prefix": "sk_random_search",
+    "body": [
+      "# ---- Randomized search: sample from distributions ----",
+      "from sklearn.model_selection import RandomizedSearchCV",
+      "from scipy.stats import loguniform, randint",
+      "",
+      "param_dist = {",
+      "    'clf__C': loguniform(${1:1e-3}, ${2:1e2}),",
+      "    'clf__max_iter': randint(${3:100}, ${4:2000}),",
+      "}",
+      "",
+      "search = RandomizedSearchCV(",
+      "    pipe, param_dist,",
+      "    n_iter=${5:50},",
+      "    cv=5,",
+      "    scoring='${6:accuracy}',",
+      "    n_jobs=-1,",
+      "    random_state=42,",
+      ")",
+      "search.fit(X_train, y_train)",
+      "print(search.best_params_)"
+    ],
+    "description": "Random search"
+  },
+  "Halving search (efficient)": {
+    "prefix": "sk_halving_search",
+    "body": [
+      "# ---- HalvingGridSearchCV: successive halving, much faster ----",
+      "from sklearn.experimental import enable_halving_search_cv  # noqa",
+      "from sklearn.model_selection import HalvingGridSearchCV, HalvingRandomSearchCV",
+      "",
+      "search = HalvingRandomSearchCV(",
+      "    pipe, param_dist,",
+      "    cv=5, scoring='accuracy', n_jobs=-1, random_state=42,",
+      ")",
+      "search.fit(X_train, y_train)"
+    ],
+    "description": "Halving search (fast)"
+  },
+  "Bayesian optimization (optuna)": {
+    "prefix": "sk_optuna",
+    "body": [
+      "# ---- Optuna: Bayesian hyperparameter optimization ----",
+      "# pip install optuna",
+      "import optuna",
+      "from sklearn.model_selection import cross_val_score",
+      "",
+      "def objective(trial):",
+      "    C = trial.suggest_float('C', 1e-3, 1e2, log=True)",
+      "    model = ${1:LogisticRegression}(C=C, max_iter=1000)",
+      "    return cross_val_score(model, X, y, cv=5, scoring='accuracy').mean()",
+      "",
+      "study = optuna.create_study(direction='maximize')",
+      "study.optimize(objective, n_trials=${2:50})",
+      "print(study.best_params, study.best_value)"
+    ],
+    "description": "Optuna Bayesian search"
+  },
+
+  "// ==================== 16. ENSEMBLE METHODS ====================": {
+    "prefix": "sk_section_ensemble",
+    "body": ["# ============ ENSEMBLE METHODS ============"],
+    "description": "Section marker"
+  },
+  "Voting": {
+    "prefix": "sk_voting",
+    "body": [
+      "from sklearn.ensemble import VotingClassifier, VotingRegressor",
+      "",
+      "# ---- Hard voting (majority) or soft voting (proba average) ----",
+      "ensemble = VotingClassifier(",
+      "    estimators=[",
+      "        ('lr',  ${1:LogisticRegression(max_iter=1000)}),",
+      "        ('rf',  RandomForestClassifier(n_estimators=200, n_jobs=-1)),",
+      "        ('svm', SVC(probability=True)),",
+      "    ],",
+      "    voting='${2:soft}',   # 'hard' or 'soft'",
+      "    n_jobs=-1,",
+      ")",
+      "ensemble.fit(X_train, y_train)"
+    ],
+    "description": "Voting ensemble"
+  },
+  "Stacking": {
+    "prefix": "sk_stacking",
+    "body": [
+      "# ---- Stacking: meta-learner on top of base models ----",
+      "from sklearn.ensemble import StackingClassifier, StackingRegressor",
+      "from sklearn.linear_model import LogisticRegression",
+      "",
+      "ensemble = StackingClassifier(",
+      "    estimators=[",
+      "        ('rf',  RandomForestClassifier(n_estimators=200, n_jobs=-1)),",
+      "        ('svm', SVC(probability=True)),",
+      "        ('gbm', GradientBoostingClassifier()),",
+      "    ],",
+      "    final_estimator=LogisticRegression(max_iter=1000),",
+      "    cv=5, n_jobs=-1,",
+      ")",
+      "ensemble.fit(X_train, y_train)"
+    ],
+    "description": "Stacking ensemble"
+  },
+  "Bagging": {
+    "prefix": "sk_bagging",
+    "body": [
+      "from sklearn.ensemble import BaggingClassifier, BaggingRegressor",
+      "",
+      "bag = BaggingClassifier(",
+      "    estimator=${1:DecisionTreeClassifier()},",
+      "    n_estimators=${2:100},",
+      "    max_samples=${3:0.8},",
+      "    max_features=${4:0.8},",
+      "    bootstrap=True,",
+      "    n_jobs=-1,",
+      "    random_state=42,",
+      ")"
+    ],
+    "description": "Bagging ensemble"
+  },
+
+  "// ==================== 17. ANOMALY DETECTION ====================": {
+    "prefix": "sk_section_anomaly",
+    "body": ["# ============ ANOMALY DETECTION ============"],
+    "description": "Section marker"
+  },
+  "Isolation Forest": {
+    "prefix": "sk_iforest",
+    "body": [
+      "# ---- IsolationForest: unsupervised outlier detection ----",
+      "from sklearn.ensemble import IsolationForest",
+      "",
+      "iso = IsolationForest(",
+      "    contamination='${1:auto}',   # or float (expected outlier fraction)",
+      "    n_estimators=${2:200},",
+      "    random_state=42, n_jobs=-1,",
+      ")",
+      "labels = iso.fit_predict(X)   # -1 = outlier, 1 = normal",
+      "scores = iso.score_samples(X)  # lower = more anomalous"
+    ],
+    "description": "Isolation Forest"
+  },
+  "Local Outlier Factor": {
+    "prefix": "sk_lof",
+    "body": [
+      "from sklearn.neighbors import LocalOutlierFactor",
+      "",
+      "lof = LocalOutlierFactor(",
+      "    n_neighbors=${1:20},",
+      "    contamination='auto',",
+      "    novelty=True,   # allows predict() on new data",
+      ")",
+      "lof.fit(X_train)",
+      "labels = lof.predict(X_test)"
+    ],
+    "description": "Local Outlier Factor"
+  },
+  "One-Class SVM": {
+    "prefix": "sk_ocsvm",
+    "body": [
+      "from sklearn.svm import OneClassSVM",
+      "",
+      "ocsvm = OneClassSVM(kernel='rbf', gamma='scale', nu=${1:0.05})",
+      "ocsvm.fit(X_train)",
+      "labels = ocsvm.predict(X_test)"
+    ],
+    "description": "One-Class SVM"
+  },
+
+  "// ==================== 18. MODEL PERSISTENCE ====================": {
+    "prefix": "sk_section_persist",
+    "body": ["# ============ MODEL PERSISTENCE ============"],
+    "description": "Section marker"
+  },
+  "Joblib save / load": {
+    "prefix": "sk_joblib",
+    "body": [
+      "# ---- Persist fitted model/pipeline ----",
+      "import joblib",
+      "",
+      "joblib.dump(model, '${1:model.joblib}')",
+      "model = joblib.load('${1:model.joblib}')",
+      "",
+      "# For sklearn models, joblib is faster than pickle for numpy arrays."
+    ],
+    "description": "Save/load with joblib"
+  },
+  "Pickle save / load": {
+    "prefix": "sk_pickle",
+    "body": [
+      "import pickle",
+      "",
+      "with open('${1:model.pkl}', 'wb') as f:",
+      "    pickle.dump(model, f)",
+      "with open('${1:model.pkl}', 'rb') as f:",
+      "    model = pickle.load(f)"
+    ],
+    "description": "Save/load with pickle"
+  },
+
+  "// ==================== 19. INTERPRETABILITY ====================": {
+    "prefix": "sk_section_interp",
+    "body": ["# ============ INTERPRETABILITY ============"],
+    "description": "Section marker"
+  },
+  "Permutation importance": {
+    "prefix": "sk_interp_perm",
+    "body": [
+      "from sklearn.inspection import permutation_importance",
+      "",
+      "result = permutation_importance(model, X_test, y_test, n_repeats=10, n_jobs=-1, random_state=42)",
+      "importances = pd.Series(result.importances_mean, index=feature_names)",
+      "print(importances.sort_values(ascending=False).head(10))"
+    ],
+    "description": "Permutation importance"
+  },
+  "Partial dependence plots": {
+    "prefix": "sk_interp_pdp",
+    "body": [
+      "from sklearn.inspection import PartialDependenceDisplay",
+      "",
+      "# ---- How does the prediction change as a feature varies? ----",
+      "PartialDependenceDisplay.from_estimator(",
+      "    model, X_train,",
+      "    features=[${1:'age', 'income'}],",
+      ")"
+    ],
+    "description": "Partial dependence plots"
+  },
+  "SHAP values": {
+    "prefix": "sk_interp_shap",
+    "body": [
+      "# ---- SHAP: game-theoretic explanations ----",
+      "# pip install shap",
+      "import shap",
+      "",
+      "# TreeExplainer is fast for tree models:",
+      "explainer = shap.TreeExplainer(model)",
+      "shap_values = explainer.shap_values(X_test)",
+      "",
+      "# Global:",
+      "shap.summary_plot(shap_values, X_test)",
+      "",
+      "# Local (single sample):",
+      "shap.force_plot(explainer.expected_value, shap_values[0], X_test.iloc[0])"
+    ],
+    "description": "SHAP explanations"
+  },
+  "Calibration curve": {
+    "prefix": "sk_interp_calibration",
+    "body": [
+      "from sklearn.calibration import CalibrationDisplay, CalibratedClassifierCV",
+      "",
+      "# ---- Are predicted probabilities trustworthy? ----",
+      "CalibrationDisplay.from_estimator(model, X_test, y_test)",
+      "",
+      "# Fix poorly calibrated models:",
+      "cal_model = CalibratedClassifierCV(model, method='${1:sigmoid}', cv=5)",
+      "cal_model.fit(X_train, y_train)"
+    ],
+    "description": "Calibration"
+  },
+
+  "// ==================== 20. COMMON PITFALLS ====================": {
+    "prefix": "sk_section_pitfalls",
+    "body": ["# ============ COMMON PITFALLS ============"],
+    "description": "Section marker"
+  },
+  "Pitfall: data leakage": {
+    "prefix": "sk_pitfall_leakage",
+    "body": [
+      "# BAD: scaling the whole dataset before splitting",
+      "# scaler.fit_transform(X)  -> leaks test stats into training!",
+      "",
+      "# GOOD: use a pipeline (or fit on train, transform test)",
+      "pipe = make_pipeline(StandardScaler(), LogisticRegression())",
+      "pipe.fit(X_train, y_train)"
+    ],
+    "description": "Avoid data leakage"
+  },
+  "Pitfall: scaling after split": {
+    "prefix": "sk_pitfall_scaling",
+    "body": [
+      "# Always fit scaler/imputer/encoder on TRAIN only:",
+      "scaler.fit(X_train)",
+      "X_train_s = scaler.transform(X_train)",
+      "X_test_s  = scaler.transform(X_test)",
+      "",
+      "# Pipelines enforce this automatically."
+    ],
+    "description": "Fit on train only"
+  },
+  "Pitfall: imbalanced metrics": {
+    "prefix": "sk_pitfall_imbalance",
+    "body": [
+      "# Accuracy is misleading on imbalanced data.",
+      "# Use:",
+      "from sklearn.metrics import classification_report, roc_auc_score, average_precision_score",
+      "",
+      "# Or resample:",
+      "#   - class_weight='balanced'",
+      "#   - imblearn.SMOTE, RandomOverSampler",
+      "#   - threshold tuning on predict_proba"
+    ],
+    "description": "Handle class imbalance"
+  },
+  "Pitfall: random_state everywhere": {
+    "prefix": "sk_pitfall_seed",
+    "body": [
+      "# Non-reproducible results usually mean one of these is missing:",
+      "#   - train_test_split(random_state=...)",
+      "#   - estimator(random_state=...)",
+      "#   - KFold(..., shuffle=True, random_state=...)",
+      "#   - np.random.seed(...)",
+      "# Set them all consistently."
+    ],
+    "description": "Reproducibility checklist"
+  },
+  "Pitfall: fitting on the test set": {
+    "prefix": "sk_pitfall_testfit",
+    "body": [
+      "# NEVER call .fit() on X_test, y_test.",
+      "# Only .predict() / .transform() / .score().",
+      "# The test set is sacred -- touch it exactly once, at the very end."
+    ],
+    "description": "Never fit on test"
+  },
+  "Pitfall: high-cardinality one-hot": {
+    "prefix": "sk_pitfall_onehot",
+    "body": [
+      "# One-hot with 10,000+ categories blows up dimensionality.",
+      "# Use instead:",
+      "#   - TargetEncoder (category_encoders)",
+      "#   - HashingEncoder",
+      "#   - Frequency encoding",
+      "#   - Embeddings (deep learning)"
+    ],
+    "description": "High-cardinality encoding"
+  }
+}

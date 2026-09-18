@@ -1,0 +1,1260 @@
+{
+  "// ==================== 1. IMPORT & SETUP ====================": {
+    "prefix": "sc_section_setup",
+    "body": ["# ============ IMPORT & SETUP ============"],
+    "description": "Section marker"
+  },
+
+  "Import SciPy submodules": {
+    "prefix": "sc_import",
+    "body": [
+      "import numpy as np",
+      "from scipy import stats        # statistics, distributions, tests",
+      "from scipy import optimize     # minimization, curve fitting, root finding",
+      "from scipy import linalg       # linear algebra (more than numpy.linalg)",
+      "from scipy import interpolate  # 1D/nD interpolation",
+      "from scipy import integrate    # numerical integration, ODE solvers",
+      "from scipy import sparse       # sparse matrices",
+      "from scipy import spatial      # distances, KD-trees",
+      "from scipy import signal       # signal processing",
+      "from scipy import ndimage      # n-dimensional image processing",
+      "from scipy import special      # special functions (gamma, erf, Bessel)",
+      "from scipy import fft          # fast Fourier transforms",
+      "from scipy import cluster      # hierarchical clustering"
+    ],
+    "description": "Import all common SciPy submodules"
+  },
+  "SciPy version": {
+    "prefix": "sc_version",
+    "body": ["import scipy", "print(scipy.__version__)"],
+    "description": "Check SciPy version"
+  },
+
+  "// ==================== 2. CONSTANTS & SPECIAL FUNCTIONS ====================": {
+    "prefix": "sc_section_special",
+    "body": ["# ============ CONSTANTS & SPECIAL FUNCTIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Physical constants": {
+    "prefix": "sc_constants",
+    "body": [
+      "from scipy.constants import pi, c, h, k, e, N_A, R, g",
+      "",
+      "# ---- Physical constants (CODATA) ----",
+      "pi        # 3.14159...",
+      "c         # speed of light 299792458.0",
+      "h         # Planck constant 6.626e-34",
+      "k         # Boltzmann constant 1.380e-23",
+      "e         # elementary charge 1.602e-19",
+      "N_A       # Avogadro 6.022e23",
+      "R         # gas constant 8.314",
+      "g         # gravity 9.80665",
+      "",
+      "# Unit conversions:",
+      "from scipy.constants import convert_temperature",
+      "convert_temperature(100, 'C', 'F')   # 212.0"
+    ],
+    "description": "Physical constants and unit conversions"
+  },
+  "Special functions": {
+    "prefix": "sc_special",
+    "body": [
+      "from scipy import special",
+      "",
+      "# ---- Gamma & related (used in distributions) ----",
+      "special.gamma(x)      # Γ(x) = (x-1)!",
+      "special.gammaln(x)    # log|Γ(x)| (numerically stable)",
+      "special.digamma(x)    # ψ(x) derivative of log Γ",
+      "special.beta(a, b)    # B(a,b) = Γ(a)Γ(b)/Γ(a+b)",
+      "",
+      "# ---- Error function (normal CDF building block) ----",
+      "special.erf(x)        # error function",
+      "special.erfc(x)       # 1 - erf(x) (complementary)",
+      "special.erfinv(y)     # inverse erf",
+      "",
+      "# ---- Bessel (physics, signal processing) ----",
+      "special.j0(x), special.j1(x), special.jn(n, x)",
+      "",
+      "# ---- Combinatorics ----",
+      "special.comb(5, 2)    # 10  (n choose k)",
+      "special.perm(5, 2)    # 20  (n permute k)",
+      "special.factorial(5)  # 120"
+    ],
+    "description": "Special mathematical functions"
+  },
+
+  "// ==================== 3. LINEAR ALGEBRA ====================": {
+    "prefix": "sc_section_linalg",
+    "body": ["# ============ LINEAR ALGEBRA (scipy.linalg) ============"],
+    "description": "Section marker"
+  },
+
+  "Decompositions": {
+    "prefix": "sc_linalg_decomp",
+    "body": [
+      "from scipy import linalg",
+      "",
+      "# ---- LU decomposition ----",
+      "P, L, U = linalg.lu(A)",
+      "",
+      "# ---- QR decomposition ----",
+      "Q, R = linalg.qr(A)",
+      "",
+      "# ---- SVD (PCA, dimensionality reduction) ----",
+      "U, S, Vt = linalg.svd(A, full_matrices=False)",
+      "",
+      "# ---- Cholesky (positive definite) ----",
+      "L = linalg.cholesky(A)",
+      "",
+      "# ---- Schur ----",
+      "T, Z = linalg.schur(A)"
+    ],
+    "description": "Matrix decompositions"
+  },
+  "Solve linear systems": {
+    "prefix": "sc_linalg_solve",
+    "body": [
+      "from scipy import linalg",
+      "",
+      "# ---- Solve Ax = b (more stable than numpy.linalg.solve) ----",
+      "x = linalg.solve(A, b)",
+      "",
+      "# ---- Least squares (overdetermined systems) ----",
+      "x, residuals, rank, sv = linalg.lstsq(A, b)",
+      "",
+      "# ---- Pseudo-inverse ----",
+      "A_pinv = linalg.pinv(A)",
+      "",
+      "# ---- Triangular solves (fast when structure is known) ----",
+      "linalg.solve_triangular(L, b, lower=True)"
+    ],
+    "description": "Solve linear systems"
+  },
+  "Eigenvalues & eigenvectors": {
+    "prefix": "sc_linalg_eig",
+    "body": [
+      "from scipy import linalg",
+      "",
+      "# ---- General eigenvalues ----",
+      "eigvals, eigvecs = linalg.eig(A)",
+      "",
+      "# ---- Symmetric / Hermitian (faster, real eigenvalues) ----",
+      "eigvals, eigvecs = linalg.eigh(A)",
+      "",
+      "# ---- Generalized eigenvalue problem ----",
+      "eigvals, eigvecs = linalg.eig(A, B)",
+      "",
+      "# ---- Singular values only ----",
+      "sv = linalg.svdvals(A)"
+    ],
+    "description": "Eigenvalue problems"
+  },
+  "Matrix functions & norms": {
+    "prefix": "sc_linalg_misc",
+    "body": [
+      "from scipy import linalg",
+      "",
+      "linalg.det(A)                     # determinant",
+      "linalg.norm(A)                    # Frobenius norm",
+      "linalg.norm(A, ord=2)             # spectral norm",
+      "linalg.inv(A)                     # inverse",
+      "linalg.expm(A)                    # matrix exponential",
+      "linalg.logm(A)                    # matrix logarithm",
+      "linalg.sqrtm(A)                   # matrix square root",
+      "",
+      "# ---- Linear regression via lstsq ----",
+      "# w = linalg.lstsq(X, y)[0]"
+    ],
+    "description": "Norms, inverse, matrix functions"
+  },
+
+  "// ==================== 4. OPTIMIZATION ====================": {
+    "prefix": "sc_section_optimize",
+    "body": ["# ============ OPTIMIZATION (scipy.optimize) ============"],
+    "description": "Section marker"
+  },
+
+  "Curve fitting (nonlinear)": {
+    "prefix": "sc_curve_fit",
+    "body": [
+      "# ---- Fit any function to data with nonlinear least squares ----",
+      "from scipy.optimize import curve_fit",
+      "",
+      "def model(x, a, b, c):",
+      "    \"\"\"${1:Exponential decay: a * exp(-b * x) + c}\"\"\"",
+      "    return a * np.exp(-b * x) + c",
+      "",
+      "popt, pcov = curve_fit(model, xdata, ydata, p0=[${2:1, 0.1, 0}])",
+      "perr = np.sqrt(np.diag(pcov))   # standard errors",
+      "",
+      "print('params:', popt)",
+      "print('errors:', perr)",
+      "",
+      "# Predictions:",
+      "y_fit = model(xdata, *popt)"
+    ],
+    "description": "Nonlinear curve fitting"
+  },
+  "Minimize scalar function": {
+    "prefix": "sc_minimize",
+    "body": [
+      "# ---- Minimize a scalar function of one or more variables ----",
+      "from scipy.optimize import minimize",
+      "",
+      "def objective(x):",
+      "    return ${1:(x[0] - 2)**2 + (x[1] - 3)**2}",
+      "",
+      "result = minimize(",
+      "    objective,",
+      "    x0=[${2:0, 0}],           # initial guess",
+      "    method='${3:BFGS}',       # BFGS, Nelder-Mead, L-BFGS-B, SLSQP, ...",
+      ")",
+      "print(result.x)              # optimal parameters",
+      "print(result.fun)            # minimum value",
+      "print(result.success)        # converged?"
+    ],
+    "description": "Minimize a scalar function"
+  },
+  "Minimize with bounds": {
+    "prefix": "sc_minimize_bounds",
+    "body": [
+      "from scipy.optimize import minimize",
+      "",
+      "result = minimize(",
+      "    ${1:objective},",
+      "    x0=[${2:0, 0}],",
+      "    method='${3:L-BFGS-B}',",
+      "    bounds=[(${4:0}, ${5:1}), (${6:-1}, ${7:1})],   # per-variable bounds",
+      ")",
+      "print(result.x)"
+    ],
+    "description": "Minimize with bounds"
+  },
+  "Minimize with constraints": {
+    "prefix": "sc_minimize_constraints",
+    "body": [
+      "from scipy.optimize import minimize",
+      "",
+      "cons = (",
+      "    {'type': 'eq',   'fun': lambda x: ${1:x[0] + x[1] - 1}},",
+      "    {'type': 'ineq', 'fun': lambda x: ${2:x[0] - 0.1}},",
+      ")",
+      "result = minimize(",
+      "    ${3:objective},",
+      "    x0=[${4:0.5, 0.5}],",
+      "    method='SLSQP',",
+      "    constraints=cons,",
+      ")"
+    ],
+    "description": "Minimize with constraints"
+  },
+  "Least squares (general)": {
+    "prefix": "sc_least_squares",
+    "body": [
+      "# ---- Robust nonlinear least squares with bounds ----",
+      "from scipy.optimize import least_squares",
+      "",
+      "def residuals(params, x, y):",
+      "    return ${1:model(x, *params) - y}",
+      "",
+      "result = least_squares(",
+      "    residuals, x0=[${2:1, 1}], args=(xdata, ydata),",
+      "    bounds=([${3:0, 0}], [${4:10, 10}]),",
+      "    loss='${5:linear}',   # 'linear', 'soft_l1', 'huber', 'cauchy'",
+      ")",
+      "print(result.x)"
+    ],
+    "description": "General least-squares with bounds"
+  },
+  "Root finding": {
+    "prefix": "sc_root",
+    "body": [
+      "# ---- Find roots (zeros) of a function ----",
+      "from scipy.optimize import root, root_scalar, brentq",
+      "",
+      "# Multidimensional:",
+      "sol = root(lambda x: ${1:x**2 - 4}, x0=${2:1})",
+      "",
+      "# Scalar root in a bracket:",
+      "sol = brentq(lambda x: ${1:x**2 - 4}, ${2:0}, ${3:3})"
+    ],
+    "description": "Root finding"
+  },
+  "Linear programming": {
+    "prefix": "sc_linprog",
+    "body": [
+      "# ---- Linear programming (LP) ----",
+      "from scipy.optimize import linprog",
+      "",
+      "# Minimize c^T x subject to A_ub x <= b_ub",
+      "res = linprog(",
+      "    c=[${1:1, 2}],",
+      "    A_ub=[[${2:-1, 1}], [${3:1, 1}]],",
+      "    b_ub=[${4:1}, ${5:3}],",
+      "    bounds=[(${6:0}, None), (${6:0}, None)],",
+      ")",
+      "print(res.x, res.fun)"
+    ],
+    "description": "Linear programming"
+  },
+  "Global optimization": {
+    "prefix": "sc_global_opt",
+    "body": [
+      "# ---- Global optimizers (escape local minima) ----",
+      "from scipy.optimize import differential_evolution, basinhopping, dual_annealing",
+      "",
+      "result = differential_evolution(",
+      "    ${1:objective},",
+      "    bounds=[(${2:-5}, ${3:5}), (${2:-5}, ${3:5})],",
+      "    seed=${4:42},",
+      ")",
+      "print(result.x, result.fun)"
+    ],
+    "description": "Global optimization"
+  },
+
+  "// ==================== 5. STATISTICS ====================": {
+    "prefix": "sc_section_stats",
+    "body": ["# ============ STATISTICS (scipy.stats) ============"],
+    "description": "Section marker"
+  },
+
+  "Descriptive statistics": {
+    "prefix": "sc_stats_describe",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- Full summary in one call ----",
+      "desc = stats.describe(data)",
+      "print(desc.nobs, desc.minmax, desc.mean, desc.variance,",
+      "      desc.skewness, desc.kurtosis)",
+      "",
+      "# ---- Individual measures ----",
+      "stats.skew(data)             # asymmetry of the distribution",
+      "stats.kurtosis(data)         # tail heaviness (Fisher: normal = 0)",
+      "stats.gmean(data)            # geometric mean",
+      "stats.hmean(data)            # harmonic mean",
+      "stats.trim_mean(data, 0.1)   # mean after trimming 10% each tail",
+      "stats.iqr(data)              # interquartile range",
+      "stats.sem(data)              # standard error of the mean",
+      "stats.mode(data)             # (mode, count)"
+    ],
+    "description": "Descriptive statistics"
+  },
+  "Probability distributions": {
+    "prefix": "sc_stats_dist",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- Every distribution has the same API ----",
+      "#   pdf / pmf  : density / mass",
+      "#   cdf        : P(X <= x)",
+      "#   sf         : survival = 1 - cdf",
+      "#   ppf        : inverse CDF (percent point)",
+      "#   rvs        : random variates",
+      "#   fit        : fit parameters from data",
+      "",
+      "# Normal:",
+      "stats.norm.pdf(x, loc=0, scale=1)",
+      "stats.norm.cdf(x, loc=0, scale=1)",
+      "stats.norm.ppf(0.95)             # z for 95%",
+      "stats.norm.rvs(size=1000, random_state=42)",
+      "",
+      "# Other common distributions:",
+      "#   stats.t    Student's t",
+      "#   stats.chi2 chi-squared",
+      "#   stats.f    F distribution",
+      "#   stats.binom, stats.poisson, stats.uniform, stats.beta, stats.gamma"
+    ],
+    "description": "Probability distributions"
+  },
+  "Fit distribution to data": {
+    "prefix": "sc_stats_fit",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- Fit a distribution to data (MLE) ----",
+      "params = stats.norm.fit(data)           # (mean, std)",
+      "params = stats.expon.fit(data)          # (loc, scale)",
+      "params = stats.beta.fit(data, floc=0, fscale=1)",
+      "",
+      "# ---- Goodness of fit ----",
+      "ks_stat, p_value = stats.kstest(data, 'norm', args=params)",
+      "print(f'KS={ks_stat:.4f}, p={p_value:.4f}')"
+    ],
+    "description": "Fit distributions to data"
+  },
+  "Normality tests": {
+    "prefix": "sc_stats_normality",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- H0: data comes from a normal distribution ----",
+      "stat, p = stats.shapiro(data)              # Shapiro-Wilk (best for n<50)",
+      "stat, p = stats.normaltest(data)           # D'Agostino K^2 (n>20)",
+      "stat, p = stats.anderson(data)             # Anderson-Darling",
+      "stat, p = stats.kstest(data, 'norm')       # KS vs standard normal",
+      "",
+      "# Decision: if p < 0.05, reject normality."
+    ],
+    "description": "Normality tests"
+  },
+  "t-tests": {
+    "prefix": "sc_stats_ttest",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- One-sample t-test (compare mean to mu) ----",
+      "t, p = stats.ttest_1samp(data, popmean=${1:0})",
+      "",
+      "# ---- Two-sample independent t-test (Welch by default) ----",
+      "t, p = stats.ttest_ind(group_a, group_b, equal_var=False)",
+      "",
+      "# ---- Paired t-test ----",
+      "t, p = stats.ttest_rel(before, after)",
+      "",
+      "# Decision: p < 0.05 -> reject H0 (means differ)."
+    ],
+    "description": "t-tests"
+  },
+  "Non-parametric tests": {
+    "prefix": "sc_stats_nonparam",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- Mann-Whitney U (non-parametric two-sample) ----",
+      "u, p = stats.mannwhitneyu(group_a, group_b, alternative='two-sided')",
+      "",
+      "# ---- Wilcoxon signed-rank (paired, non-parametric) ----",
+      "w, p = stats.wilcoxon(before, after)",
+      "",
+      "# ---- Kruskal-Wallis (non-parametric one-way ANOVA) ----",
+      "h, p = stats.kruskal(g1, g2, g3)",
+      "",
+      "# ---- Kolmogorov-Smirnov (two-sample) ----",
+      "ks, p = stats.ks_2samp(sample_a, sample_b)"
+    ],
+    "description": "Non-parametric tests"
+  },
+  "ANOVA": {
+    "prefix": "sc_stats_anova",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- One-way ANOVA (compare means of 3+ groups) ----",
+      "f, p = stats.f_oneway(group1, group2, group3)",
+      "",
+      "# Decision: p < 0.05 -> at least one group mean differs."
+    ],
+    "description": "One-way ANOVA"
+  },
+  "Chi-squared tests": {
+    "prefix": "sc_stats_chisq",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- Goodness of fit ----",
+      "chi2, p = stats.chisquare(f_obs, f_exp)",
+      "",
+      "# ---- Test of independence (contingency table) ----",
+      "chi2, p, dof, expected = stats.chi2_contingency(table)",
+      "",
+      "# Decision: p < 0.05 -> variables are not independent."
+    ],
+    "description": "Chi-squared tests"
+  },
+  "Correlation": {
+    "prefix": "sc_stats_corr",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- Pearson (linear correlation) ----",
+      "r, p = stats.pearsonr(x, y)",
+      "",
+      "# ---- Spearman (monotonic, rank-based) ----",
+      "rho, p = stats.spearmanr(x, y)",
+      "",
+      "# ---- Kendall tau (rank correlation, small samples) ----",
+      "tau, p = stats.kendalltau(x, y)",
+      "",
+      "# ---- Point-biserial (numeric vs binary) ----",
+      "r, p = stats.pointbiserialr(binary, continuous)"
+    ],
+    "description": "Correlation tests"
+  },
+  "Contingency tables": {
+    "prefix": "sc_stats_contingency",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- Build a contingency table ----",
+      "table = [[${1:10, 20}], [${2:30, 40}]]",
+      "",
+      "chi2, p, dof, expected = stats.chi2_contingency(table)",
+      "print(f'chi2={chi2:.2f}, p={p:.4f}, dof={dof}')"
+    ],
+    "description": "Contingency tables"
+  },
+  "Kernel Density Estimation (KDE)": {
+    "prefix": "sc_stats_kde",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- Non-parametric density estimate ----",
+      "kde = stats.gaussian_kde(data)",
+      "",
+      "# Evaluate at arbitrary points:",
+      "x_grid = np.linspace(data.min(), data.max(), 200)",
+      "density = kde(x_grid)",
+      "",
+      "# ---- 2D KDE ----",
+      "kde2 = stats.gaussian_kde(np.vstack([x, y]))",
+      "density = kde2(np.vstack([xi, yi]))"
+    ],
+    "description": "Kernel density estimation"
+  },
+  "Bootstrap & resampling": {
+    "prefix": "sc_stats_bootstrap",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- Bootstrap confidence interval ----",
+      "def bootstrap_ci(data, stat_func=np.mean, n=10000, ci=0.95, rng=None):",
+      "    rng = rng or np.random.default_rng(42)",
+      "    boots = [stat_func(rng.choice(data, size=len(data), replace=True))",
+      "             for _ in range(n)]",
+      "    lo = np.percentile(boots, (1 - ci) / 2 * 100)",
+      "    hi = np.percentile(boots, (1 + ci) / 2 * 100)",
+      "    return lo, hi",
+      "",
+      "lo, hi = bootstrap_ci(data)"
+    ],
+    "description": "Bootstrap confidence intervals"
+  },
+  "Monte Carlo": {
+    "prefix": "sc_stats_montecarlo",
+    "body": [
+      "# ---- Monte Carlo simulation of a statistic ----",
+      "from scipy import stats",
+      "",
+      "rng = np.random.default_rng(42)",
+      "samples = stats.norm.rvs(loc=0, scale=1, size=(10000, 100), random_state=rng)",
+      "means = samples.mean(axis=1)",
+      "",
+      "print(f'mean of means: {means.mean():.4f}')",
+      "print(f'std of means : {means.std():.4f}')"
+    ],
+    "description": "Monte Carlo simulation"
+  },
+  "Permutation test": {
+    "prefix": "sc_stats_permutation",
+    "body": [
+      "# ---- Permutation test (no distributional assumption) ----",
+      "def permutation_test(a, b, n=10000, rng=None):",
+      "    rng = rng or np.random.default_rng(42)",
+      "    observed = np.mean(a) - np.mean(b)",
+      "    combined = np.concatenate([a, b])",
+      "    count = 0",
+      "    for _ in range(n):",
+      "        rng.shuffle(combined)",
+      "        diff = np.mean(combined[:len(a)]) - np.mean(combined[len(a):])",
+      "        if abs(diff) >= abs(observed):",
+      "            count += 1",
+      "    return count / n   # p-value"
+    ],
+    "description": "Permutation test"
+  },
+
+  "// ==================== 6. INTERPOLATION ====================": {
+    "prefix": "sc_section_interp",
+    "body": ["# ============ INTERPOLATION (scipy.interpolate) ============"],
+    "description": "Section marker"
+  },
+
+  "1D interpolation": {
+    "prefix": "sc_interp1d",
+    "body": [
+      "from scipy.interpolate import interp1d",
+      "",
+      "# ---- 1D interpolation ----",
+      "f = interp1d(x, y, kind='${1:linear}', fill_value='extrapolate')",
+      "# kinds: 'linear', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic'",
+      "",
+      "y_new = f(x_new)",
+      "",
+      "# Fast alternative for linear only:",
+      "# y_new = np.interp(x_new, x, y)"
+    ],
+    "description": "1D interpolation"
+  },
+  "Cubic spline": {
+    "prefix": "sc_cubic_spline",
+    "body": [
+      "from scipy.interpolate import CubicSpline",
+      "",
+      "# ---- Smooth interpolation through all points ----",
+      "cs = CubicSpline(x, y, bc_type='${1:natural}')",
+      "y_new = cs(x_new)",
+      "dydx = cs(x_new, 1)     # first derivative",
+      "d2ydx2 = cs(x_new, 2)   # second derivative"
+    ],
+    "description": "Cubic spline interpolation"
+  },
+  "Smoothing spline": {
+    "prefix": "sc_spline_smooth",
+    "body": [
+      "from scipy.interpolate import UnivariateSpline",
+      "",
+      "# ---- Smoothing spline (noise reduction) ----",
+      "spl = UnivariateSpline(x, y, s=${1:0.5})   # s = smoothing factor",
+      "y_smooth = spl(x_new)",
+      "",
+      "# s=0 -> interpolates; large s -> smoother"
+    ],
+    "description": "Smoothing spline"
+  },
+  "Multivariate interpolation": {
+    "prefix": "sc_interp_grid",
+    "body": [
+      "from scipy.interpolate import RegularGridInterpolator",
+      "",
+      "# ---- nD interpolation on a regular grid ----",
+      "interp = RegularGridInterpolator(",
+      "    (${1:x_grid}, ${2:y_grid}),",
+      "    ${3:values},",
+      "    method='${4:linear}',   # 'linear', 'nearest', 'slinear', 'cubic'",
+      ")",
+      "point = np.array([${5:x_pt}, ${6:y_pt}])",
+      "value = interp(point)"
+    ],
+    "description": "nD regular grid interpolation"
+  },
+  "Scattered data interpolation": {
+    "prefix": "sc_interp_scattered",
+    "body": [
+      "from scipy.interpolate import griddata",
+      "",
+      "# ---- Interpolate scattered 2D data onto a grid ----",
+      "grid_x, grid_y = np.mgrid[${1:0:1:100j}, ${2:0:1:100j}]",
+      "grid_z = griddata(points, values, (grid_x, grid_y), method='${3:cubic}')"
+    ],
+    "description": "Scattered data interpolation"
+  },
+  "RBF interpolation": {
+    "prefix": "sc_interp_rbf",
+    "body": [
+      "from scipy.interpolate import RBFInterpolator",
+      "",
+      "# ---- Radial basis function interpolation (smooth, any dim) ----",
+      "rbf = RBFInterpolator(points, values, kernel='${1:thin_plate_spline}')",
+      "pred = rbf(new_points)"
+    ],
+    "description": "RBF interpolation"
+  },
+
+  "// ==================== 7. INTEGRATION & ODE ====================": {
+    "prefix": "sc_section_integrate",
+    "body": ["# ============ INTEGRATION & ODE (scipy.integrate) ============"],
+    "description": "Section marker"
+  },
+
+  "Definite integral (quad)": {
+    "prefix": "sc_quad",
+    "body": [
+      "from scipy.integrate import quad",
+      "",
+      "# ---- 1D definite integral (adaptive quadrature) ----",
+      "result, error = quad(${1:lambda x: np.exp(-x**2)}, ${2:0}, ${3:np.inf})",
+      "print(result, error)"
+    ],
+    "description": "Definite integral"
+  },
+  "Double / triple integral": {
+    "prefix": "sc_dblquad",
+    "body": [
+      "from scipy.integrate import dblquad, tplquad, nquad",
+      "",
+      "# ---- 2D integral ----",
+      "result, error = dblquad(",
+      "    ${1:func},",
+      "    ${2:a}, ${3:b},                  # x bounds",
+      "    lambda x: ${4:c}, lambda x: ${5:d},   # y bounds (may depend on x)",
+      ")",
+      "",
+      "# ---- nD integral ----",
+      "result, error = nquad(${1:func}, [[${2:0}, ${3:1}], [${4:0}, ${5:1}]])"
+    ],
+    "description": "Multi-dimensional integrals"
+  },
+  "Discrete integration (samples)": {
+    "prefix": "sc_integrate_samples",
+    "body": [
+      "from scipy.integrate import trapezoid, simpson, cumulative_trapezoid",
+      "",
+      "# ---- Integrate data sampled at points ----",
+      "area = trapezoid(y, x)",
+      "area = simpson(y, x)                  # more accurate",
+      "cumulative = cumulative_trapezoid(y, x, initial=0)"
+    ],
+    "description": "Integrate sampled data"
+  },
+  "Solve ODE (initial value)": {
+    "prefix": "sc_solve_ivp",
+    "body": [
+      "from scipy.integrate import solve_ivp",
+      "",
+      "# ---- Solve dy/dt = f(t, y) ----",
+      "def f(t, y):",
+      "    return ${1:-0.5 * y}   # example: exponential decay",
+      "",
+      "sol = solve_ivp(",
+      "    f,",
+      "    t_span=(${2:0}, ${3:10}),",
+      "    y0=[${4:1.0}],",
+      "    method='${5:RK45}',   # RK45, RK23, DOP853, Radau, BDF, LSODA",
+      "    t_eval=np.linspace(${2:0}, ${3:10}, 100),",
+      "    dense_output=True,",
+      ")",
+      "print(sol.y.shape)   # (n_states, n_times)"
+    ],
+    "description": "Solve ODE initial value problem"
+  },
+
+  "// ==================== 8. SIGNAL PROCESSING ====================": {
+    "prefix": "sc_section_signal",
+    "body": ["# ============ SIGNAL PROCESSING (scipy.signal) ============"],
+    "description": "Section marker"
+  },
+
+  "Filtering": {
+    "prefix": "sc_signal_filter",
+    "body": [
+      "from scipy import signal",
+      "",
+      "# ---- Design a Butterworth filter ----",
+      "b, a = signal.butter(${1:4}, ${2:0.1}, btype='${3:low}')   # low/high/band",
+      "y_filt = signal.filtfilt(b, a, y)   # zero-phase (no delay)",
+      "",
+      "# ---- Savitzky-Golay (smooth, preserve shape) ----",
+      "y_smooth = signal.savgol_filter(y, window_length=${4:11}, polyorder=${5:2})",
+      "",
+      "# ---- Median filter (remove spikes) ----",
+      "y_med = signal.medfilt(y, kernel_size=${6:5})"
+    ],
+    "description": "Signal filtering"
+  },
+  "Convolution & correlation": {
+    "prefix": "sc_signal_convolve",
+    "body": [
+      "from scipy import signal",
+      "",
+      "# ---- Convolution ----",
+      "y = signal.convolve(x, kernel, mode='${1:same}')",
+      "",
+      "# ---- Correlation ----",
+      "r = signal.correlate(x, template, mode='${1:same}')",
+      "",
+      "# ---- Cross-correlation (lag estimation) ----",
+      "lags = signal.correlation_lags(len(x), len(template))"
+    ],
+    "description": "Convolution and correlation"
+  },
+  "Peak detection": {
+    "prefix": "sc_signal_peaks",
+    "body": [
+      "from scipy import signal",
+      "",
+      "# ---- Find peaks in a signal ----",
+      "peaks, props = signal.find_peaks(y, height=${1:0}, distance=${2:10})",
+      "",
+      "# peaks: indices of peaks",
+      "# props['peak_heights']: peak heights",
+      "",
+      "# ---- Prominences ----",
+      "peaks, props = signal.find_peaks(y, prominence=${3:1})"
+    ],
+    "description": "Peak detection"
+  },
+  "Spectral analysis": {
+    "prefix": "sc_signal_spectral",
+    "body": [
+      "from scipy import signal",
+      "",
+      "# ---- Power spectral density ----",
+      "f, Pxx = signal.welch(y, fs=${1:100}, nperseg=${2:256})",
+      "",
+      "# ---- Spectrogram (time-frequency) ----",
+      "f, t, Sxx = signal.spectrogram(y, fs=${1:100}, nperseg=${2:256})",
+      "",
+      "# ---- Periodogram ----",
+      "f, Pxx = signal.periodogram(y, fs=${1:100})"
+    ],
+    "description": "Spectral analysis"
+  },
+
+  "// ==================== 9. FFT ====================": {
+    "prefix": "sc_section_fft",
+    "body": ["# ============ FAST FOURIER TRANSFORM (scipy.fft) ============"],
+    "description": "Section marker"
+  },
+
+  "FFT basics": {
+    "prefix": "sc_fft",
+    "body": [
+      "from scipy import fft",
+      "",
+      "# ---- 1D FFT ----",
+      "X = fft.fft(x)",
+      "x_rec = fft.ifft(X)",
+      "",
+      "# ---- Real-input FFT (faster, half spectrum) ----",
+      "X = fft.rfft(x)",
+      "x_rec = fft.irfft(X)",
+      "",
+      "# ---- Frequency bins ----",
+      "freqs = fft.fftfreq(len(x), d=${1:1.0})        # for fft",
+      "freqs = fft.rfftfreq(len(x), d=${1:1.0})       # for rfft"
+    ],
+    "description": "FFT basics"
+  },
+  "2D FFT (images)": {
+    "prefix": "sc_fft2",
+    "body": [
+      "from scipy import fft",
+      "",
+      "F = fft.fft2(image)",
+      "image_rec = fft.ifft2(F)",
+      "",
+      "# Magnitude spectrum (visualization):",
+      "mag = np.abs(fft.fftshift(F))"
+    ],
+    "description": "2D FFT"
+    },
+  "FFT filtering": {
+    "prefix": "sc_fft_filter",
+    "body": [
+      "# ---- Low-pass filter via FFT ----",
+      "from scipy import fft",
+      "",
+      "X = fft.rfft(y)",
+      "freqs = fft.rfftfreq(len(y), d=1.0)",
+      "",
+      "cutoff = ${1:10}",
+      "X[freqs > cutoff] = 0",
+      "",
+      "y_filtered = fft.irfft(X)"
+    ],
+    "description": "FFT-based filtering"
+  },
+
+  "// ==================== 10. SPARSE MATRICES ====================": {
+    "prefix": "sc_section_sparse",
+    "body": ["# ============ SPARSE MATRICES (scipy.sparse) ============"],
+    "description": "Section marker"
+  },
+
+  "Create sparse matrix": {
+    "prefix": "sc_sparse_create",
+    "body": [
+      "from scipy import sparse",
+      "",
+      "# ---- Formats ----",
+      "# COO: coordinate (efficient construction)",
+      "# CSR: compressed sparse row (efficient math, ML default)",
+      "# CSC: compressed sparse column",
+      "# LIL: list of lists (efficient element assignment)",
+      "",
+      "M = sparse.csr_matrix(dense_array)",
+      "M = sparse.coo_matrix((data, (rows, cols)), shape=(m, n))",
+      "M = sparse.random(m, n, density=0.1, format='csr', random_state=42)"
+    ],
+    "description": "Create sparse matrices"
+  },
+  "Sparse operations": {
+    "prefix": "sc_sparse_ops",
+    "body": [
+      "from scipy import sparse",
+      "",
+      "M.toarray()                # -> dense ndarray",
+      "M.tocsr(), M.tocsc(), M.tocoo()",
+      "M.nnz                      # number of non-zeros",
+      "M.shape, M.dtype",
+      "",
+      "# Math:",
+      "M.T                        # transpose",
+      "M @ v                      # matrix-vector product",
+      "M.dot(v)",
+      "M.multiply(scalar)         # element-wise",
+      "",
+      "# ---- ML: TF-IDF style feature matrices are sparse ----",
+      "# X_train = sparse.csr_matrix(X_train)"
+    ],
+    "description": "Sparse matrix operations"
+  },
+  "Sparse solvers": {
+    "prefix": "sc_sparse_linalg",
+    "body": [
+      "from scipy.sparse import linalg as spla",
+      "",
+      "# ---- Iterative solvers for large sparse systems ----",
+      "x = spla.spsolve(A, b)",
+      "x = spla.cg(A, b)                 # conjugate gradient",
+      "x = spla.gmres(A, b)              # generalized min residual",
+      "",
+      "# ---- Sparse eigenvalues ----",
+      "vals, vecs = spla.eigsh(A, k=${1:5})   # k largest/smallest"
+    ],
+    "description": "Sparse linear algebra"
+  },
+
+  "// ==================== 11. SPATIAL (DISTANCE & KD-TREES) ====================": {
+    "prefix": "sc_section_spatial",
+    "body": ["# ============ SPATIAL (scipy.spatial) ============"],
+    "description": "Section marker"
+  },
+
+  "Distance metrics": {
+    "prefix": "sc_spatial_distance",
+    "body": [
+      "from scipy.spatial import distance",
+      "",
+      "distance.euclidean(a, b)         # L2",
+      "distance.cityblock(a, b)         # Manhattan (L1)",
+      "distance.chebyshev(a, b)         # L∞",
+      "distance.minkowski(a, b, p=${1:3})",
+      "distance.cosine(a, b)            # 1 - cosine similarity",
+      "distance.correlation(a, b)",
+      "distance.jaccard(a, b)           # set dissimilarity",
+      "",
+      "# ---- Pairwise distance matrix ----",
+      "D = distance.cdist(X, Y, metric='${2:euclidean}')   # cross-distances",
+      "D = distance.pdist(X, metric='${2:euclidean}')      # condensed"
+    ],
+    "description": "Distance metrics"
+  },
+  "KD-Tree (nearest neighbors)": {
+    "prefix": "sc_spatial_kdtree",
+    "body": [
+      "from scipy.spatial import cKDTree",
+      "",
+      "# ---- Build KD-tree for fast nearest-neighbor queries ----",
+      "tree = cKDTree(points)",
+      "",
+      "# k nearest neighbors:",
+      "dist, idx = tree.query(query_points, k=${1:5})",
+      "",
+      "# All points within radius r:",
+      "idx_list = tree.query_ball_point(query_point, r=${2:1.0})",
+      "",
+      "# Pairs within distance:",
+      "pairs = tree.query_pairs(r=${2:1.0})",
+      "",
+      "# ML: k-NN, DBSCAN, matching problems"
+    ],
+    "description": "KD-tree nearest neighbors"
+  },
+  "Convex hull": {
+    "prefix": "sc_spatial_hull",
+    "body": [
+      "from scipy.spatial import ConvexHull, Delaunay, Voronoi",
+      "",
+      "hull = ConvexHull(points)",
+      "hull.vertices        # indices of hull points",
+      "hull.volume, hull.area",
+      "",
+      "tri = Delaunay(points)      # Delaunay triangulation",
+      "vor = Voronoi(points)       # Voronoi diagram"
+    ],
+    "description": "Convex hull, Delaunay, Voronoi"
+  },
+
+  "// ==================== 12. CLUSTERING ====================": {
+    "prefix": "sc_section_cluster",
+    "body": ["# ============ CLUSTERING (scipy.cluster) ============"],
+    "description": "Section marker"
+  },
+
+  "Hierarchical clustering": {
+    "prefix": "sc_cluster_hierarchy",
+    "body": [
+      "from scipy.cluster import hierarchy",
+      "from scipy.spatial.distance import pdist",
+      "",
+      "# ---- Compute linkage matrix ----",
+      "Z = hierarchy.linkage(",
+      "    X,",
+      "    method='${1:ward}',   # ward, single, complete, average, centroid",
+      "    metric='${2:euclidean}',",
+      ")",
+      "",
+      "# ---- Cut the dendrogram into flat clusters ----",
+      "labels = hierarchy.fcluster(Z, t=${3:3}, criterion='maxclust')",
+      "",
+      "# ---- Dendrogram plot ----",
+      "# hierarchy.dendrogram(Z)"
+    ],
+    "description": "Hierarchical (agglomerative) clustering"
+  },
+  "K-means (vector quantization)": {
+    "prefix": "sc_cluster_kmeans",
+    "body": [
+      "from scipy.cluster.vq import kmeans2, vq, whiten",
+      "",
+      "# ---- Whitening (per-feature normalization) ----",
+      "X_white = whiten(X)",
+      "",
+      "# ---- K-means clustering ----",
+      "centroids, labels = kmeans2(X_white, k=${1:3}, seed=${2:42})",
+      "",
+      "# ---- Assign new points to existing centroids ----",
+      "codes, dists = vq(X_new, centroids)"
+    ],
+    "description": "K-means clustering"
+  },
+
+  "// ==================== 13. IMAGE PROCESSING ====================": {
+    "prefix": "sc_section_ndimage",
+    "body": ["# ============ IMAGE PROCESSING (scipy.ndimage) ============"],
+    "description": "Section marker"
+  },
+
+  "Filters": {
+    "prefix": "sc_ndimage_filters",
+    "body": [
+      "from scipy import ndimage",
+      "",
+      "# ---- Gaussian smoothing ----",
+      "smooth = ndimage.gaussian_filter(image, sigma=${1:1.5})",
+      "",
+      "# ---- Median filter (denoising, salt-and-pepper) ----",
+      "denoised = ndimage.median_filter(image, size=${2:3})",
+      "",
+      "# ---- Uniform filter ----",
+      "blurred = ndimage.uniform_filter(image, size=${2:3})",
+      "",
+      "# ---- Sobel edge detection ----",
+      "gx = ndimage.sobel(image, axis=0)",
+      "gy = ndimage.sobel(image, axis=1)",
+      "edges = np.hypot(gx, gy)"
+    ],
+    "description": "Image filters"
+  },
+  "Morphology": {
+    "prefix": "sc_ndimage_morph",
+    "body": [
+      "from scipy import ndimage",
+      "",
+      "# ---- Binary morphology ----",
+      "eroded = ndimage.binary_erosion(mask, iterations=${1:1})",
+      "dilated = ndimage.binary_dilation(mask, iterations=${1:1})",
+      "opened = ndimage.binary_opening(mask)   # erosion + dilation",
+      "closed = ndimage.binary_closing(mask)   # dilation + erosion",
+      "",
+      "# ---- Connected components ----",
+      "labels, n_features = ndimage.label(mask)"
+    ],
+    "description": "Morphological operations"
+  },
+  "Measurements": {
+    "prefix": "sc_ndimage_measure",
+    "body": [
+      "from scipy import ndimage",
+      "",
+      "# ---- Region properties ----",
+      "labels, n = ndimage.label(mask)",
+      "",
+      "sizes = ndimage.sum(mask, labels, range(1, n + 1))",
+      "centroids = ndimage.center_of_mass(mask, labels, range(1, n + 1))",
+      "com = ndimage.center_of_mass(image)",
+      "",
+      "# ---- Rotate, zoom, shift ----",
+      "rotated = ndimage.rotate(image, angle=${1:45}, reshape=False)",
+      "zoomed  = ndimage.zoom(image, zoom=${2:1.5})",
+      "shifted = ndimage.shift(image, shift=(${3:10}, ${4:5}))"
+    ],
+    "description": "Measurements and transforms"
+  },
+
+  "// ==================== 14. ML WORKFLOWS ====================": {
+    "prefix": "sc_section_ml",
+    "body": ["# ============ ML WORKFLOWS ============"],
+    "description": "Section marker"
+  },
+
+  "Linear regression (closed form)": {
+    "prefix": "sc_ml_linreg",
+    "body": [
+      "from scipy import linalg",
+      "",
+      "# ---- Ordinary least squares ----",
+      "# Add a bias column of ones",
+      "Xb = np.hstack([np.ones((X.shape[0], 1)), X])",
+      "",
+      "w, residuals, rank, sv = linalg.lstsq(Xb, y)",
+      "b, coefs = w[0], w[1:]",
+      "",
+      "# Predictions:",
+      "y_pred = Xb @ w"
+    ],
+    "description": "OLS linear regression with lstsq"
+  },
+  "Nonlinear regression": {
+    "prefix": "sc_ml_nonlinreg",
+    "body": [
+      "from scipy.optimize import curve_fit",
+      "",
+      "def model(x, a, b):",
+      "    return ${1:a * np.exp(-b * x)}",
+      "",
+      "popt, pcov = curve_fit(model, X, y, p0=[${2:1, 0.1}])",
+      "y_pred = model(X, *popt)",
+      "",
+      "r_squared = 1 - np.sum((y - y_pred) ** 2) / np.sum((y - y.mean()) ** 2)"
+    ],
+    "description": "Nonlinear regression with curve_fit"
+  },
+  "Logistic regression (custom)": {
+    "prefix": "sc_ml_logreg",
+    "body": [
+      "from scipy.optimize import minimize",
+      "",
+      "def sigmoid(z):",
+      "    return 1 / (1 + np.exp(-z))",
+      "",
+      "def neg_log_likelihood(w, X, y):",
+      "    p = sigmoid(X @ w)",
+      "    return -np.sum(y * np.log(p + 1e-12) + (1 - y) * np.log(1 - p + 1e-12))",
+      "",
+      "Xb = np.hstack([np.ones((X.shape[0], 1)), X])",
+      "result = minimize(neg_log_likelihood, x0=np.zeros(Xb.shape[1]), args=(Xb, y))",
+      "w = result.x",
+      "",
+      "probabilities = sigmoid(Xb @ w)",
+      "predictions = (probabilities > 0.5).astype(int)"
+    ],
+    "description": "Logistic regression from scratch"
+  },
+  "PCA via SVD": {
+    "prefix": "sc_ml_pca",
+    "body": [
+      "from scipy import linalg",
+      "",
+      "# ---- PCA via SVD (dimensionality reduction) ----",
+      "Xc = X - X.mean(axis=0)",
+      "U, S, Vt = linalg.svd(Xc, full_matrices=False)",
+      "",
+      "# Project to k components:",
+      "k = ${1:2}",
+      "X_pca = U[:, :k] * S[:k]",
+      "",
+      "# Explained variance:",
+      "explained = (S**2) / np.sum(S**2)",
+      "print(explained[:k])"
+    ],
+    "description": "PCA via SVD"
+  },
+  "t-SNE preprocessing (with scipy)": {
+    "prefix": "sc_ml_tsne_prep",
+    "body": [
+      "from scipy.spatial.distance import pdist, squareform",
+      "",
+      "# ---- Compute pairwise distances for t-SNE / MDS ----",
+      "D = pdist(X, metric='euclidean')       # condensed",
+      "D_matrix = squareform(D)               # full matrix"
+    ],
+    "description": "Distance matrix for embedding"
+  },
+  "Dimensionality reduction (random projection)": {
+    "prefix": "sc_ml_randomproj",
+    "body": [
+      "# ---- Random projection (Johnson-Lindenstrauss) ----",
+      "rng = np.random.default_rng(42)",
+      "n_components = ${1:50}",
+      "R = rng.normal(size=(X.shape[1], n_components)) / np.sqrt(n_components)",
+      "X_reduced = X @ R"
+    ],
+    "description": "Random projection"
+  },
+  "Feature selection (ANOVA F-test)": {
+    "prefix": "sc_ml_f_classif",
+    "body": [
+      "from scipy import stats",
+      "",
+      "# ---- ANOVA F-test per feature (classification) ----",
+      "def f_classif(X, y):",
+      "    classes = np.unique(y)",
+      "    groups = [X[y == c] for c in classes]",
+      "    f_stats = np.zeros(X.shape[1])",
+      "    p_values = np.zeros(X.shape[1])",
+      "    for j in range(X.shape[1]):",
+      "        f_stats[j], p_values[j] = stats.f_oneway(*[g[:, j] for g in groups])",
+      "    return f_stats, p_values",
+      "",
+      "f_stats, p_values = f_classif(X, y)"
+    ],
+    "description": "ANOVA F-test for feature selection"
+  },
+
+  "// ==================== 15. COMMON PITFALLS ====================": {
+    "prefix": "sc_section_pitfalls",
+    "body": ["# ============ COMMON PITFALLS ============"],
+    "description": "Section marker"
+  },
+
+  "Pitfall: numpy.linalg vs scipy.linalg": {
+    "prefix": "sc_pitfall_linalg",
+    "body": [
+      "# numpy.linalg is a subset of scipy.linalg.",
+      "# scipy.linalg adds: lu, schur, expm, logm, sqrtm, solve_triangular, and more.",
+      "# Prefer scipy.linalg unless you need only the basics."
+    ],
+    "description": "numpy vs scipy linear algebra"
+  },
+  "Pitfall: p-value misinterpretation": {
+    "prefix": "sc_pitfall_pvalue",
+    "body": [
+      "# p < 0.05 does NOT mean the effect is large or important.",
+      "# It means: if H0 were true, the observed (or more extreme) result",
+      "# would occur with probability < 5%.",
+      "",
+      "# Always report effect size alongside the p-value:",
+      "#   Cohen's d, R^2, odds ratio, etc."
+    ],
+    "description": "p-value interpretation"
+  },
+  "Pitfall: multiple comparisons": {
+    "prefix": "sc_pitfall_multcomp",
+    "body": [
+      "# Running many tests inflates Type I error.",
+      "# Correct with Bonferroni or FDR:",
+      "from scipy import stats",
+      "from statsmodels.stats.multitest import multipletests",
+      "",
+      "rejected, p_adj, _, _ = multipletests(p_values, method='fdr_bh')"
+    ],
+    "description": "Multiple comparisons correction"
+  },
+  "Pitfall: sparse matrix densification": {
+    "prefix": "sc_pitfall_sparse",
+    "body": [
+      "# Calling .toarray() on a huge sparse matrix can OOM.",
+      "# Only densify when you truly need a dense array (and it fits).",
+      "",
+      "# Instead, keep operations sparse:",
+      "# X_sparse @ w     # stays sparse",
+      "# X_sparse.sum(axis=1)   # row sums without densifying"
+    ],
+    "description": "Sparse densification warning"
+  },
+  "Pitfall: curve_fit p0 matters": {
+    "prefix": "sc_pitfall_p0",
+    "body": [
+      "# curve_fit uses local optimization.",
+      "# Bad p0 -> wrong local minimum.",
+      "# Inspect data, estimate parameters roughly,",
+      "# and consider bounds or least_squares with a robust loss."
+    ],
+    "description": "Initial guess for curve fitting"
+  }
+}

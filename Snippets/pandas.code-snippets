@@ -1,0 +1,1294 @@
+{
+  "// ==================== 1. IMPORT & SETUP ====================": {
+    "prefix": "pd_section_setup",
+    "body": ["# ============ IMPORT & SETUP ============"],
+    "description": "Section marker"
+  },
+
+  "Import Pandas": {
+    "prefix": "pd_import",
+    "body": [
+      "import pandas as pd",
+      "import numpy as np",
+      "print(pd.__version__)"
+    ],
+    "description": "Standard Pandas import"
+  },
+  "Display options": {
+    "prefix": "pd_options",
+    "body": [
+      "# ---- Control display for exploration ----",
+      "pd.set_option('display.max_columns', ${1:50})",
+      "pd.set_option('display.max_rows', ${2:100})",
+      "pd.set_option('display.width', ${3:200})",
+      "pd.set_option('display.float_format', '{:.4f}'.format)",
+      "# Reset:  pd.reset_option('all')"
+    ],
+    "description": "Configure Pandas display"
+  },
+
+  "// ==================== 2. SERIES BASICS ====================": {
+    "prefix": "pd_section_series",
+    "body": ["# ============ SERIES BASICS ============"],
+    "description": "Section marker"
+  },
+
+  "Series create": {
+    "prefix": "pd_series",
+    "body": [
+      "# ---- Series: 1D labelled array ----",
+      "s = pd.Series([${1:1, 2, 3, 4}])",
+      "s = pd.Series([${1:1, 2, 3}], index=['${2:a}', '${3:b}', '${4:c}'], name='${5:score}')",
+      "s = pd.Series({'${2:a}': 1, '${3:b}': 2})   # from dict"
+    ],
+    "description": "Create a Series"
+  },
+  "Series access": {
+    "prefix": "pd_series_access",
+    "body": [
+      "# ---- Access by label vs position ----",
+      "s['${1:key}']            # by label",
+      "s.loc['${1:key}']        # explicit label access",
+      "s.iloc[0]                # by position",
+      "",
+      "# Vectorized ops on the whole series:",
+      "s + 1, s * 2, s ** 2, s.mean()"
+    ],
+    "description": "Series indexing"
+  },
+  "Series methods": {
+    "prefix": "pd_series_methods",
+    "body": [
+      "s.value_counts()          # frequency of unique values",
+      "s.unique()                # unique values (ndarray)",
+      "s.nunique()               # number of unique values",
+      "s.isna().sum()            # count missing",
+      "s.describe()              # summary stats",
+      "s.map(${1:func})            # element-wise mapping",
+      "s.apply(${1:func})          # element-wise, slower than map",
+      "s.replace(${2:old}, ${3:new})",
+      "s.clip(${4:0}, ${5:1})"
+    ],
+    "description": "Common Series methods"
+  },
+
+  "// ==================== 3. DATAFRAME CREATION ====================": {
+    "prefix": "pd_section_create",
+    "body": ["# ============ DATAFRAME CREATION ============"],
+    "description": "Section marker"
+  },
+
+  "DataFrame from dict": {
+    "prefix": "pd_df_dict",
+    "body": [
+      "# ---- Column-oriented dict: most common ----",
+      "df = pd.DataFrame({",
+      "    '${1:name}': ['${2:Alice}', '${3:Bob}', '${4:Carol}'],",
+      "    '${5:age}':  [${6:30}, ${7:25}, ${8:35}],",
+      "    '${9:city}': ['${10:Paris}', '${11:London}', '${12:Berlin}'],",
+      "})"
+    ],
+    "description": "DataFrame from dict of lists"
+  },
+  "DataFrame from records": {
+    "prefix": "pd_df_records",
+    "body": [
+      "# ---- Row-oriented: list of dicts ----",
+      "df = pd.DataFrame([",
+      "    {'${1:name}': '${2:Alice}', '${3:age}': ${4:30}},",
+      "    {'${1:name}': '${5:Bob}',   '${3:age}': ${6:25}},",
+      "])"
+    ],
+    "description": "DataFrame from list of dicts"
+  },
+  "DataFrame from arrays": {
+    "prefix": "pd_df_arrays",
+    "body": [
+      "df = pd.DataFrame(${1:arr}, columns=[${2:'a', 'b', 'c'}])",
+      "df = pd.DataFrame(${1:arr}, columns=${3:cols}, index=${4:idx})"
+    ],
+    "description": "DataFrame from NumPy array"
+  },
+  "Empty DataFrame with schema": {
+    "prefix": "pd_df_empty",
+    "body": [
+      "df = pd.DataFrame(columns=[${1:'a', 'b', 'c'}], dtype=${2:float})"
+    ],
+    "description": "Empty DataFrame with defined schema"
+  },
+  "Set index": {
+    "prefix": "pd_set_index",
+    "body": [
+      "# ---- Use an existing column as the index ----",
+      "df = df.set_index('${1:id}')",
+      "# Restore:",
+      "df = df.reset_index()",
+      "# Keep the old index as a column:",
+      "df = df.reset_index(drop=False)"
+    ],
+    "description": "Set / reset index"
+  },
+
+  "// ==================== 4. INSPECTION ====================": {
+    "prefix": "pd_section_inspect",
+    "body": ["# ============ INSPECTION ============"],
+    "description": "Section marker"
+  },
+
+  "First look": {
+    "prefix": "pd_inspect",
+    "body": [
+      "df.head(${1:5})          # first rows",
+      "df.tail(${1:5})          # last rows",
+      "df.sample(${2:5})        # random rows",
+      "df.shape                # (rows, cols)",
+      "df.columns.tolist()     # column names",
+      "df.dtypes               # per-column dtype",
+      "df.info()               # dtypes + nulls + memory",
+      "df.describe()           # numeric summary",
+      "df.describe(include='all')  # include categorical"
+    ],
+    "description": "Inspect a DataFrame"
+  },
+  "Summary of missing values": {
+    "prefix": "pd_inspect_nulls",
+    "body": [
+      "df.isna().sum()                     # count per column",
+      "df.isna().mean().sort_values(ascending=False)   # fraction",
+      "# Columns with any NaN:",
+      "cols_with_na = df.columns[df.isna().any()].tolist()"
+    ],
+    "description": "Summarize missing values"
+  },
+  "Value counts & unique": {
+    "prefix": "pd_inspect_counts",
+    "body": [
+      "df['${1:col}'].value_counts(dropna=False)",
+      "df['${1:col}'].nunique()",
+      "df['${1:col}'].unique()"
+    ],
+    "description": "Frequency and uniqueness"
+  },
+
+  "// ==================== 5. SELECTION (loc, iloc, at, iat) ====================": {
+    "prefix": "pd_section_select",
+    "body": ["# ============ SELECTION ============"],
+    "description": "Section marker"
+  },
+
+  "Column selection": {
+    "prefix": "pd_columns",
+    "body": [
+      "df['${1:col}']                        # Series",
+      "df[['${1:col}', '${2:col2}']]           # DataFrame (note double brackets)",
+      "df.filter(like='${3:prefix}')           # columns containing substring",
+      "df.filter(regex='^${4:col_}')            # regex match on column names"
+    ],
+    "description": "Select columns"
+  },
+  "loc (label-based)": {
+    "prefix": "pd_loc",
+    "body": [
+      "# ---- .loc: label-based indexing (INCLUSIVE of the endpoint) ----",
+      "df.loc[${1:row_label}]",
+      "df.loc[${2:row_label}, '${3:col}']",
+      "df.loc[${4:start}:${5:end}]                    # rows by label range",
+      "df.loc[:, '${3:col}':]                 # columns from a label onwards",
+      "df.loc[${6:cond}, ['${3:col}', '${7:col2}']]  # mask + columns"
+    ],
+    "description": "Label-based indexing with .loc"
+  },
+  "iloc (position-based)": {
+    "prefix": "pd_iloc",
+    "body": [
+      "# ---- .iloc: integer-position indexing (EXCLUSIVE of the endpoint) ----",
+      "df.iloc[0]                    # first row",
+      "df.iloc[-1]                   # last row",
+      "df.iloc[0:5]                  # first 5 rows",
+      "df.iloc[:, 0:3]               # first 3 columns",
+      "df.iloc[0:5, 0:3]             # submatrix"
+    ],
+    "description": "Position-based indexing with .iloc"
+  },
+  "at / iat (scalar access)": {
+    "prefix": "pd_at_iat",
+    "body": [
+      "df.at[${1:row_label}, '${2:col}']       # scalar by label (fast)",
+      "df.iat[${3:0}, ${4:0}]                   # scalar by position (fast)"
+    ],
+    "description": "Fast scalar access"
+  },
+
+  "// ==================== 6. FILTERING ====================": {
+    "prefix": "pd_section_filter",
+    "body": ["# ============ FILTERING ============"],
+    "description": "Section marker"
+  },
+
+  "Boolean mask": {
+    "prefix": "pd_filter_mask",
+    "body": [
+      "# ---- Filter rows by condition ----",
+      "df[df['${1:col}'] > ${2:0}]",
+      "",
+      "# Combine with & | ~ (parenthesise each condition!)",
+      "df[(df['${1:col}'] > ${2:0}) & (df['${3:col2}'] < ${4:100})]",
+      "df[(df['${1:col}'] == '${5:x}') | (df['${3:col2}'].isna())]",
+      "",
+      "# Membership",
+      "df[df['${1:col}'].isin([${6:v1}, ${7:v2}])]",
+      "df[~df['${1:col}'].isin([${6:v1}, ${7:v2}])]"
+    ],
+    "description": "Boolean-mask filtering"
+  },
+  "query (readable filtering)": {
+    "prefix": "pd_query",
+    "body": [
+      "# ---- .query(): SQL-like filter with @ for local variables ----",
+      "df.query('${1:age} > ${2:30} and ${3:city} == \"${4:Paris}\"')",
+      "df.query('${1:age} > @${5:min_age}')   # uses outer variable",
+      "df.query('${1:name}.str.startswith(\"${6:A}\")')"
+    ],
+    "description": "Readable filtering with query()"
+  },
+  "Filter by NaN": {
+    "prefix": "pd_filter_na",
+    "body": [
+      "df[df['${1:col}'].isna()]",
+      "df[df['${1:col}'].notna()]",
+      "df.dropna(subset=['${1:col}'])"
+    ],
+    "description": "Filter rows with / without NaN"
+  },
+  "nlargest / nsmallest": {
+    "prefix": "pd_nlargest",
+    "body": [
+      "df.nlargest(${1:5}, '${2:score}')",
+      "df.nsmallest(${1:5}, '${2:score}')"
+    ],
+    "description": "Top/bottom N rows by a column"
+  },
+
+  "// ==================== 7. ADDING & MODIFYING COLUMNS ====================": {
+    "prefix": "pd_section_addcol",
+    "body": ["# ============ ADDING & MODIFYING COLUMNS ============"],
+    "description": "Section marker"
+  },
+
+  "Assign new column": {
+    "prefix": "pd_assign",
+    "body": [
+      "# ---- Direct assignment ----",
+      "df['${1:new_col}'] = ${2:value}",
+      "",
+      "# ---- Vectorized expression ----",
+      "df['${1:new_col}'] = df['${3:a}'] + df['${4:b}']",
+      "",
+      "# ---- Multiple columns at once with .assign ----",
+      "df = df.assign(",
+      "    ${1:new_col}=lambda d: d['${3:a}'] * 2,",
+      "    ${5:other}=lambda d: d['${4:b}'].str.lower(),",
+      ")"
+    ],
+    "description": "Add new columns"
+  },
+  "Conditional column (np.where / select)": {
+    "prefix": "pd_assign_cond",
+    "body": [
+      "# ---- if/else vectorized ----",
+      "df['${1:label}'] = np.where(df['${2:score}'] >= ${3:0.5}, '${4:positive}', '${5:negative}')",
+      "",
+      "# ---- Multiple branches ----",
+      "df['${1:label}'] = np.select(",
+      "    [df['${2:score}'] >= ${6:0.8}, df['${2:score}'] >= ${3:0.5}],",
+      "    ['${7:high}', '${4:positive}'],",
+      "    default='${5:negative}',",
+      ")"
+    ],
+    "description": "Conditional columns"
+  },
+  "Apply / map / applymap": {
+    "prefix": "pd_apply",
+    "body": [
+      "# ---- Row/column-wise apply ----",
+      "df['${1:new}'] = df.apply(lambda row: ${2:func(row['${3:a}'])}, axis=1)   # row-wise",
+      "df.apply(${2:func})                                     # column-wise (default)",
+      "",
+      "# ---- Element-wise for a single column ----",
+      "df['${1:new}'] = df['${3:a}'].map(${2:func})",
+      "",
+      "# ---- Element-wise for the entire DataFrame ----",
+      "df.map(${2:func})       # pandas >= 2.1 (was applymap)"
+    ],
+    "description": "apply / map / map DataFrame"
+  },
+  "Rename columns": {
+    "prefix": "pd_rename",
+    "body": [
+      "# ---- Rename specific columns ----",
+      "df = df.rename(columns={'${1:old}': '${2:new}'})",
+      "",
+      "# ---- Bulk transform names ----",
+      "df.columns = df.columns.str.lower().str.replace(' ', '_')",
+      "df.columns = [c.strip() for c in df.columns]"
+    ],
+    "description": "Rename columns"
+  },
+  "Reindex / reorder columns": {
+    "prefix": "pd_reorder",
+    "body": [
+      "df = df[[${1:'col2', 'col1', 'col3'}]]                  # explicit order",
+      "df = df.reindex(columns=[${1:'col2', 'col1', 'col3'}])  # NaN if missing"
+    ],
+    "description": "Reorder columns"
+  },
+
+  "// ==================== 8. DROPPING ====================": {
+    "prefix": "pd_section_drop",
+    "body": ["# ============ DROPPING ============"],
+    "description": "Section marker"
+  },
+
+  "Drop columns / rows": {
+    "prefix": "pd_drop",
+    "body": [
+      "df.drop(columns=['${1:col}'])                        # single",
+      "df.drop(columns=['${1:col}', '${2:col2}'])             # multiple",
+      "df.drop(index=[${3:0, 1, 2}])                          # rows by label",
+      "",
+      "# In place (avoid; prefer reassignment):",
+      "df.drop(columns=['${1:col}'], inplace=True)"
+    ],
+    "description": "Drop columns or rows"
+  },
+  "Drop duplicates": {
+    "prefix": "pd_drop_duplicates",
+    "body": [
+      "df.drop_duplicates()                                   # full-row dupes",
+      "df.drop_duplicates(subset=['${1:id}'])                 # by column(s)",
+      "df.drop_duplicates(subset=['${1:id}'], keep='last')     # keep last",
+      "df.drop_duplicates(subset=['${1:id}'], keep=False)      # drop all dupes"
+    ],
+    "description": "Drop duplicate rows"
+  },
+
+  "// ==================== 9. MISSING DATA ====================": {
+    "prefix": "pd_section_missing",
+    "body": ["# ============ MISSING DATA ============"],
+    "description": "Section marker"
+  },
+
+  "Detect missing": {
+    "prefix": "pd_isna",
+    "body": [
+      "df.isna()                     # element-wise",
+      "df.isna().sum()               # per column",
+      "df.isna().any(axis=1)         # per row",
+      "df.notna().all()              # True per column with no missing"
+    ],
+    "description": "Detect missing values"
+  },
+  "Drop missing": {
+    "prefix": "pd_dropna",
+    "body": [
+      "df.dropna()                           # any NaN in the row",
+      "df.dropna(how='all')                  # all-NaN rows",
+      "df.dropna(subset=['${1:col}'])        # only these columns matter",
+      "df.dropna(thresh=${2:3})               # keep rows with >= 3 non-NaN"
+    ],
+    "description": "Drop rows/cols with NaN"
+  },
+  "Fill missing": {
+    "prefix": "pd_fillna",
+    "body": [
+      "# ---- Constant ----",
+      "df['${1:col}'].fillna(${2:0})",
+      "",
+      "# ---- Per-column strategy ----",
+      "df.fillna({'${1:col}': ${2:0}, '${3:col2}': '${4:missing}'})",
+      "",
+      "# ---- Statistical imputation ----",
+      "df['${1:col}'].fillna(df['${1:col}'].mean())",
+      "df['${1:col}'].fillna(df['${1:col}'].median())",
+      "df['${1:col}'].fillna(df['${1:col}'].mode()[0])",
+      "",
+      "# ---- Forward / backward fill (time series!) ----",
+      "df['${1:col}'].ffill()",
+      "df['${1:col}'].bfill()"
+    ],
+    "description": "Fill missing values"
+  },
+  "Interpolate": {
+    "prefix": "pd_interpolate",
+    "body": [
+      "# ---- Linear interpolation (time series) ----",
+      "df['${1:col}'].interpolate(method='linear')",
+      "df['${1:col}'].interpolate(method='time')   # requires DatetimeIndex"
+    ],
+    "description": "Interpolate missing values"
+  },
+
+  "// ==================== 10. SORTING & RANKING ====================": {
+    "prefix": "pd_section_sort",
+    "body": ["# ============ SORTING & RANKING ============"],
+    "description": "Section marker"
+  },
+
+  "Sort": {
+    "prefix": "pd_sort",
+    "body": [
+      "df.sort_values('${1:col}')",
+      "df.sort_values('${1:col}', ascending=False)",
+      "df.sort_values(['${1:col}', '${2:col2}'], ascending=[True, False])",
+      "df.sort_index()"
+    ],
+    "description": "Sort values or index"
+  },
+  "Rank": {
+    "prefix": "pd_rank",
+    "body": [
+      "df['${1:rank}'] = df['${2:score}'].rank(method='${3:average}', ascending=False)",
+      "# methods: average, min, max, first, dense"
+    ],
+    "description": "Rank values"
+  },
+
+  "// ==================== 11. GROUPBY (AGGREGATE / TRANSFORM / FILTER / APPLY) ====================": {
+    "prefix": "pd_section_groupby",
+    "body": ["# ============ GROUPBY ============"],
+    "description": "Section marker"
+  },
+
+  "GroupBy aggregate": {
+    "prefix": "pd_groupby",
+    "body": [
+      "# ---- Split-apply-combine ----",
+      "df.groupby('${1:key}')['${2:value}'].mean()",
+      "df.groupby('${1:key}')[['${2:value}', '${3:value2}']].agg(['mean', 'std', 'count'])",
+      "",
+      "# Named aggregations (clean output)",
+      "df.groupby('${1:key}').agg(",
+      "    ${4:total}=('${2:value}', 'sum'),",
+      "    ${5:avg}=('${2:value}', 'mean'),",
+      "    ${6:n}=('${3:value2}', 'size'),",
+      ")"
+    ],
+    "description": "GroupBy + aggregations"
+  },
+  "GroupBy multi-key": {
+    "prefix": "pd_groupby_multi",
+    "body": [
+      "df.groupby(['${1:key1}', '${2:key2}'])['${3:value}'].mean().unstack()"
+    ],
+    "description": "Group by multiple keys"
+  },
+  "GroupBy transform": {
+    "prefix": "pd_groupby_transform",
+    "body": [
+      "# ---- Return an array aligned with the original DataFrame ----",
+      "df['${1:group_mean}'] = df.groupby('${2:key}')['${3:value}'].transform('mean')",
+      "",
+      "# Feature engineering: mean-encode a category",
+      "df['${1:group_mean}'] = df.groupby('${2:key}')['${3:value}'].transform('mean')",
+      "",
+      "# Normalize within groups",
+      "df['${4:z}'] = df.groupby('${2:key}')['${3:value}'].transform(",
+      "    lambda s: (s - s.mean()) / (s.std() + 1e-8)",
+      ")"
+    ],
+    "description": "GroupBy transform (keeps shape)"
+  },
+  "GroupBy filter": {
+    "prefix": "pd_groupby_filter",
+    "body": [
+      "# ---- Keep groups that satisfy a condition ----",
+      "df.groupby('${1:key}').filter(lambda g: len(g) >= ${2:10})",
+      "df.groupby('${1:key}').filter(lambda g: g['${3:value}'].mean() > ${4:100})"
+    ],
+    "description": "Filter groups"
+  },
+  "GroupBy apply": {
+    "prefix": "pd_groupby_apply",
+    "body": [
+      "# ---- apply: arbitrary function per group ----",
+      "df.groupby('${1:key}').apply(lambda g: ${2:func(g)})",
+      "",
+      "# Access the group key inside:",
+      "df.groupby('${1:key}').apply(lambda g: pd.Series({",
+      "    'n': len(g),",
+      "    'mean': g['${3:value}'].mean(),",
+      "}))"
+    ],
+    "description": "GroupBy apply"
+  },
+  "GroupBy nlargest": {
+    "prefix": "pd_groupby_nlargest",
+    "body": [
+      "# ---- Top-N per group ----",
+      "df.groupby('${1:key}').apply(lambda g: g.nlargest(${2:3}, '${3:score}'))",
+      "# Or (preferred):",
+      "df.sort_values('${3:score}', ascending=False).groupby('${1:key}').head(${2:3})"
+    ],
+    "description": "Top-N rows per group"
+  },
+  "Crosstab / pivot table": {
+    "prefix": "pd_crosstab",
+    "body": [
+      "# ---- Frequency cross-tab ----",
+      "pd.crosstab(df['${1:row}'], df['${2:col}'])",
+      "pd.crosstab(df['${1:row}'], df['${2:col}'], normalize='index')   # row %",
+      "",
+      "# ---- Pivot table with aggregation ----",
+      "df.pivot_table(",
+      "    index='${1:row}',",
+      "    columns='${2:col}',",
+      "    values='${3:value}',",
+      "    aggfunc='${4:mean}',",
+      ")"
+    ],
+    "description": "Crosstab and pivot table"
+  },
+
+  "// ==================== 12. MERGING & JOINING ====================": {
+    "prefix": "pd_section_merge",
+    "body": ["# ============ MERGING & JOINING ============"],
+    "description": "Section marker"
+  },
+
+  "Merge (SQL-style join)": {
+    "prefix": "pd_merge",
+    "body": [
+      "# ---- SQL-style joins ----",
+      "pd.merge(left, right, on='${1:key}', how='inner')   # inner/left/right/outer",
+      "pd.merge(left, right, left_on='${2:a}', right_on='${3:b}', how='left')",
+      "",
+      "# Suffixes when both sides share column names:",
+      "pd.merge(left, right, on='${1:key}', suffixes=('_x', '_y'))",
+      "",
+      "# Validate join (catch duplicate keys):",
+      "pd.merge(left, right, on='${1:key}', validate='one_to_one')"
+    ],
+    "description": "Merge DataFrames"
+  },
+  "Concatenate (stack)": {
+    "prefix": "pd_concat",
+    "body": [
+      "# ---- Stack rows (same columns) ----",
+      "pd.concat([df1, df2], axis=0, ignore_index=True)",
+      "",
+      "# ---- Stack columns (same index) ----",
+      "pd.concat([df1, df2], axis=1)",
+      "",
+      "# ---- Keep track of source ----",
+      "pd.concat([df1, df2], keys=['${1:train}', '${2:test}'])"
+    ],
+    "description": "Concatenate DataFrames"
+  },
+  "Join on index": {
+    "prefix": "pd_join",
+    "body": [
+      "df1.join(df2, how='left')                  # index-based",
+      "df1.join(df2.set_index('${1:key}'))         # join on a column"
+    ],
+    "description": "Join on index"
+  },
+
+  "// ==================== 13. RESHAPING (PIVOT / MELT / STACK) ====================": {
+    "prefix": "pd_section_reshape",
+    "body": ["# ============ RESHAPING ============"],
+    "description": "Section marker"
+  },
+
+  "Pivot (long -> wide)": {
+    "prefix": "pd_pivot",
+    "body": [
+      "# ---- Reshape long to wide ----",
+      "df.pivot(index='${1:date}', columns='${2:symbol}', values='${3:price}')",
+      "",
+      "# With aggregation (duplicates):",
+      "df.pivot_table(index='${1:date}', columns='${2:symbol}', values='${3:price}', aggfunc='mean')"
+    ],
+    "description": "Pivot long to wide"
+  },
+  "Melt (wide -> long)": {
+    "prefix": "pd_melt",
+    "body": [
+      "# ---- Reshape wide to long (tidy data) ----",
+      "df.melt(",
+      "    id_vars=['${1:id}'],",
+      "    value_vars=['${2:col1}', '${3:col2}'],",
+      "    var_name='${4:variable}',",
+      "    value_name='${5:value}',",
+      ")"
+    ],
+    "description": "Melt wide to long"
+  },
+  "Stack / unstack": {
+    "prefix": "pd_stack",
+    "body": [
+      "# ---- Move columns <-> index levels ----",
+      "df.stack()                        # columns -> rows",
+      "df.unstack()                      # rows -> columns",
+      "df.stack().unstack()              # round trip"
+    ],
+    "description": "Stack / unstack"
+  },
+  "Explode list-like column": {
+    "prefix": "pd_explode",
+    "body": [
+      "# ---- One row per element of a list-like column ----",
+      "df.explode('${1:tags}')",
+      "",
+      "# ML: split multi-label into one-hot",
+      "dummies = df['${1:tags}'].str.join('|').str.get_dummies('|')"
+    ],
+    "description": "Explode list column"
+  },
+
+  "// ==================== 14. STRING OPERATIONS (.str) ====================": {
+    "prefix": "pd_section_str",
+    "body": ["# ============ STRING OPERATIONS (.str) ============"],
+    "description": "Section marker"
+  },
+
+  "String accessor basics": {
+    "prefix": "pd_str_basic",
+    "body": [
+      "s.str.lower()",
+      "s.str.upper()",
+      "s.str.title()",
+      "s.str.strip()",
+      "s.str.replace('${1:old}', '${2:new}', regex=False)",
+      "s.str.len()",
+      "s.str[0]                              # first char",
+      "s.str[:3]                             # slice"
+    ],
+    "description": "String basics"
+  },
+  "String search / match": {
+    "prefix": "pd_str_search",
+    "body": [
+      "s.str.contains('${1:pattern}', regex=True, na=False)",
+      "s.str.startswith('${2:prefix}')",
+      "s.str.endswith('${3:suffix}')",
+      "s.str.match('^${4:regex}')",
+      "s.str.extract(r'${5:(\\d+)}')",
+      "s.str.extractall(r'${5:(\\d+)}')"
+    ],
+    "description": "String search and extract"
+  },
+  "String split & join": {
+    "prefix": "pd_str_split",
+    "body": [
+      "s.str.split(',')",
+      "s.str.split(',', expand=True)     # -> DataFrame",
+      "s.str.cat(sep=', ')                # join into one string"
+    ],
+    "description": "Split and join string columns"
+  },
+  "String categories from concatenation": {
+    "prefix": "pd_str_concat",
+    "body": [
+      "df['${1:full}'] = df['${2:first}'].str.cat(df['${3:last}'], sep=' ')",
+      "df['${1:full}'] = df['${2:first}'] + ' ' + df['${3:last}']   # simpler"
+    ],
+    "description": "Concatenate string columns"
+  },
+
+  "// ==================== 15. DATETIME OPERATIONS (.dt) ====================": {
+    "prefix": "pd_section_datetime",
+    "body": ["# ============ DATETIME OPERATIONS (.dt) ============"],
+    "description": "Section marker"
+  },
+
+  "Parse dates": {
+    "prefix": "pd_to_datetime",
+    "body": [
+      "# ---- Convert strings to datetime ----",
+      "df['${1:date}'] = pd.to_datetime(df['${1:date}'])",
+      "df['${1:date}'] = pd.to_datetime(df['${1:date}'], format='${2:%Y-%m-%d}')",
+      "df['${1:date}'] = pd.to_datetime(df['${1:date}'], errors='coerce')   # bad -> NaT",
+      "",
+      "# On load:",
+      "df = pd.read_csv('${3:data.csv}', parse_dates=['${1:date}'])"
+    ],
+    "description": "Parse datetime columns"
+  },
+  "Datetime components": {
+    "prefix": "pd_dt_components",
+    "body": [
+      "df['${1:date}'].dt.year",
+      "df['${1:date}'].dt.month",
+      "df['${1:date}'].dt.day",
+      "df['${1:date}'].dt.hour",
+      "df['${1:date}'].dt.minute",
+      "df['${1:date}'].dt.dayofweek      # 0=Mon",
+      "df['${1:date}'].dt.quarter",
+      "df['${1:date}'].dt.dayofyear",
+      "df['${1:date}'].dt.weekofyear",
+      "df['${1:date}'].dt.is_month_end"
+    ],
+    "description": "Extract datetime components"
+  },
+  "Datetime arithmetic": {
+    "prefix": "pd_dt_arith",
+    "body": [
+      "df['${1:date}'] + pd.Timedelta(days=${2:7})",
+      "df['${1:date}'] - pd.Timestamp('${3:2024-01-01}')",
+      "(df['${1:date}'] - df['${4:date2}']).dt.days",
+      "",
+      "# Floor to period:",
+      "df['${1:date}'].dt.to_period('M')    # monthly period",
+      "df['${1:date}'].dt.floor('D')         # start of day"
+    ],
+    "description": "Datetime arithmetic"
+  },
+  "Set / convert timezone": {
+    "prefix": "pd_dt_tz",
+    "body": [
+      "df['${1:date}'].dt.tz_localize('${2:UTC}')",
+      "df['${1:date}'].dt.tz_convert('${3:Europe/Paris}')"
+    ],
+    "description": "Timezone handling"
+  },
+
+  "// ==================== 16. CATEGORICAL DATA ====================": {
+    "prefix": "pd_section_categorical",
+    "body": ["# ============ CATEGORICAL DATA ============"],
+    "description": "Section marker"
+  },
+
+  "Convert to category": {
+    "prefix": "pd_astype_category",
+    "body": [
+      "# ---- Category dtype: memory-efficient, ordered, ML-friendly ----",
+      "df['${1:col}'] = df['${1:col}'].astype('category')",
+      "",
+      "# Ordered categories:",
+      "df['${1:col}'] = pd.Categorical(df['${1:col}'], categories=['${2:low}', '${3:med}', '${4:high}'], ordered=True)",
+      "",
+      "# Access codes (int representation):",
+      "df['${1:col}'].cat.codes",
+      "df['${1:col}'].cat.categories"
+    ],
+    "description": "Categorical conversion"
+  },
+  "Dummies (one-hot encoding)": {
+    "prefix": "pd_get_dummies",
+    "body": [
+      "# ---- One-hot encode categorical columns ----",
+      "pd.get_dummies(df, columns=['${1:col}'], prefix='${1:col}', dtype=int)",
+      "",
+      "# Drop first column (avoid dummy-variable trap in linear models):",
+      "pd.get_dummies(df, columns=['${1:col}'], drop_first=True)",
+      "",
+      "# Or use the category dtype directly:",
+      "df['${1:col}'].cat.codes"
+    ],
+    "description": "One-hot encoding"
+  },
+  "Label encoding": {
+    "prefix": "pd_label_encode",
+    "body": [
+      "# ---- Assign integer codes to categories ----",
+      "df['${1:col}_code'] = df['${1:col}'].astype('category').cat.codes",
+      "",
+      "# Or map a specific order:",
+      "mapping = {'${2:low}': 0, '${3:med}': 1, '${4:high}': 2}",
+      "df['${1:col}_code'] = df['${1:col}'].map(mapping)"
+    ],
+    "description": "Label encoding"
+  },
+
+  "// ==================== 17. WINDOW FUNCTIONS ====================": {
+    "prefix": "pd_section_window",
+    "body": ["# ============ WINDOW FUNCTIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Rolling window": {
+    "prefix": "pd_rolling",
+    "body": [
+      "# ---- Rolling window (moving average, etc.) ----",
+      "df['${1:ma_7}'] = df['${2:value}'].rolling(window=${3:7}).mean()",
+      "df['${1:ma_7}'] = df['${2:value}'].rolling(window=${3:7}).std()",
+      "df['${1:ma_7}'] = df['${2:value}'].rolling(window=${3:7}, min_periods=1).mean()",
+      "",
+      "# Centered window (symmetrical, non-causal):",
+      "df['${2:value}'].rolling(window=${3:7}, center=True).mean()"
+    ],
+    "description": "Rolling window"
+  },
+  "Expanding & ewm": {
+    "prefix": "pd_expanding",
+    "body": [
+      "# ---- Expanding: cumulative stats ----",
+      "df['${1:cum_mean}'] = df['${2:value}'].expanding().mean()",
+      "",
+      "# ---- Exponentially weighted (more weight to recent) ----",
+      "df['${1:ewm}'] = df['${2:value}'].ewm(span=${3:10}, adjust=False).mean()",
+      "df['${1:ewm}'] = df['${2:value}'].ewm(halflife=${4:5}).mean()"
+    ],
+    "description": "Expanding and EWM"
+  },
+  "Shift & diff (lags)": {
+    "prefix": "pd_shift",
+    "body": [
+      "# ---- Lag / lead features (time series) ----",
+      "df['${1:lag1}'] = df['${2:value}'].shift(1)",
+      "df['${3:lead1}'] = df['${2:value}'].shift(-1)",
+      "",
+      "# ---- First difference ----",
+      "df['${4:diff}'] = df['${2:value}'].diff()",
+      "df['${4:diff}'] = df['${2:value}'].diff(periods=${5:7})",
+      "",
+      "# ---- Percent change ----",
+      "df['${6:pct}'] = df['${2:value}'].pct_change()"
+    ],
+    "description": "Lag / lead / diff"
+  },
+  "Cumulative": {
+    "prefix": "pd_cumsum",
+    "body": [
+      "df['${1:cum}'] = df['${2:value}'].cumsum()",
+      "df['${1:cum}'] = df['${2:value}'].cummax()",
+      "df['${1:cum}'] = df['${2:value}'].cummin()",
+      "df['${1:cum}'] = df['${2:value}'].cumprod()"
+    ],
+    "description": "Cumulative operations"
+  },
+
+  "// ==================== 18. TIME SERIES ====================": {
+    "prefix": "pd_section_timeseries",
+    "body": ["# ============ TIME SERIES ============"],
+    "description": "Section marker"
+  },
+
+  "DatetimeIndex": {
+    "prefix": "pd_datetimeindex",
+    "body": [
+      "df = df.set_index('${1:date}')",
+      "df.index = pd.DatetimeIndex(df.index)",
+      "",
+      "# Select by date ranges:",
+      "df.loc['${2:2024-01}']",
+      "df.loc['${3:2024-01-01}':'${4:2024-03-31}']",
+      "df.loc['${3:2024}']"
+    ],
+    "description": "Use DatetimeIndex"
+  },
+  "Resample": {
+    "prefix": "pd_resample",
+    "body": [
+      "# ---- Group by time period (like groupby for time) ----",
+      "df.resample('${1:D}').mean()      # daily / W weekly / M monthly / Q quarterly / Y yearly",
+      "df.resample('${1:M}').agg({'${2:value}': 'sum', '${3:count}': 'mean'})",
+      "",
+      "# OHLC bars for financial data:",
+      "df.resample('${4:1H}').agg({'${5:price}': ['first', 'max', 'min', 'last', 'mean']})"
+    ],
+    "description": "Resample time series"
+  },
+  "Asfreq & fill": {
+    "prefix": "pd_asfreq",
+    "body": [
+      "# ---- Fix the frequency, filling gaps ----",
+      "df.asfreq('${1:D}')",
+      "df.asfreq('${1:D}').ffill()   # propagate last observation",
+      "df.asfreq('${1:D}', fill_value=${2:0})"
+    ],
+    "description": "Change frequency and fill"
+  },
+
+  "// ==================== 19. INPUT / OUTPUT ====================": {
+    "prefix": "pd_section_io",
+    "body": ["# ============ INPUT / OUTPUT ============"],
+    "description": "Section marker"
+  },
+
+  "Read CSV": {
+    "prefix": "pd_read_csv",
+    "body": [
+      "df = pd.read_csv(",
+      "    '${1:data.csv}',",
+      "    usecols=['${2:col1}', '${3:col2}'],      # only load what you need",
+      "    dtype={'${2:col1}': '${4:int32}'},        # memory-efficient",
+      "    parse_dates=['${5:date}'],",
+      "    na_values=['${6:NA}', '', '${7:null}'],",
+      "    nrows=${8:100000},                       # read first N rows",
+      ")",
+      "",
+      "# Chunked reading (huge files):",
+      "for chunk in pd.read_csv('${1:data.csv}', chunksize=${9:100000}):",
+      "    process(chunk)"
+    ],
+    "description": "Read CSV efficiently"
+  },
+  "Write CSV": {
+    "prefix": "pd_to_csv",
+    "body": [
+      "df.to_csv('${1:out.csv}', index=False, encoding='utf-8')",
+      "df.to_csv('${1:out.csv}', index=False, float_format='%.4f', compression='gzip')"
+    ],
+    "description": "Write CSV"
+  },
+  "Read / write Excel": {
+    "prefix": "pd_excel",
+    "body": [
+      "df = pd.read_excel('${1:data.xlsx}', sheet_name='${2:Sheet1}')",
+      "sheets = pd.read_excel('${1:data.xlsx}', sheet_name=None)   # all sheets as dict",
+      "df.to_excel('${3:out.xlsx}', sheet_name='${2:Sheet1}', index=False)"
+    ],
+    "description": "Excel I/O"
+  },
+  "Read / write JSON": {
+    "prefix": "pd_json",
+    "body": [
+      "df = pd.read_json('${1:data.json}')",
+      "df = pd.json_normalize(nested_records)   # flatten nested JSON",
+      "df.to_json('${2:out.json}', orient='records', indent=2)"
+    ],
+    "description": "JSON I/O"
+  },
+  "Read / write Parquet (fast + compact)": {
+    "prefix": "pd_parquet",
+    "body": [
+      "# ---- Parquet: best format for DataFrames (fast, typed, compressed) ----",
+      "df = pd.read_parquet('${1:data.parquet}', columns=['${2:a}', '${3:b}'])",
+      "df.to_parquet('${4:out.parquet}', index=False, compression='snappy')"
+    ],
+    "description": "Parquet I/O"
+  },
+  "SQL read / write": {
+    "prefix": "pd_sql",
+    "body": [
+      "from sqlalchemy import create_engine",
+      "engine = create_engine('${1:sqlite:///db.sqlite}')",
+      "",
+      "df = pd.read_sql('SELECT * FROM ${2:table} WHERE ${3:cond}', engine)",
+      "df = pd.read_sql_table('${2:table}', engine)",
+      "",
+      "df.to_sql('${4:new_table}', engine, if_exists='${5:append}', index=False)"
+    ],
+    "description": "SQL I/O via SQLAlchemy"
+  },
+
+  "// ==================== 20. PERFORMANCE & MEMORY ====================": {
+    "prefix": "pd_section_perf",
+    "body": ["# ============ PERFORMANCE & MEMORY ============"],
+    "description": "Section marker"
+  },
+
+  "Memory usage": {
+    "prefix": "pd_memory",
+    "body": [
+      "df.memory_usage(deep=True)",
+      "df.memory_usage(deep=True).sum() / 1e6   # MB",
+      "df.info(memory_usage='deep')"
+    ],
+    "description": "Check memory usage"
+  },
+  "Downcast numeric types": {
+    "prefix": "pd_downcast",
+    "body": [
+      "# ---- Reduce memory by choosing smaller dtypes ----",
+      "for col in df.select_dtypes(include='int').columns:",
+      "    df[col] = pd.to_numeric(df[col], downcast='integer')",
+      "for col in df.select_dtypes(include='float').columns:",
+      "    df[col] = pd.to_numeric(df[col], downcast='float')",
+      "",
+      "# Categoricals for low-cardinality string columns:",
+      "for col in df.select_dtypes(include='object').columns:",
+      "    if df[col].nunique() / len(df) < 0.5:",
+      "        df[col] = df[col].astype('category')"
+    ],
+    "description": "Downcast to save memory"
+  },
+  "Vectorize instead of apply": {
+    "prefix": "pd_vectorize",
+    "body": [
+      "# ---- apply() is slow; prefer vectorized operations ----",
+      "",
+      "# SLOW:",
+      "# df['y'] = df['x'].apply(lambda v: v * 2 + 1)",
+      "",
+      "# FAST:",
+      "df['y'] = df['x'] * 2 + 1",
+      "",
+      "# Use np.where / np.select for conditionals",
+      "df['y'] = np.where(df['x'] > 0, df['x'], 0)"
+    ],
+    "description": "Vectorization over apply"
+  },
+  "query / eval for speed": {
+    "prefix": "pd_query_perf",
+    "body": [
+      "# ---- query/eval avoid intermediate arrays ----",
+      "df.query('${1:a} > ${2:b} * ${3:2}')",
+      "df.eval('${4:c} = ${1:a} + ${2:b}', inplace=True)"
+    ],
+    "description": "query and eval"
+  },
+  "Copy vs view (SettingWithCopy)": {
+    "prefix": "pd_copy",
+    "body": [
+      "# ---- Silence SettingWithCopyWarning by being explicit ----",
+      "sub = df[df['${1:col}'] > ${2:0}].copy()   # <-- use .copy()",
+      "sub['${3:new}'] = ${4:value}                # safe",
+      "",
+      "# Chain assignment on df directly avoids the warning:",
+      "df.loc[df['${1:col}'] > ${2:0}, '${3:new}'] = ${4:value}"
+    ],
+    "description": "Avoid copy/view warnings"
+  },
+
+  "// ==================== 21. FEATURE ENGINEERING FOR ML ====================": {
+    "prefix": "pd_section_ml",
+    "body": ["# ============ FEATURE ENGINEERING FOR ML ============"],
+    "description": "Section marker"
+  },
+
+  "Train / test split (hand-rolled)": {
+    "prefix": "pd_train_test",
+    "body": [
+      "# ---- Shuffle + split without sklearn ----",
+      "df = df.sample(frac=1, random_state=${1:42}).reset_index(drop=True)",
+      "split = int(${2:0.8} * len(df))",
+      "train, test = df.iloc[:split], df.iloc[split:]",
+      "",
+      "# ---- Separate X and y ----",
+      "X_train = train.drop(columns=['${3:target}'])",
+      "y_train = train['${3:target}']"
+    ],
+    "description": "Train/test split"
+  },
+  "Feature / target split": {
+    "prefix": "pd_xy",
+    "body": [
+      "X = df.drop(columns=['${1:target}'])",
+      "y = df['${1:target}'].values",
+      "",
+      "# Or (scikit-learn style):",
+      "# from sklearn.model_selection import train_test_split",
+      "# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)"
+    ],
+    "description": "Separate features and target"
+  },
+  "Binning (discretization)": {
+    "prefix": "pd_binning",
+    "body": [
+      "# ---- Equal-width bins ----",
+      "df['${1:bin}'] = pd.cut(df['${2:value}'], bins=${3:5}, labels=['${4:low}', '${5:mid_low}', '${6:mid}', '${7:mid_high}', '${8:high}'])",
+      "",
+      "# ---- Quantile bins (equal count) ----",
+      "df['${1:bin}'] = pd.qcut(df['${2:value}'], q=${9:4}, labels=['${10:Q1}', '${11:Q2}', '${12:Q3}', '${13:Q4}'])"
+    ],
+    "description": "Binning continuous features"
+  },
+  "Target encoding (mean)": {
+    "prefix": "pd_target_encode",
+    "body": [
+      "# ---- Mean-encode a categorical by the target ----",
+      "# WARNING: must be fit on TRAIN only to avoid leakage!",
+      "means = train.groupby('${1:category}')['${2:target}'].mean()",
+      "train['${1:category}_enc'] = train['${1:category}'].map(means)",
+      "test['${1:category}_enc']  = test['${1:category}'].map(means)",
+      "",
+      "# Smoothing (avoid extreme means for rare categories):",
+      "# enc = (n * mean + m * global_mean) / (n + m)"
+    ],
+    "description": "Target encoding without leakage"
+  },
+  "Frequency encoding": {
+    "prefix": "pd_freq_encode",
+    "body": [
+      "# ---- Replace category with its frequency ----",
+      "freq = df['${1:category}'].value_counts(normalize=True)",
+      "df['${1:category}_freq'] = df['${1:category}'].map(freq)"
+    ],
+    "description": "Frequency encoding"
+  },
+  "Lag features (time series)": {
+    "prefix": "pd_lag_features",
+    "body": [
+      "# ---- Lag & rolling features for ML ----",
+      "for lag in [${1:1, 7, 14, 28}]:",
+      "    df[f'${2:value}_lag_{lag}'] = df.groupby('${3:id}')['${2:value}'].shift(lag)",
+      "",
+      "# Rolling window features:",
+      "for w in [${4:7, 14}]:",
+      "    df[f'${2:value}_ma_{w}'] = (",
+      "        df.groupby('${3:id}')['${2:value}']",
+      "          .transform(lambda s: s.rolling(w).mean())",
+      "    )"
+    ],
+    "description": "Time-series lag features"
+  },
+  "Drop constant / near-constant columns": {
+    "prefix": "pd_drop_constant",
+    "body": [
+      "# ---- Remove columns with zero or near-zero variance ----",
+      "nunique = df.nunique()",
+      "constant_cols = nunique[nunique <= ${1:1}].index",
+      "df = df.drop(columns=constant_cols)",
+      "",
+      "# Drop columns that are >99% a single value:",
+      "for col in df.columns:",
+      "    if df[col].value_counts(normalize=True).iloc[0] > ${2:0.99}:",
+      "        df = df.drop(columns=col)"
+    ],
+    "description": "Drop low-variance columns"
+  },
+  "Class balance check": {
+    "prefix": "pd_class_balance",
+    "body": [
+      "df['${1:target}'].value_counts()",
+      "df['${1:target}'].value_counts(normalize=True)",
+      "",
+      "# Compute class weights for imbalanced learning:",
+      "counts = df['${1:target}'].value_counts()",
+      "weights = len(df) / (len(counts) * counts)",
+      "print(weights)"
+    ],
+    "description": "Class balance"
+  },
+
+  "// ==================== 22. COMMON PITFALLS ====================": {
+    "prefix": "pd_section_pitfalls",
+    "body": ["# ============ COMMON PITFALLS ============"],
+    "description": "Section marker"
+  },
+
+  "Pitfall: chained indexing": {
+    "prefix": "pd_pitfall_chain",
+    "body": [
+      "# BAD: chained indexing -> SettingWithCopyWarning",
+      "# df[df['a'] > 0]['b'] = 1     # may not modify df!",
+      "",
+      "# GOOD: single .loc assignment",
+      "df.loc[df['${1:a}'] > ${2:0}, '${3:b}'] = ${4:1}"
+    ],
+    "description": "Chained vs single indexing"
+  },
+  "Pitfall: and/or vs &/|": {
+    "prefix": "pd_pitfall_bool",
+    "body": [
+      "# BAD: Python and/or on boolean Series -> ValueError",
+      "# df[(df.a > 0) and (df.b < 1)]",
+      "",
+      "# GOOD: bitwise & | with parentheses",
+      "df[(df['${1:a}'] > ${2:0}) & (df['${3:b}'] < ${4:1})]"
+    ],
+    "description": "Use & | not and/or"
+  },
+  "Pitfall: inplace is misleading": {
+    "prefix": "pd_pitfall_inplace",
+    "body": [
+      "# 'inplace=True' returns None and does NOT always save memory.",
+      "# Prefer reassignment:",
+      "df = df.drop(columns=['${1:col}'])",
+      "",
+      "# The exception: when the operation clearly mutates the same object,",
+      "# e.g. df.sort_values(..., inplace=True) -- but even then reassign for clarity."
+    ],
+    "description": "Avoid inplace"
+  },
+  "Pitfall: dtype surprises on read": {
+    "prefix": "pd_pitfall_dtype",
+    "body": [
+      "# CSV reads often infer wrong dtypes:",
+      "#   - IDs become ints (leading zeros lost)",
+      "#   - Dates become strings",
+      "#   - 'NA' strings become NaN",
+      "# Always specify dtype and parse_dates explicitly.",
+      "df = pd.read_csv('${1:data.csv}', dtype={'${2:id}': str}, parse_dates=['${3:date}'])"
+    ],
+    "description": "Explicit dtypes on read"
+  },
+  "Pitfall: memory blow-up on merge": {
+    "prefix": "pd_pitfall_merge",
+    "body": [
+      "# ---- Cartesian explosion: N x M rows ----",
+      "# If the right side has duplicate keys, merge multiplies rows.",
+      "# Check first:",
+      "assert right['${1:key}'].is_unique",
+      "",
+      "# Validate join cardinality explicitly:",
+      "pd.merge(left, right, on='${1:key}', validate='many_to_one')"
+    ],
+    "description": "Merge cardinality checks"
+  },
+  "Pitfall: silent misalignment": {
+    "prefix": "pd_pitfall_align",
+    "body": [
+      "# Pandas aligns on index when combining Series/DataFrames.",
+      "# After filtering, indices are NOT reset:",
+      "sub = df[df['${1:col}'] > 0]",
+      "sub['${2:new}'] = ${3:series_with_different_index}   # many NaNs!",
+      "",
+      "# Fix: reset the index after filtering.",
+      "sub = sub.reset_index(drop=True)"
+    ],
+    "description": "Index alignment pitfalls"
+  },
+
+  "// ==================== 23. QUICK EDA RECIPE ====================": {
+    "prefix": "pd_section_eda",
+    "body": ["# ============ QUICK EDA RECIPE ============"],
+    "description": "Section marker"
+  },
+
+  "Full EDA one-shot": {
+    "prefix": "pd_eda",
+    "body": [
+      "# ---- Quick EDA summary ----",
+      "print(df.shape)",
+      "print(df.dtypes)",
+      "print(df.head())",
+      "print(df.describe(include='all').T)",
+      "print('Missing per column:'); print(df.isna().sum().sort_values(ascending=False))",
+      "print('Unique per column:'); print(df.nunique().sort_values())",
+      "",
+      "# Numeric distributions:",
+      "print(df.select_dtypes('number').describe().T)",
+      "",
+      "# Categorical distributions:",
+      "for col in df.select_dtypes('object').columns:",
+      "    print(f'\\n{col}:'); print(df[col].value_counts().head(${1:10}))"
+    ],
+    "description": "Complete EDA report"
+  },
+  "Correlation matrix": {
+    "prefix": "pd_correlation",
+    "body": [
+      "# ---- Numeric correlation ----",
+      "corr = df.select_dtypes('number').corr()",
+      "",
+      "# Show only highly correlated pairs:",
+      "corr_pairs = corr.unstack().sort_values(ascending=False)",
+      "corr_pairs = corr_pairs[corr_pairs < 1]   # drop self-correlations",
+      "print(corr_pairs.head(${1:10}))",
+      "",
+      "# Or with thresholds:",
+      "threshold = ${2:0.8}",
+      "strong = corr.where(np.triu(np.ones(corr.shape), k=1).astype(bool)).stack()",
+      "print(strong[strong.abs() > threshold])"
+    ],
+    "description": "Feature correlation"
+  },
+  "Detect outliers (IQR)": {
+    "prefix": "pd_outliers",
+    "body": [
+      "# ---- IQR-based outlier detection ----",
+      "Q1 = df['${1:value}'].quantile(0.25)",
+      "Q3 = df['${1:value}'].quantile(0.75)",
+      "IQR = Q3 - Q1",
+      "lower, upper = Q1 - 1.5 * IQR, Q3 + 1.5 * IQR",
+      "",
+      "outliers = df[(df['${1:value}'] < lower) | (df['${1:value}'] > upper)]",
+      "# Clip to remove:",
+      "df['${1:value}'] = df['${1:value}'].clip(lower, upper)"
+    ],
+    "description": "Outlier detection and clipping"
+  }
+}
