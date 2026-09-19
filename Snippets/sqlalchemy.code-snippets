@@ -1,0 +1,1137 @@
+{
+  "// ==================== 1. IMPORTS & SETUP ====================": {
+    "prefix": "sa_section_setup",
+    "body": ["# ============ IMPORTS & SETUP ============"],
+    "description": "Section marker"
+  },
+
+  "Import Core": {
+    "prefix": "sa_import_core",
+    "body": [
+      "from sqlalchemy import (",
+      "    create_engine, MetaData, Table, Column, Integer, String, Float,",
+      "    Boolean, DateTime, Date, Text, ForeignKey, select, insert, update,",
+      "    delete, func, and_, or_, text, literal_column, case, cast,",
+      "    distinct, union, union_all, exists, extract, desc, asc,",
+      ")"
+    ],
+    "description": "Common SQLAlchemy Core imports"
+  },
+  "Import ORM": {
+    "prefix": "sa_import_orm",
+    "body": [
+      "from sqlalchemy.orm import (",
+      "    DeclarativeBase, Mapped, mapped_column, relationship,",
+      "    Session, sessionmaker, selectinload, joinedload, subqueryload,",
+      "    aliased, foreign, remote, backref,",
+      ")"
+    ],
+    "description": "Common SQLAlchemy ORM imports"
+  },
+  "Import Async": {
+    "prefix": "sa_import_async",
+    "body": [
+      "from sqlalchemy.ext.asyncio import (",
+      "    AsyncSession, async_sessionmaker, create_async_engine,",
+      "    AsyncAttrs,",
+      ")"
+    ],
+    "description": "Async SQLAlchemy imports"
+  },
+
+  "// ==================== 2. ENGINE & CONNECTION ====================": {
+    "prefix": "sa_section_engine",
+    "body": ["# ============ ENGINE & CONNECTION ============"],
+    "description": "Section marker"
+  },
+
+  "Create engine (SQLite)": {
+    "prefix": "sa_engine_sqlite",
+    "body": [
+      "# ---- SQLite: file-based, zero-config, perfect for prototyping ----",
+      "engine = create_engine('sqlite:///${1:database.db}', echo=${2:False})",
+      "",
+      "# In-memory (for tests):",
+      "# engine = create_engine('sqlite:///:memory:')"
+    ],
+    "description": "Create a SQLite engine"
+  },
+  "Create engine (PostgreSQL)": {
+    "prefix": "sa_engine_postgres",
+    "body": [
+      "# ---- PostgreSQL ----",
+      "# Requires: pip install psycopg2-binary  (or asyncpg for async)",
+      "engine = create_engine(",
+      "    'postgresql://${1:user}:${2:password}@${3:localhost}:${4:5432}/${5:dbname}',",
+      "    echo=${6:False},",
+      "    pool_size=${7:5},",
+      "    max_overflow=${8:10},",
+      "    pool_pre_ping=True,   # check connection health before use",
+      ")"
+    ],
+    "description": "Create a PostgreSQL engine"
+  },
+  "Create engine (MySQL)": {
+    "prefix": "sa_engine_mysql",
+    "body": [
+      "# ---- MySQL ----",
+      "# Requires: pip install pymysql",
+      "engine = create_engine(",
+      "    'mysql+pymysql://${1:user}:${2:password}@${3:localhost}:${4:3306}/${5:dbname}',",
+      "    echo=${6:False},",
+      "    pool_pre_ping=True,",
+      ")"
+    ],
+    "description": "Create a MySQL engine"
+  },
+  "Engine with echo (debug)": {
+    "prefix": "sa_engine_debug",
+    "body": [
+      "# ---- echo=True prints every SQL statement (great for learning) ----",
+      "engine = create_engine('${1:sqlite:///db.sqlite}', echo=True)"
+    ],
+    "description": "Engine with SQL logging"
+  },
+  "Test connection": {
+    "prefix": "sa_conn_test",
+    "body": [
+      "# ---- Quick connection check ----",
+      "from sqlalchemy import text",
+      "with engine.connect() as conn:",
+      "    result = conn.execute(text('SELECT 1'))",
+      "    print(result.scalar())"
+    ],
+    "description": "Verify the engine can connect"
+  },
+  "Connection with transaction": {
+    "prefix": "sa_conn_begin",
+    "body": [
+      "# ---- Explicit transaction (auto-rollback on error) ----",
+      "with engine.begin() as conn:",
+      "    conn.execute(text('${1:INSERT INTO t VALUES (1)}'))",
+      "    # commits automatically on success"
+    ],
+    "description": "Engine.begin() context manager"
+  },
+
+  "// ==================== 3. TABLE DEFINITION (CORE) ====================": {
+    "prefix": "sa_section_table",
+    "body": ["# ============ TABLE DEFINITION (CORE) ============"],
+    "description": "Section marker"
+  },
+
+  "Declare table (Core)": {
+    "prefix": "sa_table",
+    "body": [
+      "# ---- Core Table: schema-first, no Python class ----",
+      "metadata = MetaData()",
+      "",
+      "${1:users} = Table(",
+      "    '${1:users}', metadata,",
+      "    Column('${2:id}', Integer, primary_key=True),",
+      "    Column('${3:name}', String(100), nullable=False),",
+      "    Column('${4:email}', String(255), unique=True),",
+      "    Column('${5:created_at}', DateTime, server_default=func.now()),",
+      ")"
+    ],
+    "description": "Define a Core table"
+  },
+  "Create tables": {
+    "prefix": "sa_create_all",
+    "body": [
+      "metadata.create_all(engine)          # create missing tables",
+      "metadata.drop_all(engine)            # drop all (careful!)",
+      "metadata.create_all(engine, checkfirst=True)  # safe re-run"
+    ],
+    "description": "Create or drop tables from metadata"
+  },
+
+  "// ==================== 4. ORM MODELS (2.0 STYLE) ====================": {
+    "prefix": "sa_section_models",
+    "body": ["# ============ ORM MODELS (2.0 STYLE) ============"],
+    "description": "Section marker"
+  },
+
+  "Base class": {
+    "prefix": "sa_base",
+    "body": [
+      "# ---- DeclarativeBase: the parent of all ORM models ----",
+      "class Base(DeclarativeBase):",
+      "    pass"
+    ],
+    "description": "ORM base class"
+  },
+  "Basic model": {
+    "prefix": "sa_model",
+    "body": [
+      "# ---- ORM model with type-annotated columns (2.0 style) ----",
+      "class ${1:User}(Base):",
+      "    __tablename__ = '${2:users}'",
+      "",
+      "    id: Mapped[int] = mapped_column(primary_key=True)",
+      "    name: Mapped[str] = mapped_column(String(${3:100}))",
+      "    email: Mapped[str] = mapped_column(String(255), unique=True)",
+      "    is_active: Mapped[bool] = mapped_column(default=True)",
+      "    created_at: Mapped[datetime] = mapped_column(server_default=func.now())",
+      "",
+      "    def __repr__(self) -> str:",
+      "        return f'<${1:User}(id={self.id}, name={self.name!r})>'"
+    ],
+    "description": "Basic ORM model"
+  },
+  "Model with relationships (one-to-many)": {
+    "prefix": "sa_model_rel",
+    "body": [
+      "# ---- One-to-many: User has many Posts ----",
+      "class User(Base):",
+      "    __tablename__ = 'users'",
+      "",
+      "    id: Mapped[int] = mapped_column(primary_key=True)",
+      "    name: Mapped[str] = mapped_column(String(100))",
+      "",
+      "    posts: Mapped[list['Post']] = relationship(back_populates='author')",
+      "",
+      "",
+      "class Post(Base):",
+      "    __tablename__ = 'posts'",
+      "",
+      "    id: Mapped[int] = mapped_column(primary_key=True)",
+      "    title: Mapped[str] = mapped_column(String(200))",
+      "    author_id: Mapped[int] = mapped_column(ForeignKey('users.id'))",
+      "",
+      "    author: Mapped['User'] = relationship(back_populates='posts')"
+    ],
+    "description": "One-to-many relationship"
+  },
+  "Model with many-to-many": {
+    "prefix": "sa_model_m2m",
+    "body": [
+      "# ---- Many-to-many: articles <-> tags ----",
+      "association = Table(",
+      "    'article_tags', Base.metadata,",
+      "    Column('article_id', ForeignKey('articles.id'), primary_key=True),",
+      "    Column('tag_id', ForeignKey('tags.id'), primary_key=True),",
+      ")",
+      "",
+      "class Article(Base):",
+      "    __tablename__ = 'articles'",
+      "    id: Mapped[int] = mapped_column(primary_key=True)",
+      "    title: Mapped[str] = mapped_column(String(200))",
+      "    tags: Mapped[list['Tag']] = relationship(secondary=association, back_populates='articles')",
+      "",
+      "class Tag(Base):",
+      "    __tablename__ = 'tags'",
+      "    id: Mapped[int] = mapped_column(primary_key=True)",
+      "    name: Mapped[str] = mapped_column(String(50), unique=True)",
+      "    articles: Mapped[list['Article']] = relationship(secondary=association, back_populates='tags')"
+    ],
+    "description": "Many-to-many relationship"
+  },
+  "Model with Enum and JSON": {
+    "prefix": "sa_model_types",
+    "body": [
+      "# ---- Special column types ----",
+      "from sqlalchemy import Enum, JSON",
+      "import enum",
+      "",
+      "class Status(enum.Enum):",
+      "    PENDING = 'pending'",
+      "    ACTIVE  = 'active'",
+      "    CLOSED  = 'closed'",
+      "",
+      "class Order(Base):",
+      "    __tablename__ = 'orders'",
+      "    id: Mapped[int] = mapped_column(primary_key=True)",
+      "    status: Mapped[Status] = mapped_column(Enum(Status), default=Status.PENDING)",
+      "    metadata_: Mapped[dict] = mapped_column('metadata', JSON, default=dict)",
+      "    amount: Mapped[float] = mapped_column(Numeric(12, 2))"
+    ],
+    "description": "Enum, JSON, Numeric columns"
+  },
+  "Model with indexes and constraints": {
+    "prefix": "sa_model_index",
+    "body": [
+      "class ${1:Event}(Base):",
+      "    __tablename__ = '${2:events}'",
+      "",
+      "    id: Mapped[int] = mapped_column(primary_key=True)",
+      "    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), index=True)",
+      "    event_type: Mapped[str] = mapped_column(String(50), index=True)",
+      "    created_at: Mapped[datetime] = mapped_column(index=True)",
+      "",
+      "    __table_args__ = (",
+      "        # composite index",
+      "        Index('ix_user_type_date', 'user_id', 'event_type', 'created_at'),",
+      "        # unique constraint",
+      "        UniqueConstraint('user_id', 'event_type', name='uq_user_event'),",
+      "    )"
+    ],
+    "description": "Model with indexes and constraints"
+  },
+
+  "// ==================== 5. SESSIONS ====================": {
+    "prefix": "sa_section_session",
+    "body": ["# ============ SESSIONS ============"],
+    "description": "Section marker"
+  },
+
+  "Session factory": {
+    "prefix": "sa_sessionmaker",
+    "body": [
+      "# ---- Reusable session factory ----",
+      "from sqlalchemy.orm import sessionmaker",
+      "",
+      "SessionLocal = sessionmaker(",
+      "    bind=engine,",
+      "    expire_on_commit=False,   # objects remain usable after commit",
+      "    future=True,",
+      ")"
+    ],
+    "description": "Create a session factory"
+  },
+  "Session context manager": {
+    "prefix": "sa_session",
+    "body": [
+      "# ---- Session: the ORM's unit of work ----",
+      "with Session(engine) as session:",
+      "    ${1:# ... queries ...}",
+      "    session.commit()"
+    ],
+    "description": "Session with automatic close"
+  },
+  "Session factory with context": {
+    "prefix": "sa_session_factory",
+    "body": [
+      "with SessionLocal() as session:",
+      "    try:",
+      "        ${1:# ... work ...}",
+      "        session.commit()",
+      "    except Exception:",
+      "        session.rollback()",
+      "        raise"
+    ],
+    "description": "Session with commit/rollback handling"
+  },
+  "Scoped session (thread-local)": {
+    "prefix": "sa_session_scoped",
+    "body": [
+      "# ---- One session per thread (legacy pattern) ----",
+      "from sqlalchemy.orm import scoped_session, sessionmaker",
+      "SessionLocal = scoped_session(sessionmaker(bind=engine))",
+      "",
+      "# Access anywhere:  SessionLocal()",
+      "# Remove at end:    SessionLocal.remove()"
+    ],
+    "description": "Thread-local session"
+  },
+
+  "// ==================== 6. INSERT / UPDATE / DELETE (ORM) ====================": {
+    "prefix": "sa_section_orm_dml",
+    "body": ["# ============ INSERT / UPDATE / DELETE (ORM) ============"],
+    "description": "Section marker"
+  },
+
+  "Insert one": {
+    "prefix": "sa_add",
+    "body": [
+      "with Session(engine) as session:",
+      "    obj = ${1:User}(name='${2:Alice}', email='${3:alice@example.com}')",
+      "    session.add(obj)",
+      "    session.commit()",
+      "    session.refresh(obj)   # load generated columns (id, created_at)",
+      "    print(obj.id)"
+    ],
+    "description": "Insert a single object"
+  },
+  "Insert many": {
+    "prefix": "sa_add_all",
+    "body": [
+      "with Session(engine) as session:",
+      "    session.add_all([",
+      "        ${1:User}(name='${2:Alice}'),",
+      "        ${3:User}(name='${4:Bob}'),",
+      "        ${5:User}(name='${6:Carol}'),",
+      "    ])",
+      "    session.commit()"
+    ],
+    "description": "Insert multiple objects"
+  },
+  "Update object": {
+    "prefix": "sa_update_obj",
+    "body": [
+      "with Session(engine) as session:",
+      "    obj = session.get(${1:User}, ${2:1})",
+      "    obj.${3:name} = '${4:New Name}'",
+      "    session.commit()"
+    ],
+    "description": "Update by mutating a fetched object"
+  },
+  "Update with bulk query": {
+    "prefix": "sa_update_stmt",
+    "body": [
+      "from sqlalchemy import update",
+      "with Session(engine) as session:",
+      "    stmt = (",
+      "        update(${1:User})",
+      "        .where(${1:User}.${2:is_active} == False)",
+      "        .values(${3:name}='${4:inactive}')",
+      "    )",
+      "    session.execute(stmt)",
+      "    session.commit()"
+    ],
+    "description": "Bulk UPDATE statement"
+  },
+  "Delete object": {
+    "prefix": "sa_delete_obj",
+    "body": [
+      "with Session(engine) as session:",
+      "    obj = session.get(${1:User}, ${2:1})",
+      "    session.delete(obj)",
+      "    session.commit()"
+    ],
+    "description": "Delete a fetched object"
+  },
+  "Delete with statement": {
+    "prefix": "sa_delete_stmt",
+    "body": [
+      "from sqlalchemy import delete",
+      "with Session(engine) as session:",
+      "    session.execute(delete(${1:User}).where(${1:User}.${2:is_active} == False))",
+      "    session.commit()"
+    ],
+    "description": "Bulk DELETE statement"
+  },
+  "Upsert (PostgreSQL)": {
+    "prefix": "sa_upsert",
+    "body": [
+      "from sqlalchemy.dialects.postgresql import insert as pg_insert",
+      "",
+      "stmt = pg_insert(${1:User}).values(",
+      "    id=${2:1}, name='${3:Alice}'",
+      ")",
+      "stmt = stmt.on_conflict_do_update(",
+      "    index_elements=['id'],",
+      "    set_={'name': stmt.excluded.name},",
+      ")",
+      "session.execute(stmt)",
+      "session.commit()"
+    ],
+    "description": "PostgreSQL UPSERT"
+  },
+
+  "// ==================== 7. SELECT & FILTERING ====================": {
+    "prefix": "sa_section_select",
+    "body": ["# ============ SELECT & FILTERING ============"],
+    "description": "Section marker"
+  },
+
+  "Select all": {
+    "prefix": "sa_select",
+    "body": [
+      "from sqlalchemy import select",
+      "",
+      "stmt = select(${1:User})",
+      "with Session(engine) as session:",
+      "    users = session.execute(stmt).scalars().all()"
+    ],
+    "description": "Select all rows"
+  },
+  "Select specific columns": {
+    "prefix": "sa_select_cols",
+    "body": [
+      "stmt = select(${1:User}.${2:id}, ${1:User}.${3:name})",
+      "with Session(engine) as session:",
+      "    for row in session.execute(stmt):",
+      "        print(row.id, row.name)"
+    ],
+    "description": "Select specific columns"
+  },
+  "Where (single condition)": {
+    "prefix": "sa_where",
+    "body": [
+      "stmt = select(${1:User}).where(${1:User}.${2:id} == ${3:1})"
+    ],
+    "description": "Filter with a single condition"
+  },
+  "Where (AND)": {
+    "prefix": "sa_where_and",
+    "body": [
+      "from sqlalchemy import and_",
+      "",
+      "stmt = select(${1:User}).where(",
+      "    and_(",
+      "        ${1:User}.${2:is_active} == True,",
+      "        ${1:User}.${3:age} >= ${4:18},",
+      "    )",
+      ")"
+    ],
+    "description": "Filter with AND"
+  },
+  "Where (OR)": {
+    "prefix": "sa_where_or",
+    "body": [
+      "from sqlalchemy import or_",
+      "",
+      "stmt = select(${1:User}).where(",
+      "    or_(",
+      "        ${1:User}.${2:role} == '${3:admin}',",
+      "        ${1:User}.${2:role} == '${4:moderator}',",
+      "    )",
+      ")"
+    ],
+    "description": "Filter with OR"
+  },
+  "Where (IN)": {
+    "prefix": "sa_where_in",
+    "body": [
+      "stmt = select(${1:User}).where(${1:User}.${2:id}.in_([${3:1, 2, 3}]))"
+    ],
+    "description": "Filter with IN"
+  },
+  "Where (BETWEEN)": {
+    "prefix": "sa_where_between",
+    "body": [
+      "stmt = select(${1:Order}).where(${1:Order}.${2:amount}.between(${3:100}, ${4:500}))"
+    ],
+    "description": "Filter with BETWEEN"
+  },
+  "Where (LIKE)": {
+    "prefix": "sa_where_like",
+    "body": [
+      "stmt = select(${1:User}).where(${1:User}.${2:name}.like('${3:A%}'))",
+      "# ilike() for case-insensitive (PostgreSQL):",
+      "# stmt = select(${1:User}).where(${1:User}.${2:name}.ilike('${3:a%}'))"
+    ],
+    "description": "Pattern match"
+  },
+  "Where (IS NULL / IS NOT NULL)": {
+    "prefix": "sa_where_null",
+    "body": [
+      "stmt = select(${1:User}).where(${1:User}.${2:email}.is_(None))       # IS NULL",
+      "stmt = select(${1:User}).where(${1:User}.${2:email}.is_not(None))   # IS NOT NULL"
+    ],
+    "description": "Null checks"
+  },
+  "Order by": {
+    "prefix": "sa_orderby",
+    "body": [
+      "stmt = (",
+      "    select(${1:User})",
+      "    .order_by(${1:User}.${2:created_at}.desc())",
+      "    .limit(${3:10})",
+      ")"
+    ],
+    "description": "Order and limit"
+  },
+  "Distinct": {
+    "prefix": "sa_distinct",
+    "body": [
+      "stmt = select(${1:User}.${2:country}).distinct()"
+    ],
+    "description": "Select DISTINCT"
+  },
+
+  "// ==================== 8. AGGREGATIONS & GROUP BY ====================": {
+    "prefix": "sa_section_agg",
+    "body": ["# ============ AGGREGATIONS & GROUP BY ============"],
+    "description": "Section marker"
+  },
+
+  "Count": {
+    "prefix": "sa_count",
+    "body": [
+      "from sqlalchemy import func",
+      "",
+      "stmt = select(func.count()).select_from(${1:User})",
+      "with Session(engine) as session:",
+      "    total = session.execute(stmt).scalar()"
+    ],
+    "description": "Count rows"
+  },
+  "Aggregates": {
+    "prefix": "sa_agg",
+    "body": [
+      "from sqlalchemy import func",
+      "",
+      "stmt = select(",
+      "    func.count(${1:Order}.id).label('n'),",
+      "    func.sum(${1:Order}.amount).label('total'),",
+      "    func.avg(${1:Order}.amount).label('avg'),",
+      "    func.min(${1:Order}.amount).label('min'),",
+      "    func.max(${1:Order}.amount).label('max'),",
+      ").select_from(${1:Order})"
+    ],
+    "description": "Multiple aggregates"
+  },
+  "Group by": {
+    "prefix": "sa_groupby",
+    "body": [
+      "stmt = (",
+      "    select(",
+      "        ${1:Order}.${2:user_id},",
+      "        func.count(${1:Order}.id).label('n_orders'),",
+      "        func.sum(${1:Order}.amount).label('total'),",
+      "    )",
+      "    .group_by(${1:Order}.${2:user_id})",
+      "    .order_by(func.sum(${1:Order}.amount).desc())",
+      ")"
+    ],
+    "description": "Group by with aggregates"
+  },
+  "Having": {
+    "prefix": "sa_having",
+    "body": [
+      "stmt = (",
+      "    select(${1:Order}.${2:user_id}, func.count().label('n'))",
+      "    .group_by(${1:Order}.${2:user_id})",
+      "    .having(func.count() > ${3:5})",
+      ")"
+    ],
+    "description": "Filter groups with HAVING"
+  },
+  "Pivot via CASE": {
+    "prefix": "sa_pivot_case",
+    "body": [
+      "from sqlalchemy import case, func",
+      "",
+      "stmt = select(",
+      "    ${1:Order}.${2:user_id},",
+      "    func.sum(case((",
+      "        ${1:Order}.${3:status} == '${4:paid}',",
+      "        ${1:Order}.${5:amount},",
+      "    ), else_=0)).label('paid_total'),",
+      "    func.sum(case((",
+      "        ${1:Order}.${3:status} == '${6:pending}',",
+      "        ${1:Order}.${5:amount},",
+      "    ), else_=0)).label('pending_total'),",
+      ").group_by(${1:Order}.${2:user_id})"
+    ],
+    "description": "Conditional aggregation (pivot)"
+  },
+
+  "// ==================== 9. JOINS ====================": {
+    "prefix": "sa_section_joins",
+    "body": ["# ============ JOINS ============"],
+    "description": "Section marker"
+  },
+
+  "Inner join": {
+    "prefix": "sa_join",
+    "body": [
+      "stmt = (",
+      "    select(${1:User}, ${2:Post})",
+      "    .join(${2:Post}, ${1:User}.${3:id} == ${2:Post}.${4:author_id})",
+      ")"
+    ],
+    "description": "INNER JOIN"
+  },
+  "Left outer join": {
+    "prefix": "sa_outerjoin",
+    "body": [
+      "stmt = (",
+      "    select(${1:User}, ${2:Post})",
+      "    .outerjoin(${2:Post}, ${1:User}.${3:id} == ${2:Post}.${4:author_id})",
+      ")"
+    ],
+    "description": "LEFT OUTER JOIN"
+  },
+  "Join with select_from": {
+    "prefix": "sa_join_from",
+    "body": [
+      "stmt = (",
+      "    select(${1:User}.${2:name}, ${3:Address}.${4:city})",
+      "    .select_from(${1:User})",
+      "    .join(${3:Address}, ${1:User}.${5:id} == ${3:Address}.${6:user_id})",
+      ")"
+    ],
+    "description": "Join with explicit FROM"
+  },
+  "Self join": {
+    "prefix": "sa_self_join",
+    "body": [
+      "from sqlalchemy.orm import aliased",
+      "",
+      "Manager = aliased(${1:Employee})",
+      "stmt = (",
+      "    select(${1:Employee}.${2:name}, Manager.${2:name}.label('manager_name'))",
+      "    .join(Manager, ${1:Employee}.${3:manager_id} == Manager.${4:id})",
+      ")"
+    ],
+    "description": "Self join with aliased"
+  },
+
+  "// ==================== 10. RELATIONSHIPS & EAGER LOADING ====================": {
+    "prefix": "sa_section_rel_load",
+    "body": ["# ============ RELATIONSHIPS & EAGER LOADING ============"],
+    "description": "Section marker"
+  },
+
+  "Access relationship (lazy)": {
+    "prefix": "sa_rel_access",
+    "body": [
+      "# ---- Default: lazy load (extra query per access, N+1 risk) ----",
+      "user = session.get(${1:User}, ${2:1})",
+      "for post in user.posts:      # triggers a SELECT per user",
+      "    print(post.title)"
+    ],
+    "description": "Lazy relationship access (N+1 warning)"
+  },
+  "Selectinload (recommended for collections)": {
+    "prefix": "sa_selectinload",
+    "body": [
+      "from sqlalchemy.orm import selectinload",
+      "",
+      "stmt = select(${1:User}).options(selectinload(${1:User}.${2:posts}))",
+      "with Session(engine) as session:",
+      "    users = session.execute(stmt).scalars().all()",
+      "    for u in users:",
+      "        print(u.${2:posts})   # already loaded",
+      "",
+      "# Best for one-to-many / many-to-many."
+    ],
+    "description": "Eager load collections with selectinload"
+  },
+  "Joinedload (recommended for many-to-one)": {
+    "prefix": "sa_joinedload",
+    "body": [
+      "from sqlalchemy.orm import joinedload",
+      "",
+      "stmt = select(${1:Post}).options(joinedload(${1:Post}.${2:author}))",
+      "with Session(engine) as session:",
+      "    posts = session.execute(stmt).scalars().all()",
+      "    for p in posts:",
+      "        print(p.${2:author}.name)",
+      "",
+      "# Best for many-to-one / one-to-one."
+    ],
+    "description": "Eager load scalar with joinedload"
+  },
+  "Lazy='raise' to catch N+1": {
+    "prefix": "sa_lazy_raise",
+    "body": [
+      "# ---- Fail loudly on accidental lazy loads (dev only) ----",
+      "posts: Mapped[list['Post']] = relationship(",
+      "    back_populates='author',",
+      "    lazy='raise',   # or 'raise_on_sql'",
+      ")"
+    ],
+    "description": "Detect N+1 during development"
+  },
+
+  "// ==================== 11. ADVANCED QUERIES ====================": {
+    "prefix": "sa_section_advanced",
+    "body": ["# ============ ADVANCED QUERIES ============"],
+    "description": "Section marker"
+  },
+
+  "CTE (WITH)": {
+    "prefix": "sa_cte",
+    "body": [
+      "with_orders = (",
+      "    select(",
+      "        ${1:Order}.${2:user_id},",
+      "        func.count(${1:Order}.id).label('n'),",
+      "        func.sum(${1:Order}.amount).label('total'),",
+      "    )",
+      "    .group_by(${1:Order}.${2:user_id})",
+      "    .cte('${3:user_stats}')",
+      ")",
+      "",
+      "stmt = (",
+      "    select(${4:User}, with_orders.c.n, with_orders.c.total)",
+      "    .join(with_orders, ${4:User}.id == with_orders.c.user_id)",
+      ")"
+    ],
+    "description": "Common Table Expression"
+  },
+  "Window function — ROW_NUMBER": {
+    "prefix": "sa_row_number",
+    "body": [
+      "from sqlalchemy import func",
+      "",
+      "rn = func.row_number().over(",
+      "    partition_by=${1:Order}.${2:user_id},",
+      "    order_by=${1:Order}.${3:amount}.desc(),",
+      ").label('rn')",
+      "",
+      "stmt = select(${1:Order}.id, ${1:Order}.${2:user_id}, ${1:Order}.${3:amount}, rn)"
+    ],
+    "description": "ROW_NUMBER window function"
+  },
+  "Top-N per group": {
+    "prefix": "sa_top_n_group",
+    "body": [
+      "from sqlalchemy import func",
+      "",
+      "subq = (",
+      "    select(",
+      "        ${1:Order}.*,",
+      "        func.row_number().over(",
+      "            partition_by=${1:Order}.${2:user_id},",
+      "            order_by=${1:Order}.${3:amount}.desc(),",
+      "        ).label('rn'),",
+      "    )",
+      "    .subquery()",
+      ")",
+      "stmt = select(subq).where(subq.c.rn <= ${4:3})"
+    ],
+    "description": "Top-N rows per group"
+  },
+  "Running total": {
+    "prefix": "sa_running_total",
+    "body": [
+      "from sqlalchemy import func",
+      "",
+      "stmt = select(",
+      "    ${1:Order}.${2:created_at},",
+      "    ${1:Order}.${3:amount},",
+      "    func.sum(${1:Order}.${3:amount}).over(",
+      "        order_by=${1:Order}.${2:created_at},",
+      "        rows=(None, 0),   # UNBOUNDED PRECEDING -> CURRENT ROW",
+      "    ).label('running_total'),",
+      ")"
+    ],
+    "description": "Cumulative sum via window"
+  },
+  "EXISTS / NOT EXISTS": {
+    "prefix": "sa_exists",
+    "body": [
+      "from sqlalchemy import exists",
+      "",
+      "stmt = select(${1:User}).where(",
+      "    exists().where(${2:Order}.${3:user_id} == ${1:User}.id)",
+      ")",
+      "# Add ~ for NOT EXISTS:  ~exists().where(...)"
+    ],
+    "description": "EXISTS subquery"
+  },
+  "Subquery in FROM": {
+    "prefix": "sa_subquery",
+    "body": [
+      "subq = (",
+      "    select(${1:Order}.${2:user_id}, func.sum(${1:Order}.${3:amount}).label('total'))",
+      "    .group_by(${1:Order}.${2:user_id})",
+      "    .subquery()",
+      ")",
+      "stmt = select(subq).where(subq.c.total > ${4:1000})"
+    ],
+    "description": "Subquery in FROM"
+  },
+  "Union / Union all": {
+    "prefix": "sa_union",
+    "body": [
+      "from sqlalchemy import union, union_all",
+      "",
+      "stmt = union(",
+      "    select(${1:User}.id, ${1:User}.name).where(${1:User}.${2:is_active} == True),",
+      "    select(${1:User}.id, ${1:User}.name).where(${1:User}.${3:role} == '${4:admin}'),",
+      ")",
+      "# union_all() to keep duplicates"
+    ],
+    "description": "UNION / UNION ALL"
+  },
+  "Case expression": {
+    "prefix": "sa_case",
+    "body": [
+      "from sqlalchemy import case",
+      "",
+      "segment = case(",
+      "    (${1:Order}.${2:amount} >= ${3:1000}, '${4:high}'),",
+      "    (${1:Order}.${2:amount} >= ${5:100},  '${6:mid}'),",
+      "    else_='${7:low}',",
+      ").label('segment')",
+      "",
+      "stmt = select(${1:Order}.id, segment)"
+    ],
+    "description": "CASE expression"
+  },
+
+  "// ==================== 12. PANDAS INTEGRATION ====================": {
+    "prefix": "sa_section_pandas",
+    "body": ["# ============ PANDAS INTEGRATION ============"],
+    "description": "Section marker"
+  },
+
+  "Read SQL into DataFrame": {
+    "prefix": "sa_read_sql",
+    "body": [
+      "import pandas as pd",
+      "",
+      "# ---- Easiest: query string with the engine ----",
+      "df = pd.read_sql('${1:SELECT * FROM users WHERE is_active = true}', engine)",
+      "",
+      "# Or with a SQLAlchemy Select:",
+      "stmt = select(${2:User}).where(${2:User}.${3:is_active} == True)",
+      "df = pd.read_sql(stmt, engine)"
+    ],
+    "description": "Read a query into pandas"
+  },
+  "Read with parameters": {
+    "prefix": "sa_read_sql_params",
+    "body": [
+      "import pandas as pd",
+      "from sqlalchemy import text",
+      "",
+      "df = pd.read_sql(",
+      "    text('SELECT * FROM users WHERE created_at >= :start_date'),",
+      "    engine,",
+      "    params={'start_date': '${1:2024-01-01}'},",
+      ")"
+    ],
+    "description": "Parameterized read_sql"
+  },
+  "Write DataFrame to SQL": {
+    "prefix": "sa_to_sql",
+    "body": [
+      "df.to_sql(",
+      "    '${1:table_name}',",
+      "    engine,",
+      "    if_exists='${2:append}',   # 'fail', 'replace', 'append'",
+      "    index=False,",
+      "    chunksize=${3:10000},      # batch inserts",
+      "    method='${4:multi}',       # faster multi-row INSERT",
+      ")"
+    ],
+    "description": "Write a DataFrame to a table"
+  },
+  "Read chunked (large data)": {
+    "prefix": "sa_read_sql_chunks",
+    "body": [
+      "for chunk in pd.read_sql('${1:SELECT * FROM big_table}', engine, chunksize=${2:100_000}):",
+      "    ${3:process(chunk)}   # avoid loading everything at once"
+    ],
+    "description": "Chunked read for large tables"
+  },
+  "Build ML features from SQL": {
+    "prefix": "sa_features_from_sql",
+    "body": [
+      "# ---- Feature table -> DataFrame for ML ----",
+      "from sqlalchemy import func, select",
+      "from sklearn.model_selection import train_test_split",
+      "",
+      "stmt = (",
+      "    select(",
+      "        ${1:User}.id,",
+      "        func.count(${2:Order}.id).label('n_orders'),",
+      "        func.sum(${2:Order}.amount).label('total_spend'),",
+      "    )",
+      "    .outerjoin(${2:Order}, ${1:User}.id == ${2:Order}.user_id)",
+      "    .group_by(${1:User}.id)",
+      ")",
+      "df = pd.read_sql(stmt, engine)",
+      "",
+      "X = df.drop(columns=['id'])",
+      "X_train, X_test = train_test_split(X, test_size=0.2, random_state=42)"
+    ],
+    "description": "Build a feature table for ML"
+  },
+
+  "// ==================== 13. ASYNC SQLALCHEMY ====================": {
+    "prefix": "sa_section_async",
+    "body": ["# ============ ASYNC SQLALCHEMY ============"],
+    "description": "Section marker"
+  },
+
+  "Async engine": {
+    "prefix": "sa_async_engine",
+    "body": [
+      "# ---- Async engine (requires asyncpg or aiosqlite) ----",
+      "from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker",
+      "",
+      "engine = create_async_engine(",
+      "    'postgresql+asyncpg://${1:user}:${2:pass}@${3:localhost}/${4:db}',",
+      "    echo=False,",
+      "    pool_size=5,",
+      "    max_overflow=10,",
+      ")"
+    ],
+    "description": "Create an async engine"
+  },
+  "Async session factory": {
+    "prefix": "sa_async_sessionmaker",
+    "body": [
+      "from sqlalchemy.ext.asyncio import async_sessionmaker",
+      "",
+      "async_session = async_sessionmaker(engine, expire_on_commit=False)",
+      "",
+      "async with async_session() as session:",
+      "    ${1:# ... await queries ...}"
+    ],
+    "description": "Async session factory"
+  },
+  "Async query": {
+    "prefix": "sa_async_query",
+    "body": [
+      "async with async_session() as session:",
+      "    result = await session.execute(select(${1:User}).where(${1:User}.id == ${2:1}))",
+      "    user = result.scalar_one_or_none()"
+    ],
+    "description": "Await a query"
+  },
+  "Async context manager": {
+    "prefix": "sa_async_ctx",
+    "body": [
+      "async with engine.begin() as conn:",
+      "    await conn.run_sync(Base.metadata.create_all)"
+    ],
+    "description": "Run sync operations from async"
+  },
+  "Async eager load": {
+    "prefix": "sa_async_eager",
+    "body": [
+      "from sqlalchemy.orm import selectinload",
+      "",
+      "stmt = (",
+      "    select(${1:User})",
+      "    .options(selectinload(${1:User}.${2:posts}))",
+      "    .where(${1:User}.id == ${3:1})",
+      ")",
+      "result = await session.execute(stmt)",
+      "user = result.scalar_one()",
+      "# user.posts is already loaded -- no lazy load in async!"
+    ],
+    "description": "Eager load in async (mandatory)"
+  },
+
+  "// ==================== 14. COMMON PATTERNS ====================": {
+    "prefix": "sa_section_patterns",
+    "body": ["# ============ COMMON PATTERNS ============"],
+    "description": "Section marker"
+  },
+
+  "Get or create": {
+    "prefix": "sa_get_or_create",
+    "body": [
+      "with Session(engine) as session:",
+      "    obj = session.execute(",
+      "        select(${1:User}).where(${1:User}.email == '${2:a@b.com}')",
+      "    ).scalar_one_or_none()",
+      "    if obj is None:",
+      "        obj = ${1:User}(email='${2:a@b.com}', name='${3:Alice}')",
+      "        session.add(obj)",
+      "        session.commit()"
+    ],
+    "description": "Get existing row or create it"
+  },
+  "Pagination helper": {
+    "prefix": "sa_paginate",
+    "body": [
+      "def paginate(session, stmt, page=1, per_page=20):",
+      "    total = session.execute(",
+      "        select(func.count()).select_from(stmt.subquery())",
+      "    ).scalar()",
+      "    items = session.execute(",
+      "        stmt.limit(per_page).offset((page - 1) * per_page)",
+      "    ).scalars().all()",
+      "    return items, total"
+    ],
+    "description": "Simple pagination helper"
+  },
+  "Repository pattern": {
+    "prefix": "sa_repo",
+    "body": [
+      "class ${1:UserRepository}:",
+      "    def __init__(self, session: Session):",
+      "        self.session = session",
+      "",
+      "    def get(self, id: int) -> ${2:User} | None:",
+      "        return self.session.get(${2:User}, id)",
+      "",
+      "    def list_active(self) -> list[${2:User}]:",
+      "        stmt = select(${2:User}).where(${2:User}.is_active == True)",
+      "        return list(self.session.execute(stmt).scalars())",
+      "",
+      "    def add(self, obj: ${2:User}) -> None:",
+      "        self.session.add(obj)",
+      "        self.session.commit()"
+    ],
+    "description": "Repository pattern"
+  },
+
+  "// ==================== 15. COMMON PITFALLS ====================": {
+    "prefix": "sa_section_pitfalls",
+    "body": ["# ============ COMMON PITFALLS ============"],
+    "description": "Section marker"
+  },
+
+  "Pitfall: N+1 queries": {
+    "prefix": "sa_pitfall_n_plus_one",
+    "body": [
+      "# BAD: one query for users, one per user for posts",
+      "users = session.execute(select(User)).scalars().all()",
+      "for u in users:",
+      "    print(u.posts)    # N extra queries!",
+      "",
+      "# GOOD: eager load",
+      "stmt = select(User).options(selectinload(User.posts))",
+      "users = session.execute(stmt).scalars().all()"
+    ],
+    "description": "Avoid N+1 with eager loading"
+  },
+  "Pitfall: session per request": {
+    "prefix": "sa_pitfall_session",
+    "body": [
+      "# Sessions are NOT thread-safe. Never share one across requests/threads.",
+      "# Pattern: create one session per request (or per unit of work),",
+      "# commit, and close.",
+      "",
+      "with Session(engine) as session:",
+      "    # ...",
+      "    session.commit()",
+      "# session is closed here"
+    ],
+    "description": "Session lifecycle"
+  },
+  "Pitfall: expire_on_commit": {
+    "prefix": "sa_pitfall_expire",
+    "body": [
+      "# After commit(), attributes are expired by default.",
+      "# Accessing them triggers a new SELECT.",
+      "",
+      "# Fix: set expire_on_commit=False on the sessionmaker",
+      "SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)"
+    ],
+    "description": "expire_on_commit gotcha"
+  },
+  "Pitfall: mutable default": {
+    "prefix": "sa_pitfall_mutable",
+    "body": [
+      "# BAD: default=[] is shared between rows",
+      "# tags: Mapped[list] = mapped_column(JSON, default=[])",
+      "",
+      "# GOOD: use a callable",
+      "tags: Mapped[list] = mapped_column(JSON, default=list)"
+    ],
+    "description": "Mutable default columns"
+  },
+  "Pitfall: async lazy load": {
+    "prefix": "sa_pitfall_async_lazy",
+    "body": [
+      "# BAD (in async): accessing a lazy relationship raises MissingGreenlet",
+      "# result = await session.execute(select(User))",
+      "# user.posts   # ERROR",
+      "",
+      "# GOOD: eager load everything you'll touch",
+      "stmt = select(User).options(selectinload(User.posts))",
+      "result = await session.execute(stmt)",
+      "user = result.scalar_one()",
+      "# user.posts is loaded"
+    ],
+    "description": "Async cannot lazy load"
+  },
+  "Pitfall: raw SQL injection": {
+    "prefix": "sa_pitfall_injection",
+    "body": [
+      "# BAD: f-string interpolation into SQL",
+      "# session.execute(text(f\"SELECT * FROM users WHERE name = '{name}'\"))",
+      "",
+      "# GOOD: bind parameters",
+      "from sqlalchemy import text",
+      "session.execute(",
+      "    text('SELECT * FROM users WHERE name = :name'),",
+      "    {'name': ${1:name}},",
+      ")"
+    ],
+    "description": "Parameterized SQL"
+  }
+}

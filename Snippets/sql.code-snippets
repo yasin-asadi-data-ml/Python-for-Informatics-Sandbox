@@ -1,0 +1,1328 @@
+{
+  "// ==================== 1. BASICS ====================": {
+    "prefix": "sql_section_basics",
+    "body": ["-- ============ BASICS ============"],
+    "description": "Section marker"
+  },
+
+  "SELECT all": {
+    "prefix": "sql_select",
+    "body": ["SELECT *", "FROM ${1:table_name}${2: ;}"],
+    "description": "Select all columns"
+  },
+  "SELECT columns": {
+    "prefix": "sql_select_cols",
+    "body": [
+      "SELECT",
+      "    ${1:col1},",
+      "    ${2:col2},",
+      "    ${3:col3}",
+      "FROM ${4:table_name}",
+      "${5: ;}"
+    ],
+    "description": "Select specific columns (one per line)"
+  },
+  "SELECT with alias": {
+    "prefix": "sql_select_as",
+    "body": [
+      "SELECT",
+      "    ${1:col1} AS ${2:alias1},",
+      "    ${3:col2} AS ${4:alias2}",
+      "FROM ${5:table} AS ${6:t}${7: ;}"
+    ],
+    "description": "SELECT with table and column aliases"
+  },
+  "SELECT DISTINCT": {
+    "prefix": "sql_distinct",
+    "body": ["SELECT DISTINCT ${1:col}", "FROM ${2:table}${3: ;}"],
+    "description": "Unique values"
+  },
+  "SELECT with ORDER BY": {
+    "prefix": "sql_orderby",
+    "body": [
+      "SELECT ${1:*}",
+      "FROM ${2:table}",
+      "ORDER BY ${3:col} ${4|ASC,DESC|}",
+      "LIMIT ${5:10}${6: ;}"
+    ],
+    "description": "Order and limit results"
+  },
+  "LIMIT / OFFSET (pagination)": {
+    "prefix": "sql_limit",
+    "body": [
+      "-- PostgreSQL / SQLite / MySQL:",
+      "SELECT * FROM ${1:table}",
+      "ORDER BY ${2:id}",
+      "LIMIT ${3:10} OFFSET ${4:0}${5: ;}",
+      "",
+      "-- SQL Server uses:",
+      "-- ORDER BY ${2:id} OFFSET ${4:0} ROWS FETCH NEXT ${3:10} ROWS ONLY;"
+    ],
+    "description": "Pagination"
+  },
+
+  "// ==================== 2. FILTERING (WHERE) ====================": {
+    "prefix": "sql_section_where",
+    "body": ["-- ============ FILTERING (WHERE) ============"],
+    "description": "Section marker"
+  },
+
+  "WHERE simple": {
+    "prefix": "sql_where",
+    "body": ["SELECT *", "FROM ${1:table}", "WHERE ${2:col} = ${3:value}${4: ;}"],
+    "description": "Basic WHERE clause"
+  },
+  "WHERE multiple conditions": {
+    "prefix": "sql_where_and",
+    "body": [
+      "WHERE ${1:col1} > ${2:value1}",
+      "  AND ${3:col2} < ${4:value2}",
+      "  AND ${5:col3} IS NOT NULL"
+    ],
+    "description": "Multiple AND conditions"
+  },
+  "WHERE IN list": {
+    "prefix": "sql_where_in",
+    "body": ["WHERE ${1:col} IN (${2:'a', 'b', 'c'})"],
+    "description": "Membership in a list"
+  },
+  "WHERE BETWEEN": {
+    "prefix": "sql_where_between",
+    "body": [
+      "WHERE ${1:col} BETWEEN ${2:lower} AND ${3:upper}",
+      "  -- BETWEEN is inclusive on both ends"
+    ],
+    "description": "Range filter"
+  },
+  "WHERE LIKE patterns": {
+    "prefix": "sql_where_like",
+    "body": [
+      "WHERE ${1:col} LIKE '${2:prefix}%'    -- starts with",
+      "  -- OR ${1:col} LIKE '%${3:suffix}'    -- ends with",
+      "  -- OR ${1:col} LIKE '%${4:mid}%'      -- contains",
+      "  -- OR ${1:col} ILIKE '%${4:mid}%'     -- case-insensitive (Postgres)"
+    ],
+    "description": "String pattern match"
+  },
+  "WHERE NULL / NOT NULL": {
+    "prefix": "sql_where_null",
+    "body": [
+      "WHERE ${1:col} IS NULL       -- use IS, not = NULL",
+      "-- OR ${1:col} IS NOT NULL"
+    ],
+    "description": "Null checks"
+  },
+  "CASE expression": {
+    "prefix": "sql_case",
+    "body": [
+      "CASE",
+      "    WHEN ${1:condition1} THEN ${2:value1}",
+      "    WHEN ${3:condition2} THEN ${4:value2}",
+      "    ELSE ${5:default_value}",
+      "END AS ${6:label}"
+    ],
+    "description": "Conditional expression"
+  },
+  "CASE in SELECT": {
+    "prefix": "sql_case_select",
+    "body": [
+      "SELECT",
+      "    ${1:id},",
+      "    CASE",
+      "        WHEN ${2:score} >= ${3:0.8} THEN '${4:high}'",
+      "        WHEN ${2:score} >= ${5:0.5} THEN '${6:mid}'",
+      "        ELSE '${7:low}'",
+      "    END AS ${8:segment}",
+      "FROM ${9:table}${10: ;}"
+    ],
+    "description": "Classify rows into segments"
+  },
+  "COALESCE (default for NULL)": {
+    "prefix": "sql_coalesce",
+    "body": ["COALESCE(${1:col}, ${2:default_value}) AS ${3:col_filled}"],
+    "description": "Replace NULL with a default"
+  },
+  "NULLIF (avoid division by zero)": {
+    "prefix": "sql_nullif",
+    "body": ["${1:numerator} / NULLIF(${2:denominator}, 0) AS ${3:ratio}"],
+    "description": "Safe division"
+  },
+
+  "// ==================== 3. AGGREGATIONS ====================": {
+    "prefix": "sql_section_agg",
+    "body": ["-- ============ AGGREGATIONS ============"],
+    "description": "Section marker"
+  },
+
+  "COUNT variants": {
+    "prefix": "sql_count",
+    "body": [
+      "COUNT(*)                       -- all rows",
+      "COUNT(${1:col})                 -- non-null values of col",
+      "COUNT(DISTINCT ${1:col})        -- unique non-null values"
+    ],
+    "description": "Count rows vs distinct values"
+  },
+  "SUM / AVG / MIN / MAX": {
+    "prefix": "sql_agg",
+    "body": [
+      "SELECT",
+      "    SUM(${1:amount})    AS total,",
+      "    AVG(${1:amount})    AS avg_amount,",
+      "    MIN(${1:amount})    AS min_amount,",
+      "    MAX(${1:amount})    AS max_amount,",
+      "    COUNT(*)            AS n",
+      "FROM ${2:table}${3: ;}"
+    ],
+    "description": "Common aggregates"
+  },
+  "GROUP BY": {
+    "prefix": "sql_groupby",
+    "body": [
+      "SELECT",
+      "    ${1:category},",
+      "    COUNT(*)        AS n,",
+      "    AVG(${2:value}) AS avg_value",
+      "FROM ${3:table}",
+      "GROUP BY ${1:category}",
+      "ORDER BY n DESC${4: ;}"
+    ],
+    "description": "Group and aggregate"
+  },
+  "GROUP BY with HAVING": {
+    "prefix": "sql_having",
+    "body": [
+      "SELECT ${1:category}, COUNT(*) AS n",
+      "FROM ${2:table}",
+      "GROUP BY ${1:category}",
+      "HAVING COUNT(*) > ${3:10}",
+      "ORDER BY n DESC${4: ;}",
+      "",
+      "-- HAVING filters after aggregation (WHERE filters before)."
+    ],
+    "description": "Filter groups"
+  },
+  "Group by multiple columns": {
+    "prefix": "sql_groupby_multi",
+    "body": [
+      "SELECT",
+      "    ${1:region},",
+      "    ${2:product},",
+      "    SUM(${3:revenue}) AS total_revenue",
+      "FROM ${4:sales}",
+      "GROUP BY ${1:region}, ${2:product}",
+      "ORDER BY ${1:region}, total_revenue DESC${5: ;}"
+    ],
+    "description": "Group by two columns"
+  },
+  "Conditional aggregation (pivot)": {
+    "prefix": "sql_pivot_agg",
+    "body": [
+      "SELECT",
+      "    ${1:user_id},",
+      "    SUM(CASE WHEN ${2:event} = '${3:click}' THEN 1 ELSE 0 END) AS n_clicks,",
+      "    SUM(CASE WHEN ${2:event} = '${4:purchase}' THEN 1 ELSE 0 END) AS n_purchases,",
+      "    SUM(CASE WHEN ${2:event} = '${4:purchase}' THEN ${5:amount} ELSE 0 END) AS revenue",
+      "FROM ${6:events}",
+      "GROUP BY ${1:user_id}${7: ;}",
+      "",
+      "-- This is the classic \"pivot\" without the PIVOT keyword."
+    ],
+    "description": "Pivot via conditional aggregation"
+  },
+  "Aggregate with FILTER (Postgres)": {
+    "prefix": "sql_filter_clause",
+    "body": [
+      "SELECT",
+      "    COUNT(*) FILTER (WHERE ${1:amount} > 0) AS positives,",
+      "    COUNT(*) FILTER (WHERE ${2:amount} < 0) AS negatives",
+      "FROM ${3:table}${4: ;}",
+      "",
+      "-- Cleaner than SUM(CASE WHEN ...). Postgres / SQLite 3.30+."
+    ],
+    "description": "FILTER clause for conditional aggregates"
+  },
+
+  "// ==================== 4. JOINS ====================": {
+    "prefix": "sql_section_joins",
+    "body": ["-- ============ JOINS ============"],
+    "description": "Section marker"
+  },
+
+  "INNER JOIN": {
+    "prefix": "sql_inner_join",
+    "body": [
+      "SELECT",
+      "    a.${1:id},",
+      "    a.${2:col_a},",
+      "    b.${3:col_b}",
+      "FROM ${4:table_a} AS a",
+      "INNER JOIN ${5:table_b} AS b",
+      "    ON a.${1:id} = b.${1:id}${6: ;}",
+      "",
+      "-- INNER JOIN keeps rows present in BOTH tables."
+    ],
+    "description": "Inner join"
+  },
+  "LEFT JOIN": {
+    "prefix": "sql_left_join",
+    "body": [
+      "SELECT",
+      "    a.${1:id},",
+      "    a.${2:col_a},",
+      "    b.${3:col_b}",
+      "FROM ${4:table_a} AS a",
+      "LEFT JOIN ${5:table_b} AS b",
+      "    ON a.${1:id} = b.${1:id}${6: ;}",
+      "",
+      "-- LEFT JOIN keeps ALL rows from the left table (b.col_b can be NULL)."
+    ],
+    "description": "Left join"
+  },
+  "LEFT JOIN — rows only in left": {
+    "prefix": "sql_left_only",
+    "body": [
+      "SELECT a.*",
+      "FROM ${1:table_a} AS a",
+      "LEFT JOIN ${2:table_b} AS b",
+      "    ON a.${3:id} = b.${3:id}",
+      "WHERE b.${3:id} IS NULL${4: ;}",
+      "",
+      "-- Anti-join: rows in A with no match in B."
+    ],
+    "description": "Anti-join (rows only in left)"
+  },
+  "RIGHT JOIN": {
+    "prefix": "sql_right_join",
+    "body": [
+      "SELECT a.*, b.*",
+      "FROM ${1:table_a} AS a",
+      "RIGHT JOIN ${2:table_b} AS b",
+      "    ON a.${3:id} = b.${3:id}${4: ;}",
+      "",
+      "-- RIGHT JOIN is just a LEFT JOIN with tables swapped.",
+      "-- Prefer LEFT JOIN for readability."
+    ],
+    "description": "Right join"
+  },
+  "FULL OUTER JOIN": {
+    "prefix": "sql_full_join",
+    "body": [
+      "SELECT a.*, b.*",
+      "FROM ${1:table_a} AS a",
+      "FULL OUTER JOIN ${2:table_b} AS b",
+      "    ON a.${3:id} = b.${3:id}${4: ;}",
+      "",
+      "-- Keeps all rows from both sides (NULL where no match)."
+    ],
+    "description": "Full outer join"
+  },
+  "CROSS JOIN": {
+    "prefix": "sql_cross_join",
+    "body": [
+      "SELECT a.*, b.*",
+      "FROM ${1:table_a} AS a",
+      "CROSS JOIN ${2:table_b} AS b${3: ;}",
+      "",
+      "-- Cartesian product: N x M rows. Use with caution."
+    ],
+    "description": "Cross join"
+  },
+  "SELF JOIN": {
+    "prefix": "sql_self_join",
+    "body": [
+      "SELECT",
+      "    e.${1:name} AS employee,",
+      "    m.${1:name} AS manager",
+      "FROM ${2:employees} AS e",
+      "LEFT JOIN ${2:employees} AS m",
+      "    ON e.${3:manager_id} = m.${4:id}${5: ;}"
+    ],
+    "description": "Self join (hierarchies)"
+  },
+  "Join on multiple conditions": {
+    "prefix": "sql_join_multi",
+    "body": [
+      "SELECT *",
+      "FROM ${1:table_a} AS a",
+      "JOIN ${2:table_b} AS b",
+      "    ON a.${3:id} = b.${3:id}",
+      "   AND a.${4:date} = b.${4:date}${5: ;}"
+    ],
+    "description": "Join on composite key"
+  },
+
+  "// ==================== 5. SUBQUERIES & CTEs ====================": {
+    "prefix": "sql_section_cte",
+    "body": ["-- ============ SUBQUERIES & CTEs ============"],
+    "description": "Section marker"
+  },
+
+  "Simple subquery": {
+    "prefix": "sql_subquery",
+    "body": [
+      "SELECT *",
+      "FROM (",
+      "    SELECT ${1:id}, SUM(${2:amount}) AS total",
+      "    FROM ${3:orders}",
+      "    GROUP BY ${1:id}",
+      ") AS sub",
+      "WHERE total > ${4:1000}${5: ;}"
+    ],
+    "description": "Subquery in FROM"
+  },
+  "Scalar subquery": {
+    "prefix": "sql_scalar_subquery",
+    "body": [
+      "SELECT",
+      "    ${1:id},",
+      "    ${2:amount},",
+      "    (SELECT AVG(${2:amount}) FROM ${3:orders}) AS overall_avg",
+      "FROM ${3:orders}${4: ;}"
+    ],
+    "description": "Scalar subquery in SELECT"
+  },
+  "IN with subquery": {
+    "prefix": "sql_in_subquery",
+    "body": [
+      "SELECT *",
+      "FROM ${1:customers}",
+      "WHERE ${2:id} IN (",
+      "    SELECT ${2:id}",
+      "    FROM ${3:orders}",
+      "    WHERE ${4:amount} > ${5:100}",
+      ")${6: ;}"
+    ],
+    "description": "Filter using IN subquery"
+  },
+  "EXISTS / NOT EXISTS": {
+    "prefix": "sql_exists",
+    "body": [
+      "SELECT *",
+      "FROM ${1:customers} AS c",
+      "WHERE EXISTS (",
+      "    SELECT 1 FROM ${2:orders} AS o",
+      "    WHERE o.${3:customer_id} = c.${4:id}",
+      ")${5: ;}",
+      "",
+      "-- NOT EXISTS gives customers with no orders (often faster than NOT IN)."
+    ],
+    "description": "Correlated EXISTS"
+  },
+  "CTE (WITH)": {
+    "prefix": "sql_with",
+    "body": [
+      "WITH ${1:cte_name} AS (",
+      "    SELECT ${2:id}, ${3:value}",
+      "    FROM ${4:table}",
+      "    WHERE ${5:condition}",
+      ")",
+      "SELECT *",
+      "FROM ${1:cte_name}",
+      "WHERE ${6:condition}${7: ;}"
+    ],
+    "description": "Common Table Expression"
+  },
+  "Multiple CTEs": {
+    "prefix": "sql_with_multi",
+    "body": [
+      "WITH ${1:first} AS (",
+      "    SELECT ${2:id}, SUM(${3:amount}) AS total",
+      "    FROM ${4:orders}",
+      "    GROUP BY ${2:id}",
+      "),",
+      "${5:second} AS (",
+      "    SELECT ${2:id}, COUNT(*) AS n",
+      "    FROM ${6:events}",
+      "    GROUP BY ${2:id}",
+      ")",
+      "SELECT f.${2:id}, f.total, s.n",
+      "FROM ${1:first} AS f",
+      "LEFT JOIN ${5:second} AS s USING (${2:id})${7: ;}"
+    ],
+    "description": "Chain multiple CTEs"
+  },
+  "Recursive CTE": {
+    "prefix": "sql_with_recursive",
+    "body": [
+      "WITH RECURSIVE ${1:tree} AS (",
+      "    -- Base case",
+      "    SELECT ${2:id}, ${3:parent_id}, 1 AS depth",
+      "    FROM ${4:table}",
+      "    WHERE ${3:parent_id} IS NULL",
+      "",
+      "    UNION ALL",
+      "",
+      "    -- Recursive step",
+      "    SELECT t.${2:id}, t.${3:parent_id}, tree.depth + 1",
+      "    FROM ${4:table} AS t",
+      "    JOIN ${1:tree} ON t.${3:parent_id} = ${1:tree}.${2:id}",
+      ")",
+      "SELECT * FROM ${1:tree} ORDER BY depth${5: ;}",
+      "",
+      "-- MySQL: remove the RECURSIVE keyword."
+    ],
+    "description": "Recursive CTE (hierarchies)"
+  },
+
+  "// ==================== 6. WINDOW FUNCTIONS ====================": {
+    "prefix": "sql_section_window",
+    "body": ["-- ============ WINDOW FUNCTIONS ============"],
+    "description": "Section marker"
+  },
+
+  "ROW_NUMBER": {
+    "prefix": "sql_row_number",
+    "body": [
+      "ROW_NUMBER() OVER (",
+      "    PARTITION BY ${1:category}",
+      "    ORDER BY ${2:date} DESC",
+      ") AS rn"
+    ],
+    "description": "Sequential row number within a partition"
+  },
+  "RANK / DENSE_RANK": {
+    "prefix": "sql_rank",
+    "body": [
+      "RANK()       OVER (PARTITION BY ${1:category} ORDER BY ${2:value} DESC) AS rnk,",
+      "DENSE_RANK() OVER (PARTITION BY ${1:category} ORDER BY ${2:value} DESC) AS drnk",
+      "",
+      "-- RANK skips numbers on ties (1,1,3); DENSE_RANK does not (1,1,2)."
+    ],
+    "description": "Ranking functions"
+  },
+  "Top-N per group": {
+    "prefix": "sql_top_n_per_group",
+    "body": [
+      "WITH ranked AS (",
+      "    SELECT",
+      "        *,",
+      "        ROW_NUMBER() OVER (",
+      "            PARTITION BY ${1:group_col}",
+      "            ORDER BY ${2:value} DESC",
+      "        ) AS rn",
+      "    FROM ${3:table}",
+      ")",
+      "SELECT *",
+      "FROM ranked",
+      "WHERE rn <= ${4:3}${5: ;}",
+      "",
+      "-- The most common \"top N per group\" pattern."
+    ],
+    "description": "Top-N rows per group"
+  },
+  "LAG / LEAD (previous / next row)": {
+    "prefix": "sql_lag_lead",
+    "body": [
+      "SELECT",
+      "    ${1:date},",
+      "    ${2:value},",
+      "    LAG(${2:value})  OVER (ORDER BY ${1:date}) AS prev_value,",
+      "    LEAD(${2:value}) OVER (ORDER BY ${1:date}) AS next_value",
+      "FROM ${3:table}${4: ;}"
+    ],
+    "description": "Previous and next values"
+  },
+  "Running total": {
+    "prefix": "sql_running_total",
+    "body": [
+      "SELECT",
+      "    ${1:date},",
+      "    ${2:amount},",
+      "    SUM(${2:amount}) OVER (",
+      "        ORDER BY ${1:date}",
+      "        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW",
+      "    ) AS running_total",
+      "FROM ${3:transactions}${4: ;}"
+    ],
+    "description": "Cumulative sum"
+  },
+  "Moving average (7-day)": {
+    "prefix": "sql_moving_avg",
+    "body": [
+      "SELECT",
+      "    ${1:date},",
+      "    ${2:value},",
+      "    AVG(${2:value}) OVER (",
+      "        ORDER BY ${1:date}",
+      "        ROWS BETWEEN ${3:6} PRECEDING AND CURRENT ROW",
+      "    ) AS ma_7",
+      "FROM ${4:table}${5: ;}"
+    ],
+    "description": "Moving average"
+  },
+  "Percent of total": {
+    "prefix": "sql_pct_of_total",
+    "body": [
+      "SELECT",
+      "    ${1:category},",
+      "    SUM(${2:amount}) AS total,",
+      "    SUM(${2:amount}) * 100.0 / SUM(SUM(${2:amount})) OVER () AS pct",
+      "FROM ${3:table}",
+      "GROUP BY ${1:category}${4: ;}"
+    ],
+    "description": "Share of total per group"
+  },
+  "Difference from previous row": {
+    "prefix": "sql_diff",
+    "body": [
+      "SELECT",
+      "    ${1:date},",
+      "    ${2:value},",
+      "    ${2:value} - LAG(${2:value}) OVER (ORDER BY ${1:date}) AS diff",
+      "FROM ${3:table}${4: ;}"
+    ],
+    "description": "Change vs previous row"
+  },
+  "NTILE (equal-sized buckets)": {
+    "prefix": "sql_ntile",
+    "body": [
+      "NTILE(${1:4}) OVER (ORDER BY ${2:value} DESC) AS quartile"
+    ],
+    "description": "Split into N buckets"
+  },
+  "FIRST_VALUE / LAST_VALUE": {
+    "prefix": "sql_first_last",
+    "body": [
+      "FIRST_VALUE(${1:value}) OVER (PARTITION BY ${2:group} ORDER BY ${3:date}) AS first_val,",
+      "LAST_VALUE(${1:value})  OVER (",
+      "    PARTITION BY ${2:group} ORDER BY ${3:date}",
+      "    ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING",
+      ") AS last_val"
+    ],
+    "description": "First and last value in a window"
+  },
+
+  "// ==================== 7. DATES & TIMES ====================": {
+    "prefix": "sql_section_dates",
+    "body": ["-- ============ DATES & TIMES ============"],
+    "description": "Section marker"
+  },
+
+  "Current date / time": {
+    "prefix": "sql_now",
+    "body": [
+      "CURRENT_DATE          -- today",
+      "CURRENT_TIME          -- time",
+      "CURRENT_TIMESTAMP     -- date + time",
+      "NOW()                 -- alias (Postgres, MySQL)"
+    ],
+    "description": "Current date and time"
+  },
+  "DATE_TRUNC (Postgres)": {
+    "prefix": "sql_date_trunc",
+    "body": [
+      "-- Truncate a timestamp to a period (Postgres)",
+      "DATE_TRUNC('${1|day,week,month,quarter,year|}', ${2:created_at}) AS ${3:period}",
+      "",
+      "-- MySQL equivalent: DATE_FORMAT(${2:created_at}, '%Y-%m-01')"
+    ],
+    "description": "Truncate date to period"
+  },
+  "EXTRACT parts": {
+    "prefix": "sql_extract",
+    "body": [
+      "EXTRACT(YEAR  FROM ${1:created_at}) AS yr,",
+      "EXTRACT(MONTH FROM ${1:created_at}) AS mo,",
+      "EXTRACT(DAY   FROM ${1:created_at}) AS dy,",
+      "EXTRACT(DOW   FROM ${1:created_at}) AS dow,   -- 0=Sunday",
+      "EXTRACT(HOUR  FROM ${1:created_at}) AS hr"
+    ],
+    "description": "Extract date components"
+  },
+  "Date arithmetic (Postgres)": {
+    "prefix": "sql_date_arith",
+    "body": [
+      "${1:date_col} + INTERVAL '${2:7 days}'    AS plus_7d,",
+      "${1:date_col} - INTERVAL '${3:1 month}'   AS minus_1mo,",
+      "${4:end_date} - ${5:start_date}           AS days_diff"
+    ],
+    "description": "Add / subtract intervals"
+  },
+  "Filter by relative dates": {
+    "prefix": "sql_date_filter",
+    "body": [
+      "WHERE ${1:created_at} >= CURRENT_DATE - INTERVAL '${2:30 days}'",
+      "  -- MySQL: WHERE ${1:created_at} >= CURDATE() - INTERVAL ${2:30} DAY",
+      "  -- SQL Server: WHERE ${1:created_at} >= DATEADD(day, -${2:30}, GETDATE())"
+    ],
+    "description": "Last N days filter"
+  },
+  "Group by month": {
+    "prefix": "sql_groupby_month",
+    "body": [
+      "SELECT",
+      "    DATE_TRUNC('month', ${1:created_at}) AS month,",
+      "    COUNT(*)                              AS n,",
+      "    SUM(${2:amount})                      AS revenue",
+      "FROM ${3:orders}",
+      "GROUP BY month",
+      "ORDER BY month${4: ;}"
+    ],
+    "description": "Monthly aggregation"
+  },
+
+  "// ==================== 8. STRINGS ====================": {
+    "prefix": "sql_section_strings",
+    "body": ["-- ============ STRINGS ============"],
+    "description": "Section marker"
+  },
+
+  "String basics": {
+    "prefix": "sql_string_basics",
+    "body": [
+      "CONCAT(${1:first}, ' ', ${2:last})       AS full_name,   -- standard",
+      "${1:first} || ' ' || ${2:last}           AS full_name_2, -- Postgres / SQLite",
+      "UPPER(${3:col})  AS upper_col,",
+      "LOWER(${3:col})  AS lower_col,",
+      "LENGTH(${3:col}) AS len,",
+      "TRIM(${3:col})   AS trimmed"
+    ],
+    "description": "Common string functions"
+  },
+  "SUBSTRING": {
+    "prefix": "sql_substring",
+    "body": [
+      "SUBSTRING(${1:col} FROM ${2:1} FOR ${3:10})   -- Postgres / standard",
+      "-- SUBSTRING(${1:col}, ${2:1}, ${3:10})       -- MySQL / SQL Server"
+    ],
+    "description": "Extract a substring"
+  },
+  "REPLACE": {
+    "prefix": "sql_replace",
+    "body": ["REPLACE(${1:col}, '${2:old}', '${3:new}') AS cleaned"],
+    "description": "Substring replacement"
+  },
+  "SPLIT_PART (Postgres)": {
+    "prefix": "sql_split_part",
+    "body": [
+      "SPLIT_PART(${1:col}, '${2:,}', ${3:1}) AS part1",
+      "-- MySQL: SUBSTRING_INDEX(${1:col}, '${2:,}', ${3:1})"
+    ],
+    "description": "Split string by delimiter"
+  },
+  "REGEXP match / extract": {
+    "prefix": "sql_regex",
+    "body": [
+      "-- Postgres",
+      "WHERE ${1:col} ~ '${2:pattern}'              -- match (case-sensitive)",
+      "WHERE ${1:col} ~* '${2:pattern}'             -- match (case-insensitive)",
+      "REGEXP_REPLACE(${1:col}, '${3:regex}', '${4:replacement}', 'g')",
+      "",
+      "-- MySQL",
+      "-- WHERE ${1:col} REGEXP '${2:pattern}'"
+    ],
+    "description": "Regex operations"
+  },
+
+  "// ==================== 9. SET OPERATIONS ====================": {
+    "prefix": "sql_section_setops",
+    "body": ["-- ============ SET OPERATIONS ============"],
+    "description": "Section marker"
+  },
+
+  "UNION vs UNION ALL": {
+    "prefix": "sql_union",
+    "body": [
+      "SELECT ${1:col} FROM ${2:table_a}",
+      "UNION ALL",
+      "SELECT ${1:col} FROM ${3:table_b}${4: ;}",
+      "",
+      "-- UNION removes duplicates (slower).",
+      "-- UNION ALL keeps duplicates (faster, usually what you want)."
+    ],
+    "description": "Union of result sets"
+  },
+  "INTERSECT": {
+    "prefix": "sql_intersect",
+    "body": [
+      "SELECT ${1:col} FROM ${2:table_a}",
+      "INTERSECT",
+      "SELECT ${1:col} FROM ${3:table_b}${4: ;}"
+    ],
+    "description": "Rows in both queries"
+  },
+  "EXCEPT / MINUS": {
+    "prefix": "sql_except",
+    "body": [
+      "SELECT ${1:col} FROM ${2:table_a}",
+      "EXCEPT",
+      "SELECT ${1:col} FROM ${3:table_b}${4: ;}",
+      "",
+      "-- Oracle uses MINUS instead of EXCEPT."
+    ],
+    "description": "Rows in first but not second"
+  },
+
+  "// ==================== 10. DDL / DML ====================": {
+    "prefix": "sql_section_ddl",
+    "body": ["-- ============ DDL / DML ============"],
+    "description": "Section marker"
+  },
+
+  "CREATE TABLE": {
+    "prefix": "sql_create_table",
+    "body": [
+      "CREATE TABLE ${1:table_name} (",
+      "    ${2:id}         ${3:SERIAL} PRIMARY KEY,",
+      "    ${4:name}       ${5:VARCHAR(255)} NOT NULL,",
+      "    ${6:amount}     NUMERIC(12, 2) DEFAULT 0,",
+      "    ${7:created_at} TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+      ");"
+    ],
+    "description": "Create table"
+  },
+  "CREATE TABLE AS (CTAS)": {
+    "prefix": "sql_create_table_as",
+    "body": [
+      "CREATE TABLE ${1:new_table} AS",
+      "SELECT *",
+      "FROM ${2:source_table}",
+      "WHERE ${3:condition}${4: ;}"
+    ],
+    "description": "Create table from query"
+  },
+  "INSERT": {
+    "prefix": "sql_insert",
+    "body": [
+      "INSERT INTO ${1:table} (${2:col1}, ${3:col2})",
+      "VALUES",
+      "    (${4:val1}, ${5:val2}),",
+      "    (${6:val3}, ${7:val4})${8: ;}"
+    ],
+    "description": "Insert rows"
+  },
+  "INSERT from SELECT": {
+    "prefix": "sql_insert_select",
+    "body": [
+      "INSERT INTO ${1:target_table} (${2:col1}, ${3:col2})",
+      "SELECT ${4:col_a}, ${5:col_b}",
+      "FROM ${6:source_table}",
+      "WHERE ${7:condition}${8: ;}"
+    ],
+    "description": "Insert from query"
+  },
+  "UPDATE": {
+    "prefix": "sql_update",
+    "body": [
+      "UPDATE ${1:table}",
+      "SET ${2:col} = ${3:value}",
+      "WHERE ${4:condition}${5: ;}",
+      "",
+      "-- WARNING: always include a WHERE clause, or you'll update every row."
+    ],
+    "description": "Update rows"
+  },
+  "DELETE": {
+    "prefix": "sql_delete",
+    "body": [
+      "DELETE FROM ${1:table}",
+      "WHERE ${2:condition}${3: ;}",
+      "",
+      "-- WARNING: always include WHERE, or you'll delete every row."
+    ],
+    "description": "Delete rows"
+  },
+  "UPSERT (Postgres)": {
+    "prefix": "sql_upsert",
+    "body": [
+      "INSERT INTO ${1:table} (${2:id}, ${3:col})",
+      "VALUES (${4:1}, ${5:value})",
+      "ON CONFLICT (${2:id}) DO UPDATE",
+      "    SET ${3:col} = EXCLUDED.${3:col};"
+    ],
+    "description": "Insert or update on conflict"
+  },
+  "ALTER TABLE": {
+    "prefix": "sql_alter",
+    "body": [
+      "ALTER TABLE ${1:table} ADD COLUMN ${2:new_col} ${3:TYPE};",
+      "-- ALTER TABLE ${1:table} DROP COLUMN ${2:new_col};",
+      "-- ALTER TABLE ${1:table} RENAME COLUMN ${4:old} TO ${5:new};",
+      "-- ALTER TABLE ${1:table} ALTER COLUMN ${6:col} SET NOT NULL;"
+    ],
+    "description": "Modify table structure"
+  },
+  "DROP TABLE": {
+    "prefix": "sql_drop_table",
+    "body": ["DROP TABLE ${1:IF EXISTS }${2:table_name}${3: CASCADE}${4: ;}"],
+    "description": "Drop table"
+  },
+  "CREATE INDEX": {
+    "prefix": "sql_create_index",
+    "body": [
+      "CREATE INDEX ${1:idx_name} ON ${2:table} (${3:col});",
+      "-- CREATE UNIQUE INDEX ... ON ... (...);",
+      "-- CREATE INDEX ... ON ... (${3:col}) WHERE ${4:condition};   -- partial index"
+    ],
+    "description": "Create index"
+  },
+
+  "// ==================== 11. ANALYTICS PATTERNS ====================": {
+    "prefix": "sql_section_analytics",
+    "body": ["-- ============ ANALYTICS PATTERNS ============"],
+    "description": "Section marker"
+  },
+
+  "Cohort retention": {
+    "prefix": "sql_cohort",
+    "body": [
+      "WITH user_cohorts AS (",
+      "    SELECT",
+      "        ${1:user_id},",
+      "        DATE_TRUNC('month', MIN(${2:event_date})) AS cohort_month",
+      "    FROM ${3:events}",
+      "    GROUP BY ${1:user_id}",
+      "),",
+      "activity AS (",
+      "    SELECT DISTINCT",
+      "        e.${1:user_id},",
+      "        c.cohort_month,",
+      "        DATE_TRUNC('month', e.${2:event_date}) AS activity_month",
+      "    FROM ${3:events} AS e",
+      "    JOIN user_cohorts AS c USING (${1:user_id})",
+      ")",
+      "SELECT",
+      "    cohort_month,",
+      "    activity_month,",
+      "    (EXTRACT(YEAR FROM activity_month) - EXTRACT(YEAR FROM cohort_month)) * 12",
+      "        + (EXTRACT(MONTH FROM activity_month) - EXTRACT(MONTH FROM cohort_month))",
+      "        AS month_offset,",
+      "    COUNT(DISTINCT ${1:user_id}) AS users",
+      "FROM activity",
+      "GROUP BY cohort_month, activity_month",
+      "ORDER BY cohort_month, month_offset;"
+    ],
+    "description": "Monthly cohort retention"
+  },
+  "Funnel analysis": {
+    "prefix": "sql_funnel",
+    "body": [
+      "WITH steps AS (",
+      "    SELECT",
+      "        ${1:user_id},",
+      "        MAX(CASE WHEN ${2:event} = '${3:visit}'    THEN 1 ELSE 0 END) AS s1_visit,",
+      "        MAX(CASE WHEN ${2:event} = '${4:add_cart}' THEN 1 ELSE 0 END) AS s2_cart,",
+      "        MAX(CASE WHEN ${2:event} = '${5:checkout}' THEN 1 ELSE 0 END) AS s3_checkout,",
+      "        MAX(CASE WHEN ${2:event} = '${6:purchase}' THEN 1 ELSE 0 END) AS s4_purchase",
+      "    FROM ${7:events}",
+      "    GROUP BY ${1:user_id}",
+      ")",
+      "SELECT",
+      "    SUM(s1_visit)    AS n_visit,",
+      "    SUM(s2_cart)     AS n_cart,",
+      "    SUM(s3_checkout) AS n_checkout,",
+      "    SUM(s4_purchase) AS n_purchase",
+      "FROM steps;"
+    ],
+    "description": "Simple funnel"
+  },
+  "RFM segmentation": {
+    "prefix": "sql_rfm",
+    "body": [
+      "WITH rfm AS (",
+      "    SELECT",
+      "        ${1:customer_id},",
+      "        MAX(${2:order_date})  AS last_order,",
+      "        COUNT(*)              AS frequency,",
+      "        SUM(${3:amount})      AS monetary",
+      "    FROM ${4:orders}",
+      "    GROUP BY ${1:customer_id}",
+      ")",
+      "SELECT",
+      "    ${1:customer_id},",
+      "    CURRENT_DATE - last_order::date                       AS recency_days,",
+      "    frequency,",
+      "    monetary,",
+      "    NTILE(4) OVER (ORDER BY last_order)    AS r_score,",
+      "    NTILE(4) OVER (ORDER BY frequency)     AS f_score,",
+      "    NTILE(4) OVER (ORDER BY monetary)      AS m_score",
+      "FROM rfm;"
+    ],
+    "description": "RFM customer segmentation"
+  },
+  "Gaps and islands": {
+    "prefix": "sql_gaps_islands",
+    "body": [
+      "-- Find consecutive runs (islands) of activity per user",
+      "WITH numbered AS (",
+      "    SELECT",
+      "        ${1:user_id},",
+      "        ${2:event_date},",
+      "        ${2:event_date} - INTERVAL '1 day' * ROW_NUMBER()",
+      "            OVER (PARTITION BY ${1:user_id} ORDER BY ${2:event_date}) AS grp",
+      "    FROM ${3:events}",
+      ")",
+      "SELECT",
+      "    ${1:user_id},",
+      "    MIN(${2:event_date}) AS streak_start,",
+      "    MAX(${2:event_date}) AS streak_end,",
+      "    COUNT(*)            AS streak_length",
+      "FROM numbered",
+      "GROUP BY ${1:user_id}, grp",
+      "ORDER BY ${1:user_id}, streak_start;"
+    ],
+    "description": "Consecutive-day streaks"
+  },
+  "Deduplicate keeping latest": {
+    "prefix": "sql_dedupe",
+    "body": [
+      "WITH ranked AS (",
+      "    SELECT",
+      "        *,",
+      "        ROW_NUMBER() OVER (",
+      "            PARTITION BY ${1:id}",
+      "            ORDER BY ${2:updated_at} DESC",
+      "        ) AS rn",
+      "    FROM ${3:table}",
+      ")",
+      "SELECT * FROM ranked WHERE rn = 1;"
+    ],
+    "description": "Keep most recent row per ID"
+  },
+  "Running total per group": {
+    "prefix": "sql_running_group",
+    "body": [
+      "SELECT",
+      "    ${1:user_id},",
+      "    ${2:date},",
+      "    ${3:amount},",
+      "    SUM(${3:amount}) OVER (",
+      "        PARTITION BY ${1:user_id}",
+      "        ORDER BY ${2:date}",
+      "        ROWS UNBOUNDED PRECEDING",
+      "    ) AS cumulative",
+      "FROM ${4:transactions};"
+    ],
+    "description": "Cumulative sum per group"
+  },
+
+  "// ==================== 12. DATA QUALITY CHECKS ====================": {
+    "prefix": "sql_section_quality",
+    "body": ["-- ============ DATA QUALITY CHECKS ============"],
+    "description": "Section marker"
+  },
+
+  "Null check per column": {
+    "prefix": "sql_null_check",
+    "body": [
+      "SELECT",
+      "    COUNT(*)                                 AS n_total,",
+      "    COUNT(*) - COUNT(${1:col})                AS n_null_${1:col},",
+      "    ROUND(100.0 * (COUNT(*) - COUNT(${1:col})) / COUNT(*), 2) AS pct_null",
+      "FROM ${2:table};"
+    ],
+    "description": "Missing values per column"
+  },
+  "Find duplicates": {
+    "prefix": "sql_find_dupes",
+    "body": [
+      "SELECT",
+      "    ${1:key},",
+      "    COUNT(*) AS n",
+      "FROM ${2:table}",
+      "GROUP BY ${1:key}",
+      "HAVING COUNT(*) > 1",
+      "ORDER BY n DESC;"
+    ],
+    "description": "Find duplicate keys"
+  },
+  "Referential integrity check": {
+    "prefix": "sql_ref_integrity",
+    "body": [
+      "-- Rows in ${1:child} with no matching ${2:parent}",
+      "SELECT c.*",
+      "FROM ${1:child} AS c",
+      "LEFT JOIN ${2:parent} AS p",
+      "    ON c.${3:foreign_key} = p.${4:primary_key}",
+      "WHERE p.${4:primary_key} IS NULL;"
+    ],
+    "description": "Orphaned foreign keys"
+  },
+  "Distinct value counts": {
+    "prefix": "sql_distinct_counts",
+    "body": [
+      "SELECT",
+      "    COUNT(DISTINCT ${1:col1}) AS n_${1:col1},",
+      "    COUNT(DISTINCT ${2:col2}) AS n_${2:col2},",
+      "    COUNT(*)                  AS n_rows",
+      "FROM ${3:table};"
+    ],
+    "description": "Cardinality check"
+  },
+  "Value distribution": {
+    "prefix": "sql_value_dist",
+    "body": [
+      "SELECT",
+      "    ${1:col},",
+      "    COUNT(*) AS n,",
+      "    ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS pct",
+      "FROM ${2:table}",
+      "GROUP BY ${1:col}",
+      "ORDER BY n DESC;"
+    ],
+    "description": "Frequency distribution"
+  },
+  "Range check": {
+    "prefix": "sql_range_check",
+    "body": [
+      "SELECT",
+      "    MIN(${1:col}) AS min_val,",
+      "    MAX(${1:col}) AS max_val,",
+      "    AVG(${1:col}) AS avg_val,",
+      "    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ${1:col}) AS median,",
+      "    COUNT(*) FILTER (WHERE ${1:col} < ${2:0}) AS n_below_min",
+      "FROM ${3:table};"
+    ],
+    "description": "Column range and distribution"
+  },
+
+  "// ==================== 13. ML FEATURE ENGINEERING ====================": {
+    "prefix": "sql_section_ml",
+    "body": ["-- ============ ML FEATURE ENGINEERING ============"],
+    "description": "Section marker"
+  },
+
+  "Simple random train/test split": {
+    "prefix": "sql_split",
+    "body": [
+      "-- 80/20 split with a deterministic hash (so the split is stable)",
+      "SELECT",
+      "    *,",
+      "    CASE",
+      "        WHEN ABS(HASHTEXT(${1:id}::text)) % 100 < ${2:80} THEN 'train'",
+      "        ELSE 'test'",
+      "    END AS split",
+      "FROM ${3:dataset};",
+      "",
+      "-- MySQL: replace HASHTEXT with CRC32(${1:id})."
+    ],
+    "description": "Deterministic train/test split"
+  },
+  "Aggregate features per user (RFM)": {
+    "prefix": "sql_features_rfm",
+    "body": [
+      "SELECT",
+      "    ${1:user_id},",
+      "    CURRENT_DATE - MAX(${2:order_date})::date AS recency_days,",
+      "    COUNT(*)                               AS n_orders,",
+      "    SUM(${3:amount})                       AS total_spend,",
+      "    AVG(${3:amount})                       AS avg_order_value,",
+      "    MAX(${3:amount})                       AS max_order",
+      "FROM ${4:orders}",
+      "GROUP BY ${1:user_id};"
+    ],
+    "description": "RFM features"
+  },
+  "Frequency features (top categories)": {
+    "prefix": "sql_features_freq",
+    "body": [
+      "SELECT",
+      "    ${1:user_id},",
+      "    COUNT(*) FILTER (WHERE ${2:category} = '${3:A}') AS n_${3:A},",
+      "    COUNT(*) FILTER (WHERE ${2:category} = '${4:B}') AS n_${4:B},",
+      "    COUNT(*) FILTER (WHERE ${2:category} = '${5:C}') AS n_${5:C}",
+      "FROM ${6:events}",
+      "GROUP BY ${1:user_id};"
+    ],
+    "description": "Category counts per user"
+  },
+  "Time-window features": {
+    "prefix": "sql_features_window",
+    "body": [
+      "-- Activity in rolling time windows (7/30/90 days)",
+      "SELECT",
+      "    ${1:user_id},",
+      "    COUNT(*) FILTER (WHERE ${2:event_date} >= CURRENT_DATE - INTERVAL '7 days')  AS n_7d,",
+      "    COUNT(*) FILTER (WHERE ${2:event_date} >= CURRENT_DATE - INTERVAL '30 days') AS n_30d,",
+      "    COUNT(*) FILTER (WHERE ${2:event_date} >= CURRENT_DATE - INTERVAL '90 days') AS n_90d",
+      "FROM ${3:events}",
+      "GROUP BY ${1:user_id};"
+    ],
+    "description": "Rolling window features"
+  },
+  "Build labeled dataset": {
+    "prefix": "sql_build_dataset",
+    "body": [
+      "WITH features AS (",
+      "    SELECT",
+      "        ${1:user_id},",
+      "        COUNT(*)         AS n_events,",
+      "        SUM(${2:amount}) AS total_spend",
+      "    FROM ${3:events}",
+      "    GROUP BY ${1:user_id}",
+      "),",
+      "labels AS (",
+      "    SELECT ${1:user_id}, ${4:churned}::int AS y",
+      "    FROM ${5:labels}",
+      ")",
+      "SELECT f.*, l.y",
+      "FROM features AS f",
+      "JOIN labels   AS l USING (${1:user_id});"
+    ],
+    "description": "Feature + label join"
+  },
+  "Feature table with all columns": {
+    "prefix": "sql_feature_table",
+    "body": [
+      "CREATE OR REPLACE VIEW ${1:features_v} AS",
+      "SELECT",
+      "    u.${2:user_id},",
+      "    u.${3:signup_date},",
+      "    CURRENT_DATE - u.${3:signup_date}::date AS tenure_days,",
+      "    COALESCE(o.n_orders, 0)              AS n_orders,",
+      "    COALESCE(o.total_spend, 0)           AS total_spend,",
+      "    COALESCE(e.n_events_30d, 0)          AS n_events_30d",
+      "FROM ${4:users} AS u",
+      "LEFT JOIN (",
+      "    SELECT ${2:user_id}, COUNT(*) AS n_orders, SUM(${5:amount}) AS total_spend",
+      "    FROM ${6:orders} GROUP BY ${2:user_id}",
+      ") AS o USING (${2:user_id})",
+      "LEFT JOIN (",
+      "    SELECT ${2:user_id}, COUNT(*) AS n_events_30d",
+      "    FROM ${7:events}",
+      "    WHERE ${8:event_date} >= CURRENT_DATE - INTERVAL '30 days'",
+      "    GROUP BY ${2:user_id}",
+      ") AS e USING (${2:user_id});"
+    ],
+    "description": "Full feature view"
+  },
+
+  "// ==================== 14. PERFORMANCE ====================": {
+    "prefix": "sql_section_perf",
+    "body": ["-- ============ PERFORMANCE ============"],
+    "description": "Section marker"
+  },
+
+  "EXPLAIN plan": {
+    "prefix": "sql_explain",
+    "body": [
+      "EXPLAIN ${1:SELECT * FROM table WHERE cond};",
+      "-- EXPLAIN ANALYZE ... (Postgres: actually runs the query, shows timings)"
+    ],
+    "description": "Query plan"
+  },
+  "Index hints (thoughts)": {
+    "prefix": "sql_index_notes",
+    "body": [
+      "-- Indexes speed up:",
+      "--   WHERE, JOIN, ORDER BY, GROUP BY on the indexed column.",
+      "-- Indexes slow down:",
+      "--   INSERT / UPDATE / DELETE (must maintain index).",
+      "-- Composite index (a, b) helps queries filtering on a, or (a, b), but NOT on b alone."
+    ],
+    "description": "Indexing notes"
+  },
+  "CTE vs subquery tip": {
+    "prefix": "sql_cte_tip",
+    "body": [
+      "-- Prefer CTEs for readability.",
+      "-- Some engines (Postgres 12+, MySQL 8+) materialize or inline CTEs automatically.",
+      "-- If a CTE is slow, try a subquery or a temp table instead."
+    ],
+    "description": "CTE performance tip"
+  },
+  "Avoid SELECT *": {
+    "prefix": "sql_avoid_star",
+    "body": [
+      "-- SELECT * pulls every column, breaking columnar scans and adding I/O.",
+      "-- List columns explicitly:",
+      "SELECT ${1:col1}, ${2:col2}, ${3:col3}",
+      "FROM ${4:table};"
+    ],
+    "description": "Avoid SELECT *"
+  },
+
+  "// ==================== 15. COMMON PITFALLS ====================": {
+    "prefix": "sql_section_pitfalls",
+    "body": ["-- ============ COMMON PITFALLS ============"],
+    "description": "Section marker"
+  },
+
+  "Pitfall: NULL comparisons": {
+    "prefix": "sql_pitfall_null",
+    "body": [
+      "-- BAD:",
+      "-- WHERE col = NULL       -- never matches",
+      "-- WHERE col != NULL      -- never matches",
+      "",
+      "-- GOOD:",
+      "WHERE ${1:col} IS NULL",
+      "WHERE ${1:col} IS NOT NULL"
+    ],
+    "description": "NULL needs IS, not ="
+  },
+  "Pitfall: COUNT(col) vs COUNT(*)": {
+    "prefix": "sql_pitfall_count",
+    "body": [
+      "-- COUNT(*) counts rows.",
+      "-- COUNT(col) counts NON-NULL values of col.",
+      "-- COUNT(DISTINCT col) counts distinct non-null values.",
+      "-- These often differ!"
+    ],
+    "description": "COUNT variants differ"
+  },
+  "Pitfall: WHERE vs HAVING": {
+    "prefix": "sql_pitfall_having",
+    "body": [
+      "-- WHERE filters rows BEFORE aggregation.",
+      "-- HAVING filters groups AFTER aggregation.",
+      "",
+      "-- BAD:",
+      "-- SELECT region, SUM(amount) FROM t WHERE SUM(amount) > 100 GROUP BY region;",
+      "",
+      "-- GOOD:",
+      "SELECT region, SUM(amount) AS total",
+      "FROM ${1:t}",
+      "GROUP BY region",
+      "HAVING SUM(amount) > ${2:100};"
+    ],
+    "description": "WHERE vs HAVING"
+  },
+  "Pitfall: integer division": {
+    "prefix": "sql_pitfall_intdiv",
+    "body": [
+      "-- BAD: integer / integer truncates",
+      "-- SELECT 1 / 2;   -- returns 0 in most engines",
+      "",
+      "-- GOOD: cast to float",
+      "SELECT 1.0 * ${1:a} / NULLIF(${2:b}, 0) AS ratio"
+    ],
+    "description": "Integer division gotcha"
+  },
+  "Pitfall: implicit type coercion": {
+    "prefix": "sql_pitfall_coerce",
+    "body": [
+      "-- Comparing a string to a number can silently cast and skip indexes.",
+      "-- BAD:  WHERE id = '123'",
+      "-- GOOD: WHERE id = 123",
+      "",
+      "-- Also: comparing dates as strings breaks ordering."
+    ],
+    "description": "Avoid implicit casts"
+  },
+  "Pitfall: missing GROUP BY columns": {
+    "prefix": "sql_pitfall_groupby",
+    "body": [
+      "-- Every non-aggregated column in SELECT must appear in GROUP BY.",
+      "-- BAD:",
+      "-- SELECT a, b, SUM(c) FROM t GROUP BY a;",
+      "",
+      "-- GOOD:",
+      "SELECT a, b, SUM(c) FROM ${1:t} GROUP BY a, b;"
+    ],
+    "description": "Non-aggregated columns"
+  },
+  "Pitfall: JOIN fan-out": {
+    "prefix": "sql_pitfall_fanout",
+    "body": [
+      "-- Joining a table with duplicate keys multiplies rows.",
+      "-- Check first:",
+      "SELECT ${1:key}, COUNT(*) FROM ${2:right_table}",
+      "GROUP BY ${1:key} HAVING COUNT(*) > 1;",
+      "",
+      "-- Or use DISTINCT subquery / aggregate before joining."
+    ],
+    "description": "JOIN multiplication"
+  }
+}

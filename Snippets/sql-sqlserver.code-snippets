@@ -1,0 +1,1083 @@
+{
+  "// ==================== 1. SESSION SETUP ====================": {
+    "prefix": "tsql_section_setup",
+    "body": ["-- ============ SESSION SETUP (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "SET NOCOUNT ON": {
+    "prefix": "tsql_set_nocount",
+    "body": [
+      "SET NOCOUNT ON;   -- suppress 'n rows affected' messages",
+      "SET XACT_ABORT ON; -- roll back the whole transaction on error",
+      "SET ANSI_NULLS ON;",
+      "SET QUOTED_IDENTIFIER ON;"
+    ],
+    "description": "Common session options"
+  },
+  "USE database": {
+    "prefix": "tsql_use",
+    "body": ["USE [${1:database_name}];", "GO"],
+    "description": "Switch database context"
+  },
+  "GO batch separator": {
+    "prefix": "tsql_go",
+    "body": ["GO   -- batch separator (SSMS / sqlcmd, not part of T-SQL itself)"],
+    "description": "Batch separator"
+  },
+
+  "// ==================== 2. IDENTIFIERS ====================": {
+    "prefix": "tsql_section_identifiers",
+    "body": ["-- ============ IDENTIFIERS (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "Bracketed identifier": {
+    "prefix": "tsql_brackets",
+    "body": ["[${1:column name}]"],
+    "description": "Bracket-quoted identifier (handles spaces, reserved words)"
+  },
+  "Schema-qualified table": {
+    "prefix": "tsql_schema_table",
+    "body": ["[${1:dbo}].[${2:table_name}]"],
+    "description": "Fully-qualified table name"
+  },
+  "Unicode string literal": {
+    "prefix": "tsql_nstring",
+    "body": ["N'${1:text}'"],
+    "description": "Unicode string (N prefix) — needed for NVARCHAR"
+  },
+
+  "// ==================== 3. PAGINATION ====================": {
+    "prefix": "tsql_section_pagination",
+    "body": ["-- ============ PAGINATION (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "TOP N": {
+    "prefix": "tsql_top",
+    "body": [
+      "SELECT TOP (${1:10}) ${2:*}",
+      "FROM ${3:table}",
+      "ORDER BY ${4:col} DESC;"
+    ],
+    "description": "SELECT TOP N rows"
+  },
+  "TOP N WITH TIES": {
+    "prefix": "tsql_top_ties",
+    "body": [
+      "SELECT TOP (${1:10}) WITH TIES ${2:*}",
+      "FROM ${3:table}",
+      "ORDER BY ${4:col} DESC;",
+      "",
+      "-- WITH TIES includes rows tied at the cutoff value."
+    ],
+    "description": "TOP with ties"
+  },
+  "OFFSET / FETCH (SQL Server 2012+)": {
+    "prefix": "tsql_offset_fetch",
+    "body": [
+      "SELECT ${1:*}",
+      "FROM ${2:table}",
+      "ORDER BY ${3:col}",
+      "OFFSET ${4:0} ROWS",
+      "FETCH NEXT ${5:10} ROWS ONLY;",
+      "",
+      "-- ORDER BY is mandatory for OFFSET/FETCH."
+    ],
+    "description": "Pagination (portable to standard SQL)"
+  },
+
+  "// ==================== 4. DATES & TIMES ====================": {
+    "prefix": "tsql_section_dates",
+    "body": ["-- ============ DATES & TIMES (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "Current date/time": {
+    "prefix": "tsql_now",
+    "body": [
+      "GETDATE()        -- local datetime",
+      "SYSDATETIME()    -- local, higher precision",
+      "GETUTCDATE()     -- UTC datetime",
+      "SYSUTCDATETIME() -- UTC, higher precision",
+      "CURRENT_TIMESTAMP -- ANSI alias for GETDATE()"
+    ],
+    "description": "Current date / time"
+  },
+  "DATEADD": {
+    "prefix": "tsql_dateadd",
+    "body": [
+      "DATEADD(${1|day,week,month,quarter,year,hour,minute,second|}, ${2:7}, ${3:date_col})",
+      "-- e.g. DATEADD(day, -30, GETDATE()) = 30 days ago"
+    ],
+    "description": "Add interval to a date"
+  },
+  "DATEDIFF": {
+    "prefix": "tsql_datediff",
+    "body": [
+      "DATEDIFF(${1|day,month,year,hour,minute,second|}, ${2:start_date}, ${3:end_date}) AS diff"
+    ],
+    "description": "Difference between two dates"
+  },
+  "DATEDIFF_BIG (large intervals)": {
+    "prefix": "tsql_datediff_big",
+    "body": [
+      "DATEDIFF_BIG(${1|millisecond,second,minute|}, ${2:start_date}, ${3:end_date})"
+    ],
+    "description": "Difference with bigint result"
+  },
+  "DATEPART / DATENAME": {
+    "prefix": "tsql_datepart",
+    "body": [
+      "DATEPART(year,  ${1:date_col}) AS yr,",
+      "DATEPART(month, ${1:date_col}) AS mo,",
+      "DATEPART(day,   ${1:date_col}) AS dy,",
+      "DATEPART(weekday, ${1:date_col}) AS dow,   -- depends on SET DATEFIRST",
+      "DATENAME(month, ${1:date_col}) AS month_name"
+    ],
+    "description": "Extract date parts"
+  },
+  "DATETRUNC (SQL Server 2022+)": {
+    "prefix": "tsql_datetrunc",
+    "body": [
+      "-- SQL Server 2022 and later",
+      "DATETRUNC(${1|day,week,month,quarter,year|}, ${2:date_col}) AS truncated",
+      "",
+      "-- Older versions: use DATEADD trick",
+      "-- DATEADD(month, DATEDIFF(month, 0, ${2:date_col}), 0)"
+    ],
+    "description": "Truncate date to period"
+  },
+  "Truncate to month (all versions)": {
+    "prefix": "tsql_trunc_month",
+    "body": [
+      "-- First day of month (works in all versions)",
+      "DATEADD(month, DATEDIFF(month, 0, ${1:date_col}), 0) AS month_start,",
+      "-- Last day of month",
+      "EOMONTH(${1:date_col}) AS month_end"
+    ],
+    "description": "Month boundaries without DATETRUNC"
+  },
+  "FORMAT (slow but flexible)": {
+    "prefix": "tsql_format",
+    "body": [
+      "FORMAT(${1:date_col}, '${2:yyyy-MM-dd}') AS formatted",
+      "-- FORMAT is slow; prefer CONVERT with style codes when possible."
+    ],
+    "description": "Format date as string"
+  },
+  "CONVERT date styles": {
+    "prefix": "tsql_convert_date",
+    "body": [
+      "CONVERT(VARCHAR(10), ${1:date_col}, 120) AS iso_date,   -- yyyy-mm-dd",
+      "CONVERT(VARCHAR(19), ${1:date_col}, 120) AS iso_dt,     -- yyyy-mm-dd hh:mi:ss",
+      "CONVERT(VARCHAR(23), ${1:date_col}, 126) AS iso8601     -- yyyy-mm-ddThh:mi:ss.mmm"
+    ],
+    "description": "Date to string via CONVERT"
+  },
+  "Filter by relative dates": {
+    "prefix": "tsql_date_filter",
+    "body": [
+      "WHERE ${1:created_at} >= DATEADD(day, -${2:30}, GETDATE())",
+      "-- Wrapping the column in a function (like CAST) can prevent index use."
+    ],
+    "description": "Last N days filter"
+  },
+
+  "// ==================== 5. STRINGS ====================": {
+    "prefix": "tsql_section_strings",
+    "body": ["-- ============ STRINGS (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "String concat": {
+    "prefix": "tsql_concat",
+    "body": [
+      "${1:first} + ' ' + ${2:last}                 AS full_name,   -- NULL propagates",
+      "CONCAT(${1:first}, ' ', ${2:last})           AS full_name_2, -- NULL treated as ''",
+      "CONCAT_WS(' ', ${1:first}, ${2:last})         AS full_name_3  -- separator"
+    ],
+    "description": "String concatenation"
+  },
+  "STRING_AGG (2017+)": {
+    "prefix": "tsql_string_agg",
+    "body": [
+      "SELECT",
+      "    ${1:group_col},",
+      "    STRING_AGG(${2:value_col}, ', ') WITHIN GROUP (ORDER BY ${2:value_col}) AS joined",
+      "FROM ${3:table}",
+      "GROUP BY ${1:group_col};"
+    ],
+    "description": "Concatenate values per group"
+  },
+  "GROUP_CONCAT old trick (pre-2017)": {
+    "prefix": "tsql_string_agg_old",
+    "body": [
+      "-- For SQL Server 2016 and earlier (STUFF + FOR XML PATH)",
+      "SELECT",
+      "    ${1:group_col},",
+      "    STUFF((",
+      "        SELECT ', ' + ${2:value_col}",
+      "        FROM ${3:table} AS t2",
+      "        WHERE t2.${1:group_col} = t1.${1:group_col}",
+      "        FOR XML PATH(''), TYPE",
+      "    ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS joined",
+      "FROM ${3:table} AS t1",
+      "GROUP BY ${1:group_col};"
+    ],
+    "description": "String aggregation before STRING_AGG"
+  },
+  "SUBSTRING / LEFT / RIGHT": {
+    "prefix": "tsql_substring",
+    "body": [
+      "SUBSTRING(${1:col}, ${2:1}, ${3:10}) AS sub,   -- 1-indexed, length",
+      "LEFT(${1:col}, ${3:3})            AS left_part,",
+      "RIGHT(${1:col}, ${3:3})           AS right_part"
+    ],
+    "description": "Substring operations"
+  },
+  "CHARINDEX / PATINDEX": {
+    "prefix": "tsql_charindex",
+    "body": [
+      "CHARINDEX('${1:needle}', ${2:haystack})  AS position,      -- 0 if not found",
+      "PATINDEX('%${3:pattern}%', ${2:haystack}) AS pattern_pos   -- regex-lite"
+    ],
+    "description": "Find substring position"
+  },
+  "TRIM / LTRIM / RTRIM": {
+    "prefix": "tsql_trim",
+    "body": [
+      "TRIM(${1:col})    AS trimmed,       -- 2017+",
+      "LTRIM(${1:col})   AS left_trimmed,  -- all versions",
+      "RTRIM(${1:col})   AS right_trimmed  -- all versions",
+      "-- Pre-2017: LTRIM(RTRIM(${1:col})) to trim both sides"
+    ],
+    "description": "Trim whitespace"
+  },
+  "REPLICATE / SPACE": {
+    "prefix": "tsql_replicate",
+    "body": [
+      "REPLICATE('${1:*}', ${2:10}) AS repeated,   -- repeat a char",
+      "SPACE(${2:10})                AS blanks      -- N spaces"
+    ],
+    "description": "Repeat a string / spaces"
+  },
+
+  "// ==================== 6. NULLS & CONDITIONALS ====================": {
+    "prefix": "tsql_section_nulls",
+    "body": ["-- ============ NULLS & CONDITIONALS (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "ISNULL vs COALESCE": {
+    "prefix": "tsql_isnull",
+    "body": [
+      "ISNULL(${1:col}, ${2:default})   AS filled_1,  -- 2 args, uses col's type",
+      "COALESCE(${1:col}, ${2:default}) AS filled_2   -- N args, ANSI standard",
+      "-- Prefer COALESCE for portability; ISNULL is slightly faster."
+    ],
+    "description": "Replace NULL"
+  },
+  "IIF (inline if)": {
+    "prefix": "tsql_iif",
+    "body": [
+      "IIF(${1:condition}, ${2:value_if_true}, ${3:value_if_false}) AS result",
+      "-- Shorthand for a two-branch CASE."
+    ],
+    "description": "IIF conditional"
+  },
+  "CHOOSE": {
+    "prefix": "tsql_choose",
+    "body": [
+      "CHOOSE(${1:index}, ${2:'a'}, ${3:'b'}, ${4:'c'}) AS picked",
+      "-- Returns the Nth item; 1-indexed."
+    ],
+    "description": "CHOOSE by index"
+  },
+
+  "// ==================== 7. CONVERSION ====================": {
+    "prefix": "tsql_section_convert",
+    "body": ["-- ============ CONVERSION (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "CAST / CONVERT": {
+    "prefix": "tsql_cast",
+    "body": [
+      "CAST(${1:col} AS ${2:INT})                    AS casted,",
+      "CONVERT(${2:INT}, ${1:col})                    AS converted,",
+      "CONVERT(VARCHAR(10), ${1:col}, 120)            AS styled"
+    ],
+    "description": "Type conversion"
+  },
+  "TRY_CAST / TRY_CONVERT": {
+    "prefix": "tsql_try_cast",
+    "body": [
+      "TRY_CAST(${1:col} AS ${2:INT})                 AS safe_cast,   -- NULL on failure",
+      "TRY_CONVERT(${2:INT}, ${1:col})                AS safe_convert"
+    ],
+    "description": "Safe conversion (NULL on error)"
+  },
+
+  "// ==================== 8. UPSERT / MERGE ====================": {
+    "prefix": "tsql_section_merge",
+    "body": ["-- ============ UPSERT / MERGE (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "MERGE (full upsert)": {
+    "prefix": "tsql_merge",
+    "body": [
+      "MERGE INTO ${1:target_table} AS t",
+      "USING (",
+      "    SELECT ${2:id}, ${3:value} FROM ${4:source_table}",
+      ") AS s",
+      "   ON t.${2:id} = s.${2:id}",
+      "WHEN MATCHED THEN",
+      "    UPDATE SET ${3:value} = s.${3:value}",
+      "WHEN NOT MATCHED BY TARGET THEN",
+      "    INSERT (${2:id}, ${3:value})",
+      "    VALUES (s.${2:id}, s.${3:value})",
+      "WHEN NOT MATCHED BY SOURCE THEN",
+      "    DELETE",
+      ";",
+      "",
+      "-- Terminate MERGE with a semicolon. Always."
+    ],
+    "description": "Full MERGE statement"
+  },
+  "MERGE minimal (upsert only)": {
+    "prefix": "tsql_merge_min",
+    "body": [
+      "MERGE ${1:target} AS t",
+      "USING ${2:source} AS s ON t.${3:id} = s.${3:id}",
+      "WHEN MATCHED THEN UPDATE SET ${4:col} = s.${4:col}",
+      "WHEN NOT MATCHED THEN INSERT (${3:id}, ${4:col}) VALUES (s.${3:id}, s.${4:col});"
+    ],
+    "description": "MERGE insert-or-update"
+  },
+  "IF EXISTS ... UPDATE ELSE INSERT": {
+    "prefix": "tsql_ifexists_upsert",
+    "body": [
+      "IF EXISTS (SELECT 1 FROM ${1:table} WHERE ${2:id} = @${3:id})",
+      "    UPDATE ${1:table}",
+      "    SET ${4:col} = @${5:value}",
+      "    WHERE ${2:id} = @${3:id};",
+      "ELSE",
+      "    INSERT INTO ${1:table} (${2:id}, ${4:col})",
+      "    VALUES (@${3:id}, @${5:value});"
+    ],
+    "description": "Manual upsert via IF EXISTS"
+  },
+
+  "// ==================== 9. PIVOT / UNPIVOT ====================": {
+    "prefix": "tsql_section_pivot",
+    "body": ["-- ============ PIVOT / UNPIVOT (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "PIVOT": {
+    "prefix": "tsql_pivot",
+    "body": [
+      "SELECT ${1:row_col}, [${2:val1}], [${3:val2}], [${4:val3}]",
+      "FROM (",
+      "    SELECT ${1:row_col}, ${5:col_col}, ${6:value_col}",
+      "    FROM ${7:table}",
+      ") AS src",
+      "PIVOT (",
+      "    SUM(${6:value_col})",
+      "    FOR ${5:col_col} IN ([${2:val1}], [${3:val2}], [${4:val3}])",
+      ") AS pvt;"
+    ],
+    "description": "PIVOT long to wide"
+  },
+  "UNPIVOT": {
+    "prefix": "tsql_unpivot",
+    "body": [
+      "SELECT ${1:id}, ${2:col_name}, ${3:value}",
+      "FROM ${4:table}",
+      "UNPIVOT (",
+      "    ${3:value} FOR ${2:col_name} IN ([${5:col_a}], [${6:col_b}], [${7:col_c}])",
+      ") AS unpvt;"
+    ],
+    "description": "UNPIVOT wide to long"
+  },
+
+  "// ==================== 10. APPLY (CROSS / OUTER) ====================": {
+    "prefix": "tsql_section_apply",
+    "body": ["-- ============ APPLY (T-SQL ONLY) ============"],
+    "description": "Section marker"
+  },
+
+  "CROSS APPLY": {
+    "prefix": "tsql_cross_apply",
+    "body": [
+      "SELECT a.${1:id}, x.${2:col}",
+      "FROM ${3:table_a} AS a",
+      "CROSS APPLY (",
+      "    SELECT TOP (1) *",
+      "    FROM ${4:table_b} AS b",
+      "    WHERE b.${5:fk} = a.${1:id}",
+      "    ORDER BY b.${6:date} DESC",
+      ") AS x;",
+      "",
+      "-- Like a correlated subquery but returns full rows.",
+      "-- CROSS APPLY = INNER JOIN semantics (drops rows with no match)."
+    ],
+    "description": "CROSS APPLY (top-1 per row pattern)"
+  },
+  "OUTER APPLY": {
+    "prefix": "tsql_outer_apply",
+    "body": [
+      "SELECT a.${1:id}, x.${2:col}",
+      "FROM ${3:table_a} AS a",
+      "OUTER APPLY (",
+      "    SELECT TOP (1) *",
+      "    FROM ${4:table_b} AS b",
+      "    WHERE b.${5:fk} = a.${1:id}",
+      "    ORDER BY b.${6:date} DESC",
+      ") AS x;",
+      "",
+      "-- OUTER APPLY = LEFT JOIN semantics (keeps rows with no match)."
+    ],
+    "description": "OUTER APPLY (left-join version)"
+  },
+  "APPLY with table-valued function": {
+    "prefix": "tsql_apply_tvf",
+    "body": [
+      "SELECT a.${1:id}, f.*",
+      "FROM ${2:table_a} AS a",
+      "CROSS APPLY dbo.${3:my_function}(a.${4:param}) AS f;"
+    ],
+    "description": "APPLY a table-valued function"
+  },
+
+  "// ==================== 11. OUTPUT CLAUSE ====================": {
+    "prefix": "tsql_section_output",
+    "body": ["-- ============ OUTPUT CLAUSE (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "OUTPUT from INSERT": {
+    "prefix": "tsql_output_insert",
+    "body": [
+      "INSERT INTO ${1:table} (${2:col1}, ${3:col2})",
+      "OUTPUT INSERTED.${4:id}, INSERTED.${2:col1}",
+      "VALUES (${5:val1}, ${6:val2});",
+      "",
+      "-- Returns the newly inserted rows to the client."
+    ],
+    "description": "OUTPUT inserted rows"
+  },
+  "OUTPUT from UPDATE": {
+    "prefix": "tsql_output_update",
+    "body": [
+      "UPDATE ${1:table}",
+      "SET ${2:col} = ${3:value}",
+      "OUTPUT DELETED.${2:col} AS old_value, INSERTED.${2:col} AS new_value",
+      "WHERE ${4:condition};"
+    ],
+    "description": "OUTPUT before/after from UPDATE"
+  },
+  "OUTPUT into table": {
+    "prefix": "tsql_output_into",
+    "body": [
+      "INSERT INTO ${1:audit_table}",
+      "OUTPUT INSERTED.*",
+      "SELECT * FROM ${2:source};"
+    ],
+    "description": "OUTPUT into an audit table"
+  },
+
+  "// ==================== 12. TEMP TABLES & VARIABLES ====================": {
+    "prefix": "tsql_section_temp",
+    "body": ["-- ============ TEMP TABLES & VARIABLES (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "Local temp table (#)": {
+    "prefix": "tsql_temp_local",
+    "body": [
+      "IF OBJECT_ID('tempdb..#${1:tmp}') IS NOT NULL DROP TABLE #${1:tmp};",
+      "",
+      "CREATE TABLE #${1:tmp} (",
+      "    ${2:id}    INT,",
+      "    ${3:value} DECIMAL(12, 2)",
+      ");",
+      "",
+      "INSERT INTO #${1:tmp} (${2:id}, ${3:value})",
+      "SELECT ${2:id}, ${3:value} FROM ${4:source};",
+      "",
+      "-- Visible only to the current session."
+    ],
+    "description": "Local temp table"
+  },
+  "Global temp table (##)": {
+    "prefix": "tsql_temp_global",
+    "body": [
+      "CREATE TABLE ##${1:tmp} (",
+      "    ${2:id}    INT,",
+      "    ${3:value} DECIMAL(12, 2)",
+      ");",
+      "",
+      "-- Visible to all sessions; dropped when the last one closes."
+    ],
+    "description": "Global temp table"
+  },
+  "Table variable": {
+    "prefix": "tsql_table_variable",
+    "body": [
+      "DECLARE @${1:rows} TABLE (",
+      "    ${2:id}    INT,",
+      "    ${3:value} DECIMAL(12, 2)",
+      ");",
+      "",
+      "INSERT INTO @${1:rows} (${2:id}, ${3:value})",
+      "SELECT ${2:id}, ${3:value} FROM ${4:source};",
+      "",
+      "-- Smaller scope, no statistics — use for small row counts."
+    ],
+    "description": "Table variable"
+  },
+  "Scalar variables": {
+    "prefix": "tsql_declare",
+    "body": [
+      "DECLARE @${1:id} INT = ${2:1};",
+      "DECLARE @${3:name} NVARCHAR(100) = N'${4:value}';",
+      "",
+      "SELECT @${1:id} = ${5:col} FROM ${6:table} WHERE ${7:condition};",
+      "SELECT @${1:id} AS value;"
+    ],
+    "description": "Declare and assign scalar variables"
+    },
+  "SELECT INTO (CTAS)": {
+    "prefix": "tsql_select_into",
+    "body": [
+      "SELECT *",
+      "INTO ${1:new_table}",
+      "FROM ${2:source_table}",
+      "WHERE ${3:condition};",
+      "",
+      "-- Quick CTAS. No indexes, no constraints — add them after."
+    ],
+    "description": "SELECT INTO new table"
+  },
+
+  "// ==================== 13. IDENTITY & SEQUENCES ====================": {
+    "prefix": "tsql_section_identity",
+    "body": ["-- ============ IDENTITY & SEQUENCES (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "IDENTITY column": {
+    "prefix": "tsql_identity",
+    "body": [
+      "CREATE TABLE ${1:table} (",
+      "    ${2:id}   INT IDENTITY(1, 1) PRIMARY KEY,",
+      "    ${3:name} NVARCHAR(100) NOT NULL",
+      ");"
+    ],
+    "description": "Auto-incrementing identity column"
+  },
+  "SEQUENCE": {
+    "prefix": "tsql_sequence",
+    "body": [
+      "CREATE SEQUENCE ${1:seq_name}",
+      "    START WITH 1",
+      "    INCREMENT BY 1",
+      "    MINVALUE 1",
+      "    NO CYCLE;",
+      "",
+      "SELECT NEXT VALUE FOR ${1:seq_name};   -- get next value"
+    ],
+    "description": "Sequence object (2012+)"
+  },
+  "SCOPE_IDENTITY": {
+    "prefix": "tsql_scope_identity",
+    "body": [
+      "INSERT INTO ${1:table} (${2:col}) VALUES (${3:value});",
+      "SELECT SCOPE_IDENTITY() AS new_id;",
+      "",
+      "-- Prefer SCOPE_IDENTITY() over @@IDENTITY (safer with triggers)."
+    ],
+    "description": "Get last inserted identity"
+  },
+
+  "// ==================== 14. ERROR HANDLING ====================": {
+    "prefix": "tsql_section_errors",
+    "body": ["-- ============ ERROR HANDLING (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "TRY / CATCH": {
+    "prefix": "tsql_try_catch",
+    "body": [
+      "BEGIN TRY",
+      "    BEGIN TRANSACTION;",
+      "        ${1:-- statements}",
+      "    COMMIT TRANSACTION;",
+      "END TRY",
+      "BEGIN CATCH",
+      "    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;",
+      "",
+      "    THROW;   -- re-raise; preserves the original error",
+      "    -- Or log details:",
+      "    -- SELECT ERROR_NUMBER() AS errno,",
+      "    --        ERROR_MESSAGE() AS msg,",
+      "    --        ERROR_LINE() AS line;",
+      "END CATCH;"
+    ],
+    "description": "TRY / CATCH with transaction"
+  },
+  "RAISERROR": {
+    "prefix": "tsql_raiserror",
+    "body": [
+      "RAISERROR(N'${1:Error message here}', ${2:16}, 1);",
+      "-- 16 = severity that raises an error the client can catch."
+    ],
+    "description": "Raise a custom error (older style)"
+  },
+  "THROW": {
+    "prefix": "tsql_throw",
+    "body": [
+      "THROW ${1:50000}, N'${2:Error message}', 1;",
+      "-- Modern replacement for RAISERROR (2012+)."
+    ],
+    "description": "Throw a custom error"
+  },
+
+  "// ==================== 15. STORED PROCEDURES ====================": {
+    "prefix": "tsql_section_proc",
+    "body": ["-- ============ STORED PROCEDURES & FUNCTIONS (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "CREATE OR ALTER PROCEDURE": {
+    "prefix": "tsql_proc",
+    "body": [
+      "CREATE OR ALTER PROCEDURE ${1:dbo.my_proc}",
+      "    @${2:id}    INT,",
+      "    @${3:name}  NVARCHAR(100) = NULL",
+      "AS",
+      "BEGIN",
+      "    SET NOCOUNT ON;",
+      "",
+      "    SELECT *",
+      "    FROM ${4:table}",
+      "    WHERE ${5:id} = @${2:id};",
+      "END;",
+      "GO"
+    ],
+    "description": "Stored procedure"
+  },
+  "EXEC procedure": {
+    "prefix": "tsql_exec",
+    "body": [
+      "EXEC ${1:dbo.my_proc}",
+      "    @${2:id}   = ${3:1},",
+      "    @${4:name} = N'${5:value}';"
+    ],
+    "description": "Execute a stored procedure"
+  },
+  "Inline table-valued function": {
+    "prefix": "tsql_tvf_inline",
+    "body": [
+      "CREATE OR ALTER FUNCTION ${1:dbo.my_tvf} (@${2:id} INT)",
+      "RETURNS TABLE",
+      "AS",
+      "RETURN (",
+      "    SELECT *",
+      "    FROM ${3:table}",
+      "    WHERE ${4:id} = @${2:id}",
+      ");",
+      "GO",
+      "",
+      "-- Fast: no temp tables, can be inlined by the optimizer."
+    ],
+    "description": "Inline table-valued function"
+  },
+  "Scalar function": {
+    "prefix": "tsql_udf_scalar",
+    "body": [
+      "CREATE OR ALTER FUNCTION ${1:dbo.my_func} (@${2:x} INT)",
+      "RETURNS INT",
+      "AS",
+      "BEGIN",
+      "    RETURN ${3:@x * 2};",
+      "END;",
+      "GO",
+      "",
+      "-- WARNING: scalar UDFs prevent parallelism. Prefer inline TVFs."
+    ],
+    "description": "Scalar user-defined function"
+  },
+
+  "// ==================== 16. WINDOW FUNCTIONS ====================": {
+    "prefix": "tsql_section_window",
+    "body": ["-- ============ WINDOW FUNCTIONS (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "ROW_NUMBER / RANK / DENSE_RANK": {
+    "prefix": "tsql_rownumber",
+    "body": [
+      "ROW_NUMBER() OVER (PARTITION BY ${1:group} ORDER BY ${2:col} DESC) AS rn,",
+      "RANK()       OVER (PARTITION BY ${1:group} ORDER BY ${2:col} DESC) AS rnk,",
+      "DENSE_RANK() OVER (PARTITION BY ${1:group} ORDER BY ${2:col} DESC) AS drnk"
+    ],
+    "description": "Ranking functions"
+  },
+  "Top-N per group": {
+    "prefix": "tsql_top_n_group",
+    "body": [
+      "WITH ranked AS (",
+      "    SELECT *,",
+      "           ROW_NUMBER() OVER (",
+      "               PARTITION BY ${1:group_col}",
+      "               ORDER BY ${2:value} DESC",
+      "           ) AS rn",
+      "    FROM ${3:table}",
+      ")",
+      "SELECT * FROM ranked WHERE rn <= ${4:3};"
+    ],
+    "description": "Top N rows per group"
+  },
+  "LAG / LEAD": {
+    "prefix": "tsql_lag_lead",
+    "body": [
+      "SELECT",
+      "    ${1:date},",
+      "    ${2:value},",
+      "    LAG(${2:value})  OVER (ORDER BY ${1:date}) AS prev_value,",
+      "    LEAD(${2:value}) OVER (ORDER BY ${1:date}) AS next_value",
+      "FROM ${3:table};"
+    ],
+    "description": "Previous / next row values"
+  },
+  "Running total": {
+    "prefix": "tsql_running_total",
+    "body": [
+      "SELECT",
+      "    ${1:date},",
+      "    ${2:amount},",
+      "    SUM(${2:amount}) OVER (",
+      "        ORDER BY ${1:date}",
+      "        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW",
+      "    ) AS running_total",
+      "FROM ${3:transactions};"
+    ],
+    "description": "Cumulative sum"
+  },
+
+  "// ==================== 17. DDL SPECIFIC TO SQL SERVER ====================": {
+    "prefix": "tsql_section_ddl",
+    "body": ["-- ============ DDL SPECIFIC TO SQL SERVER ============"],
+    "description": "Section marker"
+  },
+
+  "CREATE TABLE with defaults": {
+    "prefix": "tsql_create_table",
+    "body": [
+      "CREATE TABLE ${1:dbo.table_name} (",
+      "    ${2:id}          INT IDENTITY(1, 1) PRIMARY KEY,",
+      "    ${3:name}        NVARCHAR(255) NOT NULL,",
+      "    ${4:amount}      DECIMAL(12, 2) NOT NULL DEFAULT 0,",
+      "    ${5:created_at}  DATETIME2 NOT NULL DEFAULT SYSDATETIME(),",
+      "    ${6:is_active}   BIT NOT NULL DEFAULT 1",
+      ");"
+    ],
+    "description": "Create table (T-SQL style)"
+  },
+  "CREATE INDEX (clustered / nonclustered)": {
+    "prefix": "tsql_create_index",
+    "body": [
+      "CREATE CLUSTERED INDEX ${1:ix_name}",
+      "    ON ${2:dbo.table} (${3:col});",
+      "",
+      "-- CREATE NONCLUSTERED INDEX ${1:ix_name}",
+      "--     ON ${2:dbo.table} (${3:col}) INCLUDE (${4:extra_col});"
+    ],
+    "description": "Clustered index"
+  },
+  "TRUNCATE TABLE": {
+    "prefix": "tsql_truncate",
+    "body": [
+      "TRUNCATE TABLE ${1:dbo.table};",
+      "-- Fast delete of all rows. Cannot be used with FKs pointing to it."
+    ],
+    "description": "Truncate table"
+  },
+  "ALTER TABLE add column": {
+    "prefix": "tsql_alter_add",
+    "body": [
+      "ALTER TABLE ${1:dbo.table}",
+      "    ADD ${2:new_col} ${3:INT} NULL;",
+      "",
+      "-- To add NOT NULL with default on an existing table:",
+      "-- ALTER TABLE ${1:dbo.table}",
+      "--     ADD ${2:new_col} ${3:INT} NOT NULL CONSTRAINT DF_${1:table}_${2:new_col} DEFAULT 0;"
+    ],
+    "description": "Add column"
+  },
+  "DROP with OBJECT_ID check": {
+    "prefix": "tsql_drop_if_exists",
+    "body": [
+      "IF OBJECT_ID('${1:dbo.table}', 'U') IS NOT NULL",
+      "    DROP TABLE ${1:dbo.table};",
+      "",
+      "-- For procedures / views / functions use:",
+      "-- IF OBJECT_ID('${2:dbo.proc}', 'P') IS NOT NULL DROP PROCEDURE ${2:dbo.proc};"
+    ],
+    "description": "Drop if exists (pre-2016 syntax)"
+  },
+  "DROP IF EXISTS (2016+)": {
+    "prefix": "tsql_drop_if_exists_new",
+    "body": [
+      "DROP TABLE IF EXISTS ${1:dbo.table};",
+      "DROP PROCEDURE IF EXISTS ${2:dbo.proc};",
+      "DROP VIEW IF EXISTS ${3:dbo.view};"
+    ],
+    "description": "DROP IF EXISTS (SQL Server 2016+)"
+  },
+
+  "// ==================== 18. DATABASE INFO ====================": {
+    "prefix": "tsql_section_metadata",
+    "body": ["-- ============ DATABASE INFO & METADATA (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "List tables": {
+    "prefix": "tsql_list_tables",
+    "body": [
+      "SELECT TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE",
+      "FROM INFORMATION_SCHEMA.TABLES",
+      "WHERE TABLE_TYPE = 'BASE TABLE'",
+      "ORDER BY TABLE_SCHEMA, TABLE_NAME;"
+    ],
+    "description": "List all tables"
+  },
+  "List columns of a table": {
+    "prefix": "tsql_list_columns",
+    "body": [
+      "SELECT",
+      "    COLUMN_NAME,",
+      "    DATA_TYPE,",
+      "    CHARACTER_MAXIMUM_LENGTH,",
+      "    IS_NULLABLE,",
+      "    COLUMN_DEFAULT",
+      "FROM INFORMATION_SCHEMA.COLUMNS",
+      "WHERE TABLE_SCHEMA = '${1:dbo}' AND TABLE_NAME = '${2:table}'",
+      "ORDER BY ORDINAL_POSITION;"
+    ],
+    "description": "List columns of a table"
+  },
+  "List indexes": {
+    "prefix": "tsql_list_indexes",
+    "body": [
+      "SELECT",
+      "    i.name        AS index_name,",
+      "    i.type_desc   AS index_type,",
+      "    c.name        AS column_name,",
+      "    ic.key_ordinal,",
+      "    ic.is_included_column",
+      "FROM sys.indexes AS i",
+      "JOIN sys.index_columns AS ic",
+      "    ON i.object_id = ic.object_id AND i.index_id = ic.index_id",
+      "JOIN sys.columns AS c",
+      "    ON ic.object_id = c.object_id AND ic.column_id = c.column_id",
+      "WHERE i.object_id = OBJECT_ID('${1:dbo.table}')",
+      "ORDER BY i.name, ic.key_ordinal;"
+    ],
+    "description": "List indexes on a table"
+  },
+  "Table size": {
+    "prefix": "tsql_table_size",
+    "body": [
+      "SELECT",
+      "    t.name        AS table_name,",
+      "    p.rows        AS row_count,",
+      "    SUM(a.total_pages) * 8 / 1024.0 AS total_mb",
+      "FROM sys.tables AS t",
+      "JOIN sys.indexes AS i ON t.object_id = i.object_id",
+      "JOIN sys.partitions AS p ON i.object_id = p.object_id AND i.index_id = p.index_id",
+      "JOIN sys.allocation_units AS a ON p.partition_id = a.container_id",
+      "WHERE i.index_id <= 1",
+      "GROUP BY t.name, p.rows",
+      "ORDER BY total_mb DESC;"
+    ],
+    "description": "Table sizes"
+  },
+
+  "// ==================== 19. PERFORMANCE ====================": {
+    "prefix": "tsql_section_perf",
+    "body": ["-- ============ PERFORMANCE (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "SET STATISTICS IO / TIME": {
+    "prefix": "tsql_set_stats",
+    "body": [
+      "SET STATISTICS IO ON;",
+      "SET STATISTICS TIME ON;",
+      "",
+      "${1:SELECT * FROM table WHERE cond};",
+      "",
+      "SET STATISTICS IO OFF;",
+      "SET STATISTICS TIME OFF;"
+    ],
+    "description": "Measure IO and time of a query"
+  },
+  "Actual execution plan": {
+    "prefix": "tsql_actual_plan",
+    "body": [
+      "SET SHOWPLAN_ALL OFF;",
+      "SET STATISTICS XML ON;",
+      "",
+      "${1:SELECT * FROM table WHERE cond};",
+      "",
+      "SET STATISTICS XML OFF;"
+    ],
+    "description": "Capture the actual execution plan"
+  },
+  "Index usage stats": {
+    "prefix": "tsql_index_usage",
+    "body": [
+      "SELECT",
+      "    OBJECT_NAME(s.object_id) AS table_name,",
+      "    i.name AS index_name,",
+      "    s.user_seeks, s.user_scans, s.user_lookups, s.user_updates",
+      "FROM sys.dm_db_index_usage_stats AS s",
+      "JOIN sys.indexes AS i",
+      "    ON i.object_id = s.object_id AND i.index_id = s.index_id",
+      "WHERE database_id = DB_ID()",
+      "ORDER BY (s.user_seeks + s.user_scans + s.user_lookups) DESC;"
+    ],
+    "description": "Index usage stats"
+  },
+  "Missing index hints": {
+    "prefix": "tsql_missing_indexes",
+    "body": [
+      "SELECT",
+      "    migs.avg_total_user_cost * migs.avg_user_impact * (migs.user_seeks + migs.user_scans) AS score,",
+      "    mid.statement AS table_name,",
+      "    mid.equality_columns,",
+      "    mid.inequality_columns,",
+      "    mid.included_columns",
+      "FROM sys.dm_db_missing_index_group_stats AS migs",
+      "JOIN sys.dm_db_missing_index_groups AS mig",
+      "    ON migs.group_handle = mig.index_group_handle",
+      "JOIN sys.dm_db_missing_index_details AS mid",
+      "    ON mig.index_handle = mid.index_handle",
+      "ORDER BY score DESC;"
+    ],
+    "description": "Missing index suggestions"
+  },
+
+  "// ==================== 20. COMMON PITFALLS (T-SQL) ====================": {
+    "prefix": "tsql_section_pitfalls",
+    "body": ["-- ============ COMMON PITFALLS (T-SQL) ============"],
+    "description": "Section marker"
+  },
+
+  "Pitfall: no LIMIT keyword": {
+    "prefix": "tsql_pitfall_limit",
+    "body": [
+      "-- BAD (MySQL / Postgres syntax):",
+      "-- SELECT * FROM t LIMIT 10;",
+      "",
+      "-- GOOD (T-SQL):",
+      "SELECT TOP (10) * FROM ${1:t} ORDER BY ${2:col};",
+      "-- or:",
+      "SELECT * FROM ${1:t} ORDER BY ${2:col} OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY;"
+    ],
+    "description": "TOP vs LIMIT"
+  },
+  "Pitfall: + with NULL": {
+    "prefix": "tsql_pitfall_concat_null",
+    "body": [
+      "-- BAD: NULL propagates",
+      "-- SELECT 'a' + NULL;   -- returns NULL",
+      "",
+      "-- GOOD: CONCAT treats NULL as ''",
+      "SELECT CONCAT('${1:a}', ${2:col});"
+    ],
+    "description": "String concat with NULL"
+  },
+  "Pitfall: N'string' for Unicode": {
+    "prefix": "tsql_pitfall_unicode",
+    "body": [
+      "-- BAD: silently converts to non-Unicode",
+      "-- INSERT INTO t (name) VALUES ('café');   -- 'é' may become '?'",
+      "",
+      "-- GOOD: use N prefix for NVARCHAR columns",
+      "INSERT INTO ${1:t} (${2:name}) VALUES (N'${3:café}');"
+    ],
+    "description": "Unicode string literals"
+  },
+  "Pitfall: VARCHAR vs NVARCHAR": {
+    "prefix": "tsql_pitfall_nvarchar",
+    "body": [
+      "-- VARCHAR: 1 byte/char, single code page (e.g. Latin-1).",
+      "-- NVARCHAR: 2 bytes/char, supports all Unicode.",
+      "-- Use NVARCHAR for user-facing text, VARCHAR for codes / ASCII-only."
+    ],
+    "description": "VARCHAR vs NVARCHAR"
+  },
+  "Pitfall: division by zero": {
+    "prefix": "tsql_pitfall_divzero",
+    "body": [
+      "-- BAD: -- divides by zero -> error",
+      "-- SELECT ${1:a} / ${2:b};",
+      "",
+      "-- GOOD: NULLIF turns 0 into NULL, division yields NULL",
+      "SELECT ${1:a} / NULLIF(${2:b}, 0) AS ratio;"
+    ],
+    "description": "Safe division"
+  },
+  "Pitfall: MERGE missing semicolon": {
+    "prefix": "tsql_pitfall_merge_semi",
+    "body": [
+      "-- A MERGE statement MUST end with a semicolon.",
+      "-- Without it, SQL Server raises a syntax error.",
+      "MERGE ${1:target} AS t",
+      "USING ${2:source} AS s ON t.${3:id} = s.${3:id}",
+      "WHEN MATCHED THEN UPDATE SET ${4:col} = s.${4:col}",
+      "WHEN NOT MATCHED THEN INSERT (${3:id}) VALUES (s.${3:id});   -- <-- semicolon"
+    ],
+    "description": "MERGE semicolon requirement"
+  },
+  "Pitfall: function on indexed column": {
+    "prefix": "tsql_pitfall_sargable",
+    "body": [
+      "-- BAD (non-SARGable, forces full scan):",
+      "-- WHERE YEAR(created_at) = 2024",
+      "-- WHERE UPPER(name) = 'ALICE'",
+      "",
+      "-- GOOD (SARGable, can use index):",
+      "WHERE ${1:created_at} >= '2024-01-01' AND ${1:created_at} < '2025-01-01'",
+      "-- For case-insensitive: rely on column collation instead of UPPER()."
+    ],
+    "description": "SARGable predicates"
+  },
+  "Pitfall: implicit conversion kills indexes": {
+    "prefix": "tsql_pitfall_implicit_cast",
+    "body": [
+      "-- BAD: NVARCHAR column compared to VARCHAR literal",
+      "-- causes implicit conversion and index scan.",
+      "",
+      "-- GOOD: match types exactly",
+      "SELECT * FROM ${1:t} WHERE ${2:name_col} = N'${3:value}';"
+    ],
+    "description": "Implicit conversion pitfalls"
+  },
+  "Pitfall: temp table vs table variable": {
+    "prefix": "tsql_pitfall_temp_var",
+    "body": [
+      "-- #temp table: has statistics, good for large row counts, parallelism OK.",
+      "-- @table_var: no statistics, no parallelism, good for tiny row counts.",
+      "-- Rule of thumb: if > ~100 rows, use #temp."
+    ],
+    "description": "Temp table vs table variable"
+  }
+}
